@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="164dp"
-        android:text="Enter your phone or email"
+        android:text="Enter your phone number"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,6 +94,8 @@
         app:boxStrokeColor = "@color/white"
         app:startIconTint="@color/white"
         android:textColorHint="#ffffff"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/white"
         >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -104,11 +106,8 @@
             android:layout_height="wrap_content"
             android:drawablePadding="1dp"
             android:textSize="20sp"
+            android:inputType="textPassword"
             android:textStyle="bold" />
-
-
-
-
 
     </com.google.android.material.textfield.TextInputLayout>
 

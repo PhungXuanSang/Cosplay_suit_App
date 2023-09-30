@@ -31,7 +31,7 @@
                 android:id="@+id/tv_fullname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello word !"
+                android:text=""
                 android:textSize="22dp"/>
             <TextView
                 android:layout_width="wrap_content"

@@ -1,11 +1,9 @@
 package com.example.cosplay_suit_app.DTO;
 
-public class LoginUser {
+public class SignUpUser {
     User user;
 
     String message;
-
-
 
     public User getUser() {
         return user;
@@ -23,11 +21,11 @@ public class LoginUser {
         this.message = message;
     }
 
-    public LoginUser(User user, String message) {
+    public SignUpUser(User user, String message) {
         this.user = user;
         this.message = message;
     }
 
-    public LoginUser() {
+    public SignUpUser() {
     }
 }

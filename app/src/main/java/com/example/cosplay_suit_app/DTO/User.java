@@ -13,6 +13,15 @@ public class User {
 
 //    private  boolean check;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -61,8 +70,8 @@ public class User {
 //        this.check = check;
 //    }
 
-    public User(String email, String passwd) {
-        this.email = email;
+    public User(String phone, String passwd) {
+        this.phone = phone;
         this.passwd = passwd;
     }
 
