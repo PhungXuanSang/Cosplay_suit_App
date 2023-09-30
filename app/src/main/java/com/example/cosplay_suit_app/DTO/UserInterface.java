@@ -20,14 +20,12 @@ public interface UserInterface {
             "Accept: application/json",
     })
 
-    @POST("login/")
-    Call<User> login(@Body User user);
+    @POST("login")
+    Call<LoginUser> login(@Body User user);
 
-    @FormUrlEncoded
-    @POST("login/{email}/{passwd}")
-    Call<User> getUser(@Field("email") String email,
-                            @Field("passwd") String passwd
-    );
+    @POST("reg")
+    Call<SignUpUser> sign_up(@Body User objT);
+
 
 
 //    @GET("login/{email}")
