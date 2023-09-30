@@ -35,7 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity {
 
 
-    static final String BASE_URL = "http://192.168.52.107:3000/user/api/";
+    static final String BASE_URL = "http://192.168.43.118:3000/user/api/";
 
     TextView tvSignup;
 
@@ -51,8 +51,6 @@ public class LoginActivity extends AppCompatActivity {
     String TAG = "zzz";
 
     private ProgressDialog progressDialog;
-
-    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         tilpass = findViewById(R.id.til_pass);
 
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        id = sharedPreferences.getString("id","");
+
 
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,9 +97,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (id != null){
+        SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
+        String id = sharedPreferences.getString("id","");
+        Log.e(TAG, "onStart: " + id );
+        if (!id.equalsIgnoreCase("")){
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
         }
     }
 
