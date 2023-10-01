@@ -35,7 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity {
 
 
-    static final String BASE_URL = "http://192.168.43.118:3000/user/api/";
+    static final String BASE_URL = "http://192.168.1.9:3000/user/api/";
 
     TextView tvSignup;
 

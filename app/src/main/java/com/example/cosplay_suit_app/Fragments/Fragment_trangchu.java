@@ -33,7 +33,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Fragment_trangchu extends Fragment {
-    static final String BASE_URL = "http://192.168.68.102:3000/product/";
+    static final String BASE_URL = "http://192.168.1.9:3000/product/";
 
     RecyclerView rcv1,rcv_2,rcv_3;
     List<DTO_SanPham> mlist;
