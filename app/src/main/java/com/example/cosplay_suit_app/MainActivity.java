@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.cosplay_suit_app.Fragments.Fragment_chat;
-import com.example.cosplay_suit_app.Fragments.Fragment_taikhoan;
+import com.example.cosplay_suit_app.Fragments.Fragment_profile;
 import com.example.cosplay_suit_app.Fragments.Fragment_trangchu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 if (id == R.id.nav_trangchu){
                     ralaceFragment(Fragment_trangchu.newInstance());
                 } else if (id == R.id.nav_taikhoan) {
-                    ralaceFragment(Fragment_taikhoan.newInstance());
+                    ralaceFragment(Fragment_profile.newInstance());
                 }else if(id == R.id.nav_tinnhan){
                     ralaceFragment(Fragment_chat.newInstance());
                 }else{
