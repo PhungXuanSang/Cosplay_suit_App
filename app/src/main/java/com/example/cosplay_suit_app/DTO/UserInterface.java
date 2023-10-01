@@ -15,16 +15,22 @@ import retrofit2.http.Query;
 
 public interface UserInterface {
 
-    @Headers({
-            "Content-Type: application/json",
-            "Accept: application/json",
-    })
+//    @Headers({
+//            "Content-Type: application/json",
+//            "Accept: application/json",
+//    })
 
     @POST("login")
     Call<LoginUser> login(@Body User user);
 
     @POST("reg")
     Call<SignUpUser> sign_up(@Body User objT);
+
+    @PUT("regapp/{id_user}")
+    Call<User> udate_role(@Path("id_user") String id_user,@Body User objT);
+
+    @POST("shop/add")
+    Call<Shop> new_shop(@Body Shop shop);
 
 
 

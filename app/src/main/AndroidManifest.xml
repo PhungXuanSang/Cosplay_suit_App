@@ -37,6 +37,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".Activity.RegisterShopActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
