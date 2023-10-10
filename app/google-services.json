@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "166518530190",
+    "project_id": "duantotnghiepcosplaysuit",
+    "storage_bucket": "duantotnghiepcosplaysuit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166518530190:android:a30b3ffc3779b2426869df",
+        "android_client_info": {
+          "package_name": "com.example.cosplay_suit_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN4l6e4dCVjzXii1P0ID5Y2VfYCfEqq80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
