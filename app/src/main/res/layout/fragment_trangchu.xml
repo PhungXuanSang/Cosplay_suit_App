@@ -1,59 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@drawable/bg4"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-    </ImageView>
+        />
 
     <ImageView
         android:id="@+id/ic_giohang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bag_shopping_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/giohang"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        />
 
     <ImageView
         android:id="@+id/ic_taikhoan"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="372dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:src="@drawable/account_1"
-        app:layout_constraintBottom_toBottomOf="@+id/ic_giohang"
-        app:layout_constraintStart_toStartOf="@+id/ic_giohang" />
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"/>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/id_layoutImage"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:backgroundTint="#5EAFED"
-        app:cardCornerRadius="15dp"
-
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="0.5">
+        android:id="@+id/cartsearch"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        app:cardCornerRadius="10dp"
+        android:layout_marginTop="110dp"
+        android:layout_centerHorizontal="true">
 
         <SearchView
             android:id="@+id/sv_pro"
@@ -61,107 +42,236 @@
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:padding="2dp" />
+
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textView5"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="0.5" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Categories"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:layout_below="@+id/cartsearch"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See all"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_below="@+id/cartsearch"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"/>
+    <TableLayout
+        android:id="@+id/tableid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Categries"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5">
+        android:layout_below="@+id/cartsearch"
+        android:layout_marginTop="40dp">
+        <TableRow
+            android:padding="5dp">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    android:layout_margin="2dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+                        <ImageView
+                            android:id="@+id/img_manga"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/manga"
+                            android:layout_centerHorizontal="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Manga"
+                            android:textStyle="bold"
+                            android:textSize="10dp"
+                            android:layout_below="@+id/img_manga"
+                            android:layout_marginTop="10dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
 
-    </TextView>
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    android:layout_margin="2dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+                        <ImageView
+                            android:id="@+id/img_game"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/game"
+                            android:layout_centerHorizontal="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Game"
+                            android:textStyle="bold"
+                            android:textSize="10dp"
+                            android:layout_below="@+id/img_game"
+                            android:layout_marginTop="10dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_1"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_margin="7dp"
-        android:layout_weight="1"
-        android:background="#FDF3F3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.0" />
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    android:layout_margin="2dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+                        <ImageView
+                            android:id="@+id/img_movie"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/movie"
+                            android:layout_centerHorizontal="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Movie"
+                            android:textStyle="bold"
+                            android:textSize="10dp"
+                            android:layout_below="@+id/img_movie"
+                            android:layout_marginTop="10dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
 
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    android:layout_margin="2dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+                        <ImageView
+                            android:id="@+id/img_festival"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/festival"
+                            android:layout_centerHorizontal="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Festival"
+                            android:textStyle="bold"
+                            android:textSize="10dp"
+                            android:layout_below="@+id/img_festival"
+                            android:layout_marginTop="10dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+        </TableRow>
+    </TableLayout>
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tv_trending"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Trending"
-        android:textSize="20dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/rcv2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rcv_1"
-        app:layout_constraintVertical_bias="0.0">
-
-    </TextView>
+        android:textSize="22dp"
+        android:layout_below="@+id/tableid"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv2"
+        android:id="@+id/rcv_trending"
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:layout_margin="7dp"
+        android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="#FDF3F3"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.538"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.5" />
-
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        android:layout_below="@+id/tv_trending"/>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/black"
+        android:layout_below="@+id/rcv_trending"/>
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tv_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Other"
-        android:textSize="20dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/rcv3"
-        app:layout_constraintEnd_toStartOf="@+id/rcv3"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rcv2"
-        app:layout_constraintVertical_bias="0.5">
-
-    </TextView>
+        android:textSize="22dp"
+        android:layout_below="@+id/rcv_trending"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="7dp"
+        android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="#FDF3F3"
         app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.538"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:spanCount="2" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:spanCount="2"
+        android:layout_below="@+id/tv_other"
+        />
+</RelativeLayout>
