@@ -40,6 +40,9 @@
         <activity
             android:name=".Activity.RegisterShopActivity"
             android:exported="false" />
+        <activity
+            android:name=".Activity.Chitietsanpham"
+            android:exported="false" />
     </application>
 
 </manifest>
