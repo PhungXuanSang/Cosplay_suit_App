@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.R;
 
@@ -47,6 +48,19 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Adapter_SanPham.ItemViewHolder viewHolder = (Adapter_SanPham.ItemViewHolder) holder;
         viewHolder.tv_nameSanPham.setText(sanPham.getNameproduct());
         Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
+        viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, Chitietsanpham.class);
+                intent.putExtra("id_product", sanPham.getId());
+                intent.putExtra("name", sanPham.getNameproduct());
+                intent.putExtra("price", sanPham.getPrice());
+                intent.putExtra("image", sanPham.getImage());
+                intent.putExtra("about", sanPham.getDescription());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -56,6 +70,7 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView tv_nameSanPham;
         ImageView img_AnhSp;
+        LinearLayout ll_chitietsp;
 
 
         public ItemViewHolder(View view) {
@@ -63,6 +78,7 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             tv_nameSanPham = view.findViewById(R.id.tv_nameSp);
             img_AnhSp = view.findViewById(R.id.anh_sp);
+            ll_chitietsp = view.findViewById(R.id.id_chitietsp);
 
         }
 

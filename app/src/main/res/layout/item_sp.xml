@@ -6,6 +6,7 @@
     app:cardCornerRadius="10dp"
     android:layout_margin="20dp"
     android:orientation="vertical"
+    android:id="@+id/id_chitietsp"
     >
     <ImageView
         android:id="@+id/anh_sp"
