@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="Trang chủ" android:id="@+id/nav_trangchu"
         android:icon="@drawable/home_24"/>
-    <item android:title="Tài Khoản" android:id="@+id/nav_taikhoan"
-        android:icon="@drawable/taikhoan"/>
     <item android:title="Tin Nhắn" android:id="@+id/nav_tinnhan"
         android:icon="@drawable/ic_chat"/>
+    <item android:title="Tài Khoản" android:id="@+id/nav_taikhoan"
+        android:icon="@drawable/taikhoan"/>
 </menu>

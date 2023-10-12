@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
-    android:layout_margin="20dp"
-    android:orientation="vertical"
+    android:layout_margin="8dp"
     android:id="@+id/id_chitietsp"
     >
-    <ImageView
-        android:id="@+id/anh_sp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_weight="1"
-        android:src="@drawable/account_1" />
-
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/anh_sp"
+            android:layout_width="160dp"
+            android:layout_height="170dp"
+            android:src="@drawable/account_1" />
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:layout_weight="8"
             android:orientation="horizontal"
-            android:layout_gravity="center"
-            >
-
+            android:layout_below="@+id/anh_sp"
+            android:background="#ccc">
             <TextView
-                android:gravity="center"
-                android:layout_gravity="center"
                 android:id="@+id/tv_nameSp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
                 android:text="name"
-                android:textSize="20sp" />
-
-
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
+            <ImageView
+                android:id="@+id/img_favorite"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/favorite"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"/>
         </LinearLayout>
+    </RelativeLayout>
 
-
-
-
-
-
-</LinearLayout>
+</androidx.cardview.widget.CardView>
