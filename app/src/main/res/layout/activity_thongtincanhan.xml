@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.thongtincanhan">
+
+    <!-- Ảnh đại diện -->
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ttcn_avatar"
+        android:contentDescription="Profile Image" />
+
+    <!-- Tên người dùng -->
+
+    <!-- Thông tin cá nhân -->
+    <TextView
+        android:id="@+id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Tên người dùng"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/personalInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usernameText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:text="Thông tin cá nhân"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/personalInfoText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="352dp"
+        android:layout_marginBottom="491dp"
+        android:text="SDT:" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="320dp"
+        android:layout_marginBottom="492dp"
+        android:text="[]" />
+
+    <TextView
+        android:layout_width="41dp"
+        android:layout_height="24dp"
+        android:layout_below="@+id/personalInfoText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="67dp"
+        android:layout_marginEnd="340dp"
+        android:layout_marginBottom="446dp"
+        android:text="Email:" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="320dp"
+        android:layout_marginBottom="451dp"
+        android:text="[]" />
+
+    <TextView
+        android:layout_width="52dp"
+        android:layout_height="22dp"
+        android:layout_below="@+id/personalInfoText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="107dp"
+        android:layout_marginEnd="329dp"
+        android:layout_marginBottom="408dp"
+        android:text="Adress:" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="319dp"
+        android:layout_marginBottom="412dp"
+        android:text="[]" />
+
+    <!-- Các nút chức năng khác có thể được thêm vào dưới đây -->
+</RelativeLayout>
