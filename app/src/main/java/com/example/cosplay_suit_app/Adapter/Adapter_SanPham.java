@@ -14,6 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -70,7 +71,7 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView tv_nameSanPham;
         ImageView img_AnhSp;
-        LinearLayout ll_chitietsp;
+        CardView ll_chitietsp;
 
 
         public ItemViewHolder(View view) {
