@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.SanPhamInterface;
@@ -45,7 +46,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Chitietsanpham extends AppCompatActivity {
-    static final String BASE_URL = "http://192.168.68.106:3000/product/";
+    static String url = API.URL;
+    static final String BASE_URL = url + "/product/";
 
     String TAG = "chitietsp";
     ImageView img_backsp, img_pro;
@@ -181,15 +183,15 @@ public class Chitietsanpham extends AppCompatActivity {
         });
 
         // Hiển thị dữ liệu trong dialog
-        ImageView img_pro = dialogView.findViewById(R.id.img_pro);
-        TextView tv_name = dialogView.findViewById(R.id.tv_name);
-        TextView tv_price = dialogView.findViewById(R.id.tv_price);
-        TextView tv_about = dialogView.findViewById(R.id.tv_about);
+//        ImageView img_pro = dialogView.findViewById(R.id.img_pro);
+//        TextView tv_name = dialogView.findViewById(R.id.tv_name);
+//        TextView tv_price = dialogView.findViewById(R.id.tv_price);
+//        TextView tv_about = dialogView.findViewById(R.id.tv_about);
 
-        Glide.with(context).load(imageproduct).centerCrop().into(img_pro);
-        tv_name.setText("Tên: " + nameproduct);
-        tv_price.setText("Giá: " + priceproduct + "đ");
-        tv_about.setText("About: " + about);
+//        Glide.with(context).load(imageproduct).centerCrop().into(img_pro);
+//        tv_name.setText("Tên: " + nameproduct);
+//        tv_price.setText("Giá: " + priceproduct + "đ");
+//        tv_about.setText("About: " + about);
 
         // Hiển thị dialog
         dialog.show();

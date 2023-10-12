@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.LoginUser;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.DTO.UserInterface;
@@ -34,8 +35,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
-
-    static final String BASE_URL = "http://192.168.68.106:3000/user/api/";
+    static String url = API.URL;
+    static final String BASE_URL = url + "/user/api/";
 
     TextView tvSignup;
 

@@ -35,17 +35,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- ImageView mới nằm ở góc trên cùng bên trái -->
-<!--                <ImageView-->
-<!--                    android:id="@+id/img_backsp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:src="@drawable/ic_back"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-                <!-- Đặt các thành phần của ConstraintLayout ở đây -->
-
                 <TextView
                     android:id="@+id/tv_name"
                     android:layout_width="0dp"
