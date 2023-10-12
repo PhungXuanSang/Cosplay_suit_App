@@ -5,11 +5,15 @@ import static java.security.AccessController.getContext;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,50 +157,45 @@ public class Chitietsanpham extends AppCompatActivity {
         });
 
     }
+public static void showDialog(Context context, String idproduct, String nameproduct, int priceproduct, String imageproduct, String about) {
+    Dialog dialog = new Dialog(context);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    dialog.setContentView(R.layout.dialog_productdetail);
 
+    // Hiển thị tên sản phẩm
+    TextView tv_name = dialog.findViewById(R.id.tv_name);
+    tv_name.setText("name: " + nameproduct);
 
-    public static void showDialog(Context context, String idproduct, String nameproduct, int priceproduct, String imageproduct, String about) {
-        // Tạo một AlertDialog.Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    // Hiển thị giá sản phẩm
+    TextView tv_price = dialog.findViewById(R.id.tv_price);
+    tv_price.setText("price: " + priceproduct + " VNĐ");
 
-        // Sử dụng LayoutInflater để nạp layout dialog
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_productdetail, null);
-        builder.setView(dialogView);
+    // Hiển thị thông tin sản phẩm
+    TextView tv_about = dialog.findViewById(R.id.tv_about);
+    tv_about.setText("about: " + about);
 
-        // Thiết lập kích thước dialog để tràn màn hình
-        AlertDialog dialog = builder.create();
-        dialog.show(); // Hiển thị dialog trước khi thiết lập kích thước
-        Window window = dialog.getWindow();
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    Window window = dialog.getWindow();
+    WindowManager.LayoutParams layoutParams = window.getAttributes();
 
+    // Chiều rộng full màn hình
+    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
+    // Đặt vị trí của dialog ở phía dưới cùng của màn hình
+    layoutParams.gravity = Gravity.BOTTOM;
 
+    // Lấy chiều cao màn hình
+    WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    Display display = windowManager.getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    int screenHeight = size.y;
 
-        // Tùy chỉnh các thuộc tính của dialog
-        builder.setTitle("Tiêu đề dialog");
-        builder.setPositiveButton("Đồng ý", (dialogInterface, which) -> {
-            // Xử lý khi người dùng nhấn nút Đồng ý
-        });
-        builder.setNegativeButton("Hủy", (dialogInterface, which) -> {
-            // Xử lý khi người dùng nhấn nút Hủy
-        });
+    // Đặt chiều dài của dialog thành 75% chiều cao màn hình
+    layoutParams.height = (int) (0.75 * screenHeight);
 
-        // Hiển thị dữ liệu trong dialog
-//        ImageView img_pro = dialogView.findViewById(R.id.img_pro);
-//        TextView tv_name = dialogView.findViewById(R.id.tv_name);
-//        TextView tv_price = dialogView.findViewById(R.id.tv_price);
-//        TextView tv_about = dialogView.findViewById(R.id.tv_about);
+    window.setAttributes(layoutParams);
+    window.setBackgroundDrawableResource(android.R.color.transparent);
 
-//        Glide.with(context).load(imageproduct).centerCrop().into(img_pro);
-//        tv_name.setText("Tên: " + nameproduct);
-//        tv_price.setText("Giá: " + priceproduct + "đ");
-//        tv_about.setText("About: " + about);
-
-        // Hiển thị dialog
-        dialog.show();
-    }
-
-
-
+    dialog.show();
+}
 }
