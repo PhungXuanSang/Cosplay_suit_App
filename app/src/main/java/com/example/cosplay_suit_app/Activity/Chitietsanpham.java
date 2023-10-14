@@ -59,7 +59,7 @@ public class Chitietsanpham extends AppCompatActivity {
     TextView  tv_price, tv_name;
     ArrayList<DTO_SanPham> mlist;
     Adapter_SanPham adapter;
-    RecyclerView rcv_5;
+    RecyclerView rcv_5,rcv_bl;
 
     String idproduct,nameproduct, imageproduct;
     int  priceproduct;
@@ -91,11 +91,13 @@ public class Chitietsanpham extends AppCompatActivity {
 
 
 
-        rcv_5 =findViewById(R.id.rcv_5);
-        mlist = new ArrayList<DTO_SanPham>();
-        adapter = new Adapter_SanPham(mlist, Chitietsanpham.this);
-        rcv_5.setAdapter(adapter);
-        GetListSanPham();
+//        rcv_5 =findViewById(R.id.rcv_5);
+//        mlist = new ArrayList<DTO_SanPham>();
+//        adapter = new Adapter_SanPham(mlist, Chitietsanpham.this);
+//        rcv_5.setAdapter(adapter);
+//        GetListSanPham();
+
+
 
         TextView tv_product = findViewById(R.id.tv_product);
         tv_product.setOnClickListener(new View.OnClickListener() {
