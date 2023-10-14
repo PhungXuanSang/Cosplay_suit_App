@@ -59,6 +59,7 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("price", sanPham.getPrice());
                 intent.putExtra("image", sanPham.getImage());
                 intent.putExtra("about", sanPham.getDescription());
+                intent.putExtra("slkho", sanPham.getAmount());
                 context.startActivity(intent);
             }
         });

@@ -167,7 +167,7 @@
         android:textSize="15dp" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_"
+        android:id="@+id/btn_addcart"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:background="@drawable/my_button_bg4"

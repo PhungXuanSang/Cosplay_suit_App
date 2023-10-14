@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.Activity.RegisterShopActivity;
+import com.example.cosplay_suit_app.Package_bill.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
 
 public class Fragment_profile extends Fragment {
@@ -24,7 +25,7 @@ public class Fragment_profile extends Fragment {
 
     private ImageView img_profile;
 
-    private TextView tv_dky_shop;
+    private TextView tv_dky_shop, tv_donhangmua;
     private Button btn_login_profile;
 
     String username_u;
@@ -50,6 +51,15 @@ public class Fragment_profile extends Fragment {
         btn_login_profile = view.findViewById(R.id.btn_login_profile);
         tv_dky_shop = view.findViewById(R.id.tv_dky_shop);
         img_profile = view.findViewById(R.id.img_profile);
+        tv_donhangmua = view.findViewById(R.id.donhangmua);
+
+        tv_donhangmua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Collection_adapter_bill.class);
+                startActivity(intent);
+            }
+        });
 
         btn_login_profile.setOnClickListener(new View.OnClickListener() {
             @Override

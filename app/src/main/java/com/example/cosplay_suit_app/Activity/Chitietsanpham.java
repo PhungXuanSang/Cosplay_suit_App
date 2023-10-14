@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -62,6 +63,7 @@ public class Chitietsanpham extends AppCompatActivity {
 
     String idproduct,nameproduct, imageproduct;
     int  priceproduct;
+    static int slkho;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -74,7 +76,7 @@ public class Chitietsanpham extends AppCompatActivity {
         idproduct = intent.getStringExtra("id_product");
         nameproduct = intent.getStringExtra("name");
         priceproduct = intent.getIntExtra("price",0);
-
+        slkho = intent.getIntExtra("slkho", 0);
         imageproduct = intent.getStringExtra("image");
         Glide.with(Chitietsanpham.this).load(imageproduct).centerCrop().into(img_pro);
         tv_name.setText("Tên: " + nameproduct);
@@ -157,45 +159,88 @@ public class Chitietsanpham extends AppCompatActivity {
         });
 
     }
-public static void showDialog(Context context, String idproduct, String nameproduct, int priceproduct, String imageproduct, String about) {
-    Dialog dialog = new Dialog(context);
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    dialog.setContentView(R.layout.dialog_productdetail);
+    public static void showDialog(Context context, String idproduct, String nameproduct, int priceproduct, String imageproduct, String about) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_productdetail);
 
-    // Hiển thị tên sản phẩm
-    TextView tv_name = dialog.findViewById(R.id.tv_name);
-    tv_name.setText("name: " + nameproduct);
+        // Hiển thị tên sản phẩm
+        TextView tv_name = dialog.findViewById(R.id.tv_name);
+        tv_name.setText("name: " + nameproduct);
 
-    // Hiển thị giá sản phẩm
-    TextView tv_price = dialog.findViewById(R.id.tv_price);
-    tv_price.setText("price: " + priceproduct + " VNĐ");
+        // Hiển thị giá sản phẩm
+        TextView tv_price = dialog.findViewById(R.id.tv_price);
+        tv_price.setText("price: " + priceproduct + " VNĐ");
 
-    // Hiển thị thông tin sản phẩm
-    TextView tv_about = dialog.findViewById(R.id.tv_about);
-    tv_about.setText("about: " + about);
+        // Hiển thị thông tin sản phẩm
+        TextView tv_about = dialog.findViewById(R.id.tv_about);
+        tv_about.setText("about: " + about);
 
-    Window window = dialog.getWindow();
-    WindowManager.LayoutParams layoutParams = window.getAttributes();
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
 
-    // Chiều rộng full màn hình
-    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
-    // Đặt vị trí của dialog ở phía dưới cùng của màn hình
-    layoutParams.gravity = Gravity.BOTTOM;
+        // Đặt vị trí của dialog ở phía dưới cùng của màn hình
+        layoutParams.gravity = Gravity.BOTTOM;
 
-    // Lấy chiều cao màn hình
-    WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    Display display = windowManager.getDefaultDisplay();
-    Point size = new Point();
-    display.getSize(size);
-    int screenHeight = size.y;
+        // Lấy chiều cao màn hình
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenHeight = size.y;
 
-    // Đặt chiều dài của dialog thành 75% chiều cao màn hình
-    layoutParams.height = (int) (0.75 * screenHeight);
+        // Đặt chiều dài của dialog thành 75% chiều cao màn hình
+        layoutParams.height = (int) (0.75 * screenHeight);
 
-    window.setAttributes(layoutParams);
-    window.setBackgroundDrawableResource(android.R.color.transparent);
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
 
-    dialog.show();
-}
+        //Thêm sản phẩm vào giỏ hàng
+        Button btnaddcart = dialog.findViewById(R.id.btn_addcart);
+        btnaddcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogAddcart(context, priceproduct, slkho, imageproduct);
+            }
+        });
+
+        dialog.show();
+    }
+
+    public static void dialogAddcart(Context context, int priceproduct, int slkho, String imageproduct){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_addcart);
+
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+        // Hiển thị giá sản phẩm
+        TextView tvgiasp = dialog.findViewById(R.id.tv_giasp);
+        tvgiasp.setText(+ priceproduct + " VNĐ");
+
+        // Hiển thị số lượng sản phẩm
+        TextView tvslkho = dialog.findViewById(R.id.tv_slkho);
+        tvslkho.setText("WareHouse: " + slkho);
+
+        // Hiển thị image sản phẩm
+        ImageView imgsp = dialog.findViewById(R.id.imgproduct);
+        Glide.with(context).load(imageproduct).centerCrop().into(imgsp);
+
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao theo dialog màn hình
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        // Đặt vị trí của dialog ở phía dưới cùng của màn hình
+        layoutParams.gravity = Gravity.BOTTOM;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialog.show();
+    }
 }
