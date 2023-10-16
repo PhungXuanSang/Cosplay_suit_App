@@ -9,11 +9,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageView
-            android:background="#F3EDED"
             android:id="@+id/img_pro"
             android:layout_width="match_parent"
             android:layout_height="299dp"
+            android:background="#33F1DFDF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +26,6 @@
             android:src="@drawable/ic_back"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/img_bl"
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
         <TextView
-            android:text="Mạnh đẹp zai"
+            android:text="                              "
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,11 +81,12 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/tv_vnd"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:text="vnđ" />
+                android:text="   " />
         </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"
@@ -104,78 +105,84 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
                 <TextView
+                    android:background="#DDDADA"
                     android:id="@+id/id_comment"
-                    android:text="Chưa có đánh giá "
+                    android:text="                                       "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:layout_marginLeft="5dp"
                     android:text="|"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:background="#DDDADA"
+                    android:id="@+id/id_daban"
                     android:layout_marginLeft="4dp"
-                    android:text="Đã bán "
+                    android:text="                                                     "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:text="10"
                     android:id="@+id/id_bought"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/id_li"
+                android:layout_margin="10dp"
+                android:background="#DDDADA"
                 android:layout_gravity="center"
                 android:gravity="right"
                 android:layout_weight="2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="20dp">
 
                 <ImageView
+                    android:background="#DDDADA"
                     android:id="@+id/img_favorite"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:src="@drawable/ic_no_favorite_24" />
+                    android:layout_marginRight="4dp" />
                 <ImageView
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:src="@drawable/icc_comment_24"
                     android:id="@+id/img_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <ImageView
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_share_24"
                     android:id="@+id/img_share"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
         <TextView
+            android:background="#DDDADA"
+            android:text="                                "
             android:id="@+id/tv_product"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="sans-serif"
-            android:text="Product Details - >>"
             android:textSize="17dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/id_linear_all" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_product"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/item_binh_luan"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:background="#33F1DFDF"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_product"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_binh_luan"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="10dp"
-    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
     android:id="@+id/id_chitietsp"
     >
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <androidx.cardview.widget.CardView
+        android:outlineSpotShadowColor="@color/black"
+        android:outlineAmbientShadowColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        android:background="#ffffff"
+        android:layout_margin="8dp">
         <ImageView
+            android:layout_gravity="center"
             android:id="@+id/anh_sp"
-            android:layout_width="160dp"
-            android:layout_height="170dp"
-            android:src="@drawable/account_1" />
+            android:layout_width="170dp"
+            android:layout_height="190dp" />
         <LinearLayout
-            android:layout_width="160dp"
+            android:background="#26000000"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/anh_sp"
-            android:background="#ccc">
+            android:layout_gravity="center_horizontal|bottom">
             <TextView
-                android:id="@+id/tv_nameSp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:text="name"
-                android:textSize="15dp"
+                android:text="manh dep zai"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="20dp"
+                android:gravity="center"
                 android:textStyle="bold"
-                android:textColor="@color/white"/>
-            <ImageView
-                android:id="@+id/img_favorite"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/favorite"
+                android:textColor="@color/white"
                 android:layout_gravity="center"
-                android:layout_margin="2dp"/>
+                android:id="@+id/tv_nameSp"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"/>
         </LinearLayout>
-    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
-</androidx.cardview.widget.CardView>
+
+
+</FrameLayout>

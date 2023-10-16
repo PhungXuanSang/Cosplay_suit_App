@@ -5,10 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -63,7 +60,8 @@ public class Fragment_trangchu extends Fragment {
         rcv_3 = viewok.findViewById(R.id.rcv3);
 
         mlist = new ArrayList<DTO_SanPham>();
-        arrayAdapter = new Adapter_SanPham(mlist,getContext());
+        arrayAdapter = new Adapter_SanPham(getContext());
+        arrayAdapter.updateData(mlist);
         rcv_3.setAdapter(arrayAdapter);
         GetListSanPham();
         return viewok;
