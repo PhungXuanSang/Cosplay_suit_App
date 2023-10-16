@@ -1,6 +1,9 @@
 package com.example.cosplay_suit_app.DTO;
 
+import com.google.gson.annotations.SerializedName;
+
 public class DTO_SanPham {
+    @SerializedName("_id")
     String id;
     String id_shop,id_category,nameproduct,amount,image,description,time_product;
     int price;

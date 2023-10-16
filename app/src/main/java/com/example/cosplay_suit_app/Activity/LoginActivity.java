@@ -20,11 +20,15 @@ import com.example.cosplay_suit_app.DTO.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout tillogin;
     private TextInputLayout tilpass;
+    FirebaseAuth auth;
+    FirebaseDatabase database;
 
 
     int temp = 0;
@@ -58,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+
         progressDialog = new ProgressDialog(this);
 
         tvSignup = findViewById(R.id.tv_signup);
@@ -68,7 +76,9 @@ public class LoginActivity extends AppCompatActivity {
         tillogin = findViewById(R.id.til_login);
         tilpass = findViewById(R.id.til_pass);
 
+        auth = FirebaseAuth.getInstance();
 
+        database = FirebaseDatabase.getInstance();
 
 
         findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
@@ -131,7 +141,11 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, dto.getMessage(), Toast.LENGTH_SHORT).show();
                     if (dto.getUser() != null){
                         Log.e(TAG, "onResponse: " + dto.getUser().getEmail() );
-                        remenber(dto.getUser().getId(),dto.getUser().getFullname(),dto.getUser().getPasswd(),dto.getUser().getEmail(),dto.getUser().getPhone());
+                        remenber(dto.getUser().getId(),dto.getUser().getFullname(),dto.getUser().getPasswd(),dto.getUser().getEmail(),dto.getUser().getPhone(),dto.getUser().getRole());
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("id", dto.getUser().getId());
+                        map.put("fullname", dto.getUser().getFullname());
+                        database.getReference().child("Users").child(dto.getUser().getId()).setValue(map);
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finishAffinity();
                     }
@@ -154,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    public void remenber(String id, String fullname,  String passwd, String email , String phone){
+    public void remenber(String id, String fullname,  String passwd, String email , String phone,String role){
         SharedPreferences preferences = getSharedPreferences("User",MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -163,6 +177,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("passwd",passwd);
         editor.putString("email",email);
         editor.putString("phone",phone);
+        editor.putString("role",role);
         editor.apply();
     }
 

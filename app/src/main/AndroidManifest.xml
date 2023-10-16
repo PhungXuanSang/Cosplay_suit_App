@@ -20,9 +20,6 @@
             android:name=".Package_bill.Collection_adapter_bill"
             android:exported="false" />
         <activity
-            android:name=".Activity.ProductDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activity.thongtincanhan"
             android:exported="false" />
         <activity

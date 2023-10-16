@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/ic_giohang"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/giohang"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
@@ -30,9 +30,9 @@
 
             <ImageView
                 android:id="@+id/ic_taikhoan"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/account_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_account_circle_24"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_alignParentRight="true"/>
@@ -278,13 +278,15 @@
                 android:id="@+id/rcv3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_below="@+id/tv_other"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:background="#FDF3F3"
                 app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                app:spanCount="2"
-                android:layout_below="@+id/tv_other"
-                />
+                app:spanCount="2" />
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
