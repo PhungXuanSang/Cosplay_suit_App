@@ -30,7 +30,26 @@ public class Collection_adapter_bill extends AppCompatActivity {
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         // thiết lập tiêu đề tab
                         tab.setText( "Tab thứ ... " + position );
-
+                        switch (position){
+                            case 0:
+                                tab.setText("Chờ xác nhận");
+                                break;
+                            case 1:
+                                tab.setText("Chờ lấy hàng");
+                                break;
+                            case 2:
+                                tab.setText("Đang giao");
+                                break;
+                            case 3:
+                                tab.setText("Đã giao");
+                                break;
+                            case 4:
+                                tab.setText("Đã hủy");
+                                break;
+                            case 5:
+                                tab.setText("Trả hàng");
+                                break;
+                        }
                         // muốn tùy chỉnh riêng cho từng tab: thì dùng swich case để kiểm tra postion và tùy chỉnh.
                     }
                 });

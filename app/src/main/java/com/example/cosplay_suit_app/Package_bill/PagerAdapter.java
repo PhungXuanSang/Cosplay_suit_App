@@ -30,18 +30,7 @@ public class PagerAdapter extends FragmentStateAdapter {
             case 5:
                 return new Fragment_trahang();
             default:
-                if(position % 2 >0)
-                    return new Fragment_dagiao();
-                else if(position % 2 >0)
-                    return new Fragment_danggiao();
-                else if(position % 2 >0)
-                    return new Fragment_xacnhan();
-                else if(position % 2 >0)
-                    return new Fragment_layhang();
-                else if(position % 2 >0)
-                    return new Fragment_trahang();
-                else
-                    return new Fragment_xacnhan();
+                return new Fragment_xacnhan();
         }
     }
 
