@@ -2,17 +2,38 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="500dp"
-    android:layout_margin="10dp"
+
+
     android:layout_gravity="center"
     tools:context=".Activity.LoginActivity"
-    android:background="@drawable/bg_register">
+   >
 
+
+
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageView1"
+        android:scaleType="center"
+        android:src="@drawable/bgregistershop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_border_color="#333333"
+        app:riv_border_width="1dip"
+        app:riv_corner_radius="20dp"
+        app:riv_mutate_background="true"
+
+        app:riv_tile_mode="clamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <LinearLayout
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="26dp"
         android:orientation="horizontal"
         android:id="@+id/id_linear1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,13 +44,13 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:gravity="center"
             android:id="@+id/t_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="Register Shop"
             android:textColor="@color/white"
-            android:textSize="24dp"
+            android:textSize="26dp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -38,12 +59,12 @@
         android:id="@+id/tv_nameshop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="44dp"
         android:text="Enter your name shop"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id_linear1" />
 
@@ -118,16 +139,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_register_shop"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:backgroundTint="@color/white"
+        android:background="@drawable/btn_register"
         android:gravity="center"
-        android:text="Sign Up"
+        android:text="Register"
         android:textAllCaps="false"
-        android:textColor="#000000"
+        android:textColor="#020202"
         android:textSize="25dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
