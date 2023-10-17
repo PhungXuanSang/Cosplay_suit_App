@@ -107,62 +107,14 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("image", sanPham.getImage());
                 intent.putExtra("about", sanPham.getDescription());
                 intent.putExtra("slkho", sanPham.getAmount());
+                intent.putExtra("id_shop",sanPham.getId_shop());
+                intent.putExtra("time_product",sanPham.getTime_product());
+                intent.putExtra("id_category",sanPham.getId_category());
+
                 context.startActivity(intent);
             }
         });
-        SharedPreferences sharedPreferences = context.getSharedPreferences("User", context.MODE_PRIVATE);
-        id = sharedPreferences.getString("id", "");
 
-        if (!id.equalsIgnoreCase("")){
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(id).child("Favorites").child(sanPham.getId())
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Log.e("bl", "My: " + snapshot.exists());
-                            isMyFavorite = snapshot.exists();
-//                            if (isMyFavorite){
-//                                viewHolder.img_favorite.setImageResource(R.drawable.favorite_24);
-//                            }else{
-//                                viewHolder.img_favorite.setImageResource(R.drawable.no_favorite_24);
-//                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-        }
-
-//        viewHolder.img_favorite.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!id.equalsIgnoreCase("")){
-//                    if (isMyFavorite){
-//                        removeToFavorite(context,sanPham.getId());
-//                    }else{
-//                       addToFavorite(context,sanPham.getId());
-//                    }
-//                }else{
-//                    new AlertDialog.Builder(context).setTitle("Notification!!")
-//                            .setMessage("You need to log in to add favorites,Do you want to log in??")
-//                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                    context.startActivity(new Intent(context, LoginActivity.class));
-//                                    dialogInterface.dismiss();
-//                                }
-//                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                    dialogInterface.dismiss();
-//                                }
-//                            }).show();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -244,10 +196,6 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         });
     }
-    void getFavorite(){
-    }
-
-
 
     public void addToFavorite(Context context,String idProduct){
         if (id.equalsIgnoreCase("")){

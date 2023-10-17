@@ -74,13 +74,14 @@ public class Chitietsanpham extends AppCompatActivity {
     Adapter_SanPham adapter;
     RecyclerView rcv_5, rcv_bl;
 
-    String idproduct, nameproduct, imageproduct;
+    String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category;
     BottomSheetDialog bottomSheetDialog;
     Dialog fullScreenDialog;
-    int priceproduct;
+    int priceproduct, slkho;
     boolean isMyFavorite = false;
+    long startTime = System.currentTimeMillis();
+    long elapsedTime;
     String id;
-    static int slkho;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,27 +91,39 @@ public class Chitietsanpham extends AppCompatActivity {
         Log.d(TAG, "onCreate: Đã vào chi tiết sp");
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
+        Intent intent = getIntent();
+        idproduct = intent.getStringExtra("id_product");
+        nameproduct = intent.getStringExtra("name");
+        priceproduct = intent.getIntExtra("price", 0);
+        slkho = intent.getIntExtra("slkho", 0);
+        imageproduct = intent.getStringExtra("image");
+        aboutproduct = intent.getStringExtra("about");
+        id_shop = intent.getStringExtra("id_shop");
+        time_product = intent.getStringExtra("time_product");
+        id_category = intent.getStringExtra("id_category");
         showDialog();
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        loadFavorite();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         Handler handler = new Handler(Looper.getMainLooper());
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                loadFavorite();
 
+            }
+        });
         executorService.execute(new Runnable() {
             @Override
             public void run() {
                 //cong viec background viet o day
                 Anhxa();
-                Intent intent = getIntent();
-                idproduct = intent.getStringExtra("id_product");
-                nameproduct = intent.getStringExtra("name");
-                priceproduct = intent.getIntExtra("price", 0);
-                slkho = intent.getIntExtra("slkho", 0);
-                imageproduct = intent.getStringExtra("image");
-                loadFavorite();
-                TextView tv_product = findViewById(R.id.tv_product);
-                try {
 
-                    Thread.sleep(1500);
+                TextView tv_product = findViewById(R.id.tv_product);
+
+                try {
+                    Log.e(TAG, "run12: " + elapsedTime);
+                    Thread.sleep(elapsedTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -126,6 +139,7 @@ public class Chitietsanpham extends AppCompatActivity {
                         tv_name.setText(" " + nameproduct + " ");
                         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
                         tv_price.setText("" + decimalFormat.format(priceproduct));
+                        Log.e("BL1", "run: " + isMyFavorite);
                         if (isMyFavorite) {
                             img_favorite.setImageResource(R.drawable.favorite_24);
                         } else {
@@ -155,11 +169,24 @@ public class Chitietsanpham extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 if (!id.equalsIgnoreCase("")) {
-//                    if (isMyFavorite) {
-//                        removeToFavorite(context, sanPham.getId());
-//                    } else {
-//                        addToFavorite(context, sanPham.getId());
-//                    }
+                                    if (isMyFavorite) {
+                                        removeFavorite(Chitietsanpham.this, id, idproduct);
+                                    } else {
+                                        DTO_SanPham sanPham = new DTO_SanPham();
+                                        sanPham.setId(idproduct);
+                                        sanPham.setAmount(String.valueOf(slkho));
+                                        sanPham.setDescription(aboutproduct);
+                                        sanPham.setId_category(id_category);
+                                        sanPham.setId_shop(id_shop);
+                                        sanPham.setImage(imageproduct);
+                                        sanPham.setNameproduct(nameproduct);
+                                        sanPham.setPrice(priceproduct);
+                                        sanPham.setTime_product(time_product);
+                                        Favorite favorite = new Favorite();
+                                        favorite.setTb_user(id);
+                                        favorite.setSanPham(sanPham);
+                                        addFavorite(Chitietsanpham.this, favorite);
+                                    }
                                 } else {
                                     new AlertDialog.Builder(Chitietsanpham.this).setTitle("Notification!!")
                                             .setMessage("You need to log in to add favorites,Do you want to log in??")
@@ -184,24 +211,11 @@ public class Chitietsanpham extends AppCompatActivity {
         });
 
 
-
-
-
-
-
-
-
-
 //        rcv_5 =findViewById(R.id.rcv_5);
 //        mlist = new ArrayList<DTO_SanPham>();
 //        adapter = new Adapter_SanPham(mlist, Chitietsanpham.this);
 //        rcv_5.setAdapter(adapter);
 //        GetListSanPham();
-
-
-
-
-
 
 
     }
@@ -214,18 +228,20 @@ public class Chitietsanpham extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
-        Call<Favorite> objT = truyenInterface.list_favorite(id,idproduct);
+        Call<Favorite> objT = truyenInterface.list_favorite(id, idproduct);
 
         objT.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     isMyFavorite = response.isSuccessful();
-                    Log.e("bl", "BL: " + isMyFavorite );
-                }else{
+                    Log.e("bl", "BL: " + isMyFavorite);
+                    elapsedTime = System.currentTimeMillis() - startTime;
+                } else {
                     isMyFavorite = false;
                 }
             }
+
             @Override
             public void onFailure(Call<Favorite> call, Throwable t) {
                 Log.e("bl", "onFailure: " + t.getLocalizedMessage());
@@ -386,7 +402,7 @@ public class Chitietsanpham extends AppCompatActivity {
         Gson gson = new GsonBuilder().setLenient().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL_FAVoRITE)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
@@ -397,9 +413,12 @@ public class Chitietsanpham extends AppCompatActivity {
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
-////                    context.startActivity(new Intent(context, MainActivity.class));
-////                    GetListSanPham();
-//                    updateData(mlist);
+                    loadFavorite();
+                    if (isMyFavorite) {
+                        img_favorite.setImageResource(R.drawable.favorite_24);
+                    } else {
+                        img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
+                    }
                 }
             }
 
@@ -411,11 +430,40 @@ public class Chitietsanpham extends AppCompatActivity {
     }
 
 
+    void removeFavorite(Context context, String tb_user, String tb_product) {
+        Gson gson = new GsonBuilder().setLenient().create();
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_FAVoRITE)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
+        Call<Void> objT = truyenInterface.delete_favorite(tb_user, tb_product);
+
+        objT.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
+                    loadFavorite();
+                    if (isMyFavorite) {
+                        img_favorite.setImageResource(R.drawable.favorite_24);
+                    } else {
+                        img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
+                    }
+                } else {
+                    Log.e("bl", "Remove: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("bl", "onFailure: " + t.getLocalizedMessage());
+            }
+        });
+    }
 
     public void showDialog() {
-
-
 
         fullScreenDialog = new Dialog(Chitietsanpham.this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         fullScreenDialog.setContentView(R.layout.dialog_load_chi_tiet_product);
