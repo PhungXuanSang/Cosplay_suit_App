@@ -1,7 +1,4 @@
 package com.example.cosplay_suit_app.Activity;
-
-import static java.security.AccessController.getContext;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,18 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -32,19 +23,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
+import com.example.cosplay_suit_app.DTO.BillInterface;
+import com.example.cosplay_suit_app.DTO.CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
 import com.example.cosplay_suit_app.DTO.SanPhamInterface;
-import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
@@ -53,7 +42,6 @@ import com.google.gson.GsonBuilder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -67,7 +55,9 @@ public class Chitietsanpham extends AppCompatActivity {
     static String url = API.URL;
     static final String BASE_URL = url + "/product/";
     static final String BASE_URL_FAVoRITE = url + "/user/api/";
-    String TAG = "chitietsp";
+
+    static final String BASE_URL_CARTORDER = url + "/bill/";
+    static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite;
     TextView tv_price, tv_name;
     ArrayList<DTO_SanPham> mlist;
@@ -81,7 +71,7 @@ public class Chitietsanpham extends AppCompatActivity {
     boolean isMyFavorite = false;
     long startTime = System.currentTimeMillis();
     long elapsedTime;
-    String id;
+    static String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,14 +200,10 @@ public class Chitietsanpham extends AppCompatActivity {
             }
         });
 
-
-//        rcv_5 =findViewById(R.id.rcv_5);
+//        rcv_5 = findViewById(R.id.rcv_5);
 //        mlist = new ArrayList<DTO_SanPham>();
 //        adapter = new Adapter_SanPham(mlist, Chitietsanpham.this);
 //        rcv_5.setAdapter(adapter);
-//        GetListSanPham();
-
-
     }
 
     public void loadFavorite() {
@@ -258,48 +244,8 @@ public class Chitietsanpham extends AppCompatActivity {
         img_favorite = findViewById(R.id.img_favorite);
         img_backsp = findViewById(R.id.img_backsp);
     }
-
-    void GetListSanPham() {
-        // tạo gson
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        // sử dụng interface
-        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
-
-        // tạo đối tượng
-        Call<List<DTO_SanPham>> objCall = sanPhamInterface.lay_danh_sach();
-        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
-            @Override
-            public void onResponse(Call<List<DTO_SanPham>> call, Response<List<DTO_SanPham>> response) {
-                if (response.isSuccessful()) {
-
-                    mlist.clear();
-                    mlist.addAll(response.body());
-                    adapter.notifyDataSetChanged();
-                    Log.d("list", "onResponse: " + mlist.size());
-
-                } else {
-                    Toast.makeText(Chitietsanpham.this,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
-                }
-
-//                GetListSanPham();
-            }
-
-            @Override
-            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
-
-            }
-        });
-
-    }
-
-    public void showDialog(Context context, String idproduct, String nameproduct, int priceproduct, String imageproduct, String about) {
+    public void showDialog(Context context, String idproduct, String nameproduct,
+                           int priceproduct, String imageproduct, String about) {
         bottomSheetDialog = new BottomSheetDialog(Chitietsanpham.this);
 
         View view = getLayoutInflater().inflate(R.layout.dialog_productdetail, null);
@@ -355,7 +301,7 @@ public class Chitietsanpham extends AppCompatActivity {
         btnaddcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogAddcart(context, priceproduct, slkho, imageproduct);
+                dialogAddcart(context,idproduct, priceproduct, slkho, imageproduct);
                 bottomSheetDialog.dismiss();
             }
         });
@@ -363,7 +309,8 @@ public class Chitietsanpham extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    public static void dialogAddcart(Context context, int priceproduct, int slkho, String imageproduct) {
+    public void dialogAddcart(Context context,String idproduct,
+                                     int priceproduct, int slkho, String imageproduct) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_addcart);
@@ -383,6 +330,21 @@ public class Chitietsanpham extends AppCompatActivity {
         ImageView imgsp = dialog.findViewById(R.id.imgproduct);
         Glide.with(context).load(imageproduct).centerCrop().into(imgsp);
 
+        //thêm vào giỏ hàng
+        Button btnaddcart = dialog.findViewById(R.id.btndialog_addcart);
+        btnaddcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CartOrder cartOrder = new CartOrder();
+                cartOrder.setId_user(id);
+                cartOrder.setId_product(idproduct);
+                cartOrder.setAmount(1);
+                cartOrder.setProperties("ok");
+
+                AddCart(cartOrder);
+            }
+        });
+
         // Chiều rộng full màn hình
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         // Chiều cao theo dialog màn hình
@@ -397,6 +359,40 @@ public class Chitietsanpham extends AppCompatActivity {
         dialog.show();
     }
 
+    void AddCart(CartOrder objcart){
+        //tạo dđối towngj chuyển đổi kiểu dữ liệu
+        Gson gson = new GsonBuilder().setLenient().create();
+        //Tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl( BASE_URL_CARTORDER )
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        //Khởi tạo Interface
+        BillInterface billInterface = retrofit.create(BillInterface.class);
+        //Tạo Call
+        Call<CartOrder> objCall = billInterface.addcart(objcart);
+
+        //Thực hiệnửi dữ liệu lên server
+        objCall.enqueue(new Callback<CartOrder>() {
+            @Override
+            public void onResponse(Call<CartOrder> call, Response<CartOrder> response) {
+                //Kết quẳ server trả về ở đây
+                if(response.isSuccessful()){
+                    //Lấy kết quar trả về
+                    CartOrder cartOrder = response.body();
+                    Toast.makeText(Chitietsanpham.this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                }else {
+                    Log.d(TAG, "nguyen1: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CartOrder> call, Throwable t) {
+                //Nếu say ra lỗi sẽ thông báo ở đây
+                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
+    }
 
     void addFavorite(Context context, Favorite favorite) {
         Gson gson = new GsonBuilder().setLenient().create();

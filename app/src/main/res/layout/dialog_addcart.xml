@@ -62,12 +62,11 @@
         >
         <TableRow>
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_addcart"
+                android:id="@+id/btndialog_addcart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_button_bg4"
                 android:gravity="center"
-                android:onClick="onClick"
                 android:text="Add Cart"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
