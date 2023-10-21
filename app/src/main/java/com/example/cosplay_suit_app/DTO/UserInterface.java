@@ -32,6 +32,8 @@ public interface UserInterface {
     @POST("shop/add")
     Call<Shop> new_shop(@Body Shop shop);
 
+    @POST("shop/add")
+    Call<SignUpShop> sign_up_shop(@Body Shop objT);
 
 
 //    @GET("login/{email}")

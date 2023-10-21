@@ -35,7 +35,9 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.Activity.RegisterShopActivity;
+import com.example.cosplay_suit_app.Activity.SignUpActivity;
 import com.example.cosplay_suit_app.DTO.Shop;
+import com.example.cosplay_suit_app.DTO.SignUpShop;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.DTO.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
@@ -255,33 +257,38 @@ public class Fragment_profile extends Fragment {
                 .build();
         UserInterface userInterface = retrofit.create(UserInterface.class);
 
-        Call<Shop> objCall = userInterface.new_shop(s);
-        objCall.enqueue(new Callback<Shop>() {
+        Call<SignUpShop> objCall = userInterface.sign_up_shop(s);
+        objCall.enqueue(new Callback<SignUpShop>() {
             @Override
-            public void onResponse(Call<Shop> call, Response<Shop> response) {
-                Shop shop = response.body();
+            public void onResponse(Call<SignUpShop> call, Response<SignUpShop> response) {
+                SignUpShop regisShop = response.body();
 
-                if (response.isSuccessful()){
-
-                    Log.e("zzzzz", "onResponse1: " +shop.getId_user());
-                    Toast.makeText(getContext(), shop.getId(), Toast.LENGTH_SHORT).show();
-
-                }else{
+                if (response.isSuccessful()) {
+                    progressDialog.dismiss();
+                    Log.e("mess", "regisshop: " + regisShop.getResponse());
+                    Toast.makeText(getContext(), regisShop.getResponse()+"", Toast.LENGTH_SHORT).show();
+                    if (regisShop.getShop() != null) {
+                        Log.e("zzzzz", "regisshop: " + regisShop.getShop().getId_user());
+                        Intent intent = new Intent(getContext(), LoginActivity.class);
+                        startActivity(intent);
+                    } else {
 //                    Log.e("zzz", "onResponse: " +signUpUser.getMessage());
 //                    Log.e(TAG, "onResponse: " + response.message());
+                    }
                 }
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<Shop> call, Throwable t) {
-                Toast.makeText(getContext(), "Sign Up Fail", Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
-                Log.e("zzzz", t.getLocalizedMessage());
+                @Override
+                public void onFailure (Call < SignUpShop > call, Throwable t){
+                    Toast.makeText(getContext(), "Sign Up Fail", Toast.LENGTH_SHORT).show();
+                    t.printStackTrace();
+                    Log.e("zzzz", t.getLocalizedMessage());
 
-            }
+                }
+
         });
 
     }
+    }
 
-}
