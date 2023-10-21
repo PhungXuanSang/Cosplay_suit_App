@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,12 +37,20 @@ import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
 import com.example.cosplay_suit_app.DTO.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -81,25 +91,27 @@ public class Chitietsanpham extends AppCompatActivity {
         Log.d(TAG, "onCreate: Đã vào chi tiết sp");
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
-        Intent intent = getIntent();
-        idproduct = intent.getStringExtra("id_product");
-        nameproduct = intent.getStringExtra("name");
-        priceproduct = intent.getIntExtra("price", 0);
-        slkho = intent.getIntExtra("slkho", 0);
-        imageproduct = intent.getStringExtra("image");
-        aboutproduct = intent.getStringExtra("about");
-        id_shop = intent.getStringExtra("id_shop");
-        time_product = intent.getStringExtra("time_product");
-        id_category = intent.getStringExtra("id_category");
         showDialog();
-        loadFavorite();
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Handler handler = new Handler(Looper.getMainLooper());
         executorService.execute(new Runnable() {
             @Override
             public void run() {
+
+                Intent intent = getIntent();
+                idproduct = intent.getStringExtra("id_product");
+                nameproduct = intent.getStringExtra("name");
+                priceproduct = intent.getIntExtra("price", 0);
+                slkho = intent.getIntExtra("slkho", 0);
+                imageproduct = intent.getStringExtra("image");
+                aboutproduct = intent.getStringExtra("about");
+                id_shop = intent.getStringExtra("id_shop");
+                time_product = intent.getStringExtra("time_product");
+                id_category = intent.getStringExtra("id_category");
                 loadFavorite();
+
+
 
             }
         });
@@ -113,7 +125,7 @@ public class Chitietsanpham extends AppCompatActivity {
 
                 try {
                     Log.e(TAG, "run12: " + elapsedTime);
-                    Thread.sleep(elapsedTime);
+                    Thread.sleep(1111);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -160,23 +172,11 @@ public class Chitietsanpham extends AppCompatActivity {
                             public void onClick(View view) {
                                 if (!id.equalsIgnoreCase("")) {
                                     if (isMyFavorite) {
-                                        removeFavorite(Chitietsanpham.this, id, idproduct);
+                                        removeToFavorite(Chitietsanpham.this, idproduct);
                                     } else {
-                                        DTO_SanPham sanPham = new DTO_SanPham();
-                                        sanPham.setId(idproduct);
-                                        sanPham.setAmount(String.valueOf(slkho));
-                                        sanPham.setDescription(aboutproduct);
-                                        sanPham.setId_category(id_category);
-                                        sanPham.setId_shop(id_shop);
-                                        sanPham.setImage(imageproduct);
-                                        sanPham.setNameproduct(nameproduct);
-                                        sanPham.setPrice(priceproduct);
-                                        sanPham.setTime_product(time_product);
-                                        Favorite favorite = new Favorite();
-                                        favorite.setTb_user(id);
-                                        favorite.setSanPham(sanPham);
-                                        addFavorite(Chitietsanpham.this, favorite);
+                                        addToFavorite(Chitietsanpham.this, idproduct);
                                     }
+
                                 } else {
                                     new AlertDialog.Builder(Chitietsanpham.this).setTitle("Notification!!")
                                             .setMessage("You need to log in to add favorites,Do you want to log in??")
@@ -207,33 +207,30 @@ public class Chitietsanpham extends AppCompatActivity {
     }
 
     public void loadFavorite() {
-        Gson gson = new GsonBuilder().setLenient().create();
+        if (id.equalsIgnoreCase("")) {
+//            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
+        } else {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(id).child("Favorites").child(idproduct)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            isMyFavorite = snapshot.exists();
+                            if (isMyFavorite) {
+                                img_favorite.setImageResource(R.drawable.favorite_24);
+                            } else {
+                                img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
+                            }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_FAVoRITE)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
-        Call<Favorite> objT = truyenInterface.list_favorite(id, idproduct);
+                        }
 
-        objT.enqueue(new Callback<Favorite>() {
-            @Override
-            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
-                if (response.isSuccessful()) {
-                    isMyFavorite = response.isSuccessful();
-                    Log.e("bl", "BL: " + isMyFavorite);
-                    elapsedTime = System.currentTimeMillis() - startTime;
-                } else {
-                    isMyFavorite = false;
-                }
-            }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onFailure(Call<Favorite> call, Throwable t) {
-                Log.e("bl", "onFailure: " + t.getLocalizedMessage());
-                isMyFavorite = false;
-            }
-        });
+                        }
+                    });
+        }
+
 
     }
 
@@ -394,71 +391,56 @@ public class Chitietsanpham extends AppCompatActivity {
         });
     }
 
-    void addFavorite(Context context, Favorite favorite) {
-        Gson gson = new GsonBuilder().setLenient().create();
+    public void addToFavorite(Context context,String idProduct){
+        if (id.equalsIgnoreCase("")){
+            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
+        }else{
+            long timestamp = System.currentTimeMillis();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_FAVoRITE)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
-        Call<Favorite> objT = truyenInterface.add_favorite(favorite);
+            HashMap<String , Object> hashMap = new HashMap<>();
+            hashMap.put("idProduct",idProduct);
+            hashMap.put("timeStamp",timestamp);
 
-        objT.enqueue(new Callback<Favorite>() {
-            @Override
-            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
-                    loadFavorite();
-                    if (isMyFavorite) {
-                        img_favorite.setImageResource(R.drawable.favorite_24);
-                    } else {
-                        img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Favorite> call, Throwable t) {
-                Log.e("bl", "onFailure: " + t.getLocalizedMessage());
-            }
-        });
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(id).child("Favorites").child(idProduct)
+                    .setValue(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "failed to add to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
 
-    void removeFavorite(Context context, String tb_user, String tb_product) {
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_FAVoRITE)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
-        Call<Void> objT = truyenInterface.delete_favorite(tb_user, tb_product);
-
-        objT.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
-                    loadFavorite();
-                    if (isMyFavorite) {
-                        img_favorite.setImageResource(R.drawable.favorite_24);
-                    } else {
-                        img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
-                    }
-                } else {
-                    Log.e("bl", "Remove: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("bl", "onFailure: " + t.getLocalizedMessage());
-            }
-        });
+    public void removeToFavorite(Context context,String idProduct ){
+        if (id.equalsIgnoreCase("")){
+            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
+        }else{
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(id).child("Favorites").child(idProduct)
+                    .removeValue()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "failed to remove to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
-
     public void showDialog() {
 
         fullScreenDialog = new Dialog(Chitietsanpham.this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);

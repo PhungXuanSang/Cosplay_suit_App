@@ -2,10 +2,12 @@ package com.example.cosplay_suit_app.Fragments;
 
 import static com.example.cosplay_suit_app.Fragments.Fragment_trangchu.BASE_URL;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.API;
@@ -35,6 +38,7 @@ import com.example.cosplay_suit_app.Activity.RegisterShopActivity;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.DTO.UserInterface;
+import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.Package_bill.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -58,13 +62,15 @@ public class Fragment_profile extends Fragment {
     private TextView tv_dky_shop, tv_donhangmua;
     private Button btn_login_profile;
 
+    private AppCompatButton appCompatButton;
+
     private ProgressDialog progressDialog;
 
     Dialog dialog;
 
     String username_u;
     String id_user;
-
+    static String id;
     static String url = API.URL;
     static final String BASE_URL = url +"/user/api/";
 
@@ -90,7 +96,7 @@ public class Fragment_profile extends Fragment {
         tv_dky_shop = view.findViewById(R.id.tv_dky_shop);
         img_profile = view.findViewById(R.id.img_profile);
         tv_donhangmua = view.findViewById(R.id.donhangmua);
-
+        appCompatButton = view.findViewById(R.id.btn_login_profile);
 
 
         tv_donhangmua.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +126,28 @@ public class Fragment_profile extends Fragment {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname","");
+        id = sharedPreferences.getString("id", "");
         tv_fullname.setText(username_u);
+
+
+        if (!id.equalsIgnoreCase("")) {
+            appCompatButton.setText("Sign Out");
+            appCompatButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sharedPreferences.edit().clear().commit();
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                }
+            });
+        } else {
+            appCompatButton.setText("Sign In");
+            appCompatButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(),LoginActivity.class));
+                }
+            });
+        }
 
 
 
