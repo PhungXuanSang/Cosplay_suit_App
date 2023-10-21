@@ -39,7 +39,7 @@
             android:background="@drawable/my_button_bg"
             android:gravity="center"
             android:onClick="onClick"
-            android:text="Login"
+
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textSize="25dp"
