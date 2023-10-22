@@ -2,7 +2,6 @@ package com.example.cosplay_suit_app.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.SignUpUser;
 import com.example.cosplay_suit_app.DTO.User;
-import com.example.cosplay_suit_app.DTO.UserInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;

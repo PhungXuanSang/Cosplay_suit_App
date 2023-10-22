@@ -1,4 +1,9 @@
-package com.example.cosplay_suit_app.DTO;
+package com.example.cosplay_suit_app.Interface_retrofit;
+
+import com.example.cosplay_suit_app.DTO.LoginUser;
+import com.example.cosplay_suit_app.DTO.Shop;
+import com.example.cosplay_suit_app.DTO.SignUpUser;
+import com.example.cosplay_suit_app.DTO.User;
 
 import java.util.List;
 

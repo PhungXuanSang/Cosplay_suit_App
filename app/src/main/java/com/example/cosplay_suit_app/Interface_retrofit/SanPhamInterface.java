@@ -1,4 +1,7 @@
-package com.example.cosplay_suit_app.DTO;
+package com.example.cosplay_suit_app.Interface_retrofit;
+
+import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.Favorite;
 
 import java.util.List;
 
@@ -14,7 +17,7 @@ public interface SanPhamInterface {
     Call<List<DTO_SanPham>> lay_danh_sach ();
 
     @GET("favorite/{tb_user}/{tb_product}")
-    Call<Favorite> list_favorite(@Path("tb_user") String tb_user ,@Path("tb_product") String tb_product);
+    Call<Favorite> list_favorite(@Path("tb_user") String tb_user , @Path("tb_product") String tb_product);
 
     @DELETE("favorite/{tb_user}/{tb_product}")
     Call<Void> delete_favorite(@Path("tb_user") String tb_user ,@Path("tb_product") String tb_product);

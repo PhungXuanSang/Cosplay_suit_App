@@ -1,10 +1,12 @@
 package com.example.cosplay_suit_app.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -14,9 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.CartOrderActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
-import com.example.cosplay_suit_app.DTO.SanPhamInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,16 +37,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Fragment_trangchu extends Fragment {
-
     static String url = API.URL;
-
     static final String BASE_URL = url +"/product/";
-
     RecyclerView rcv1,rcv_2,rcv_3;
     List<DTO_SanPham> mlist;
     Adapter_SanPham arrayAdapter;
     View viewok;
     SearchView sv_pro;
+    ImageView img_giohang;
     public Fragment_trangchu() {
 
     }
@@ -58,7 +59,16 @@ public class Fragment_trangchu extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_trangchu, container, false);
         rcv_3 = viewok.findViewById(R.id.rcv3);
+        img_giohang = viewok.findViewById(R.id.ic_giohang);
+        img_giohang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(),CartOrderActivity.class );
+                startActivity(intent);
+            }
+        });
 
+        //danh sách sản phẩm
         mlist = new ArrayList<DTO_SanPham>();
         arrayAdapter = new Adapter_SanPham(getContext());
         arrayAdapter.updateData(mlist);

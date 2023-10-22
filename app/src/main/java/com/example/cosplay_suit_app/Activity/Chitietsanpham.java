@@ -23,35 +23,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
-import com.example.cosplay_suit_app.DTO.BillInterface;
-import com.example.cosplay_suit_app.DTO.CartOrder;
+import com.example.cosplay_suit_app.Interface_retrofit.BillInterface;
+import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
-import com.example.cosplay_suit_app.DTO.SanPhamInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -91,27 +80,25 @@ public class Chitietsanpham extends AppCompatActivity {
         Log.d(TAG, "onCreate: Đã vào chi tiết sp");
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
+        Intent intent = getIntent();
+        idproduct = intent.getStringExtra("id_product");
+        nameproduct = intent.getStringExtra("name");
+        priceproduct = intent.getIntExtra("price", 0);
+        slkho = intent.getIntExtra("slkho", 0);
+        imageproduct = intent.getStringExtra("image");
+        aboutproduct = intent.getStringExtra("about");
+        id_shop = intent.getStringExtra("id_shop");
+        time_product = intent.getStringExtra("time_product");
+        id_category = intent.getStringExtra("id_category");
         showDialog();
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        loadFavorite();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         Handler handler = new Handler(Looper.getMainLooper());
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-
-                Intent intent = getIntent();
-                idproduct = intent.getStringExtra("id_product");
-                nameproduct = intent.getStringExtra("name");
-                priceproduct = intent.getIntExtra("price", 0);
-                slkho = intent.getIntExtra("slkho", 0);
-                imageproduct = intent.getStringExtra("image");
-                aboutproduct = intent.getStringExtra("about");
-                id_shop = intent.getStringExtra("id_shop");
-                time_product = intent.getStringExtra("time_product");
-                id_category = intent.getStringExtra("id_category");
                 loadFavorite();
-
-
 
             }
         });
@@ -125,7 +112,7 @@ public class Chitietsanpham extends AppCompatActivity {
 
                 try {
                     Log.e(TAG, "run12: " + elapsedTime);
-                    Thread.sleep(1111);
+                    Thread.sleep(elapsedTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -172,11 +159,23 @@ public class Chitietsanpham extends AppCompatActivity {
                             public void onClick(View view) {
                                 if (!id.equalsIgnoreCase("")) {
                                     if (isMyFavorite) {
-                                        removeToFavorite(Chitietsanpham.this, idproduct);
+                                        removeFavorite(Chitietsanpham.this, id, idproduct);
                                     } else {
-                                        addToFavorite(Chitietsanpham.this, idproduct);
+                                        DTO_SanPham sanPham = new DTO_SanPham();
+                                        sanPham.setId(idproduct);
+                                        sanPham.setAmount(String.valueOf(slkho));
+                                        sanPham.setDescription(aboutproduct);
+                                        sanPham.setId_category(id_category);
+                                        sanPham.setId_shop(id_shop);
+                                        sanPham.setImage(imageproduct);
+                                        sanPham.setNameproduct(nameproduct);
+                                        sanPham.setPrice(priceproduct);
+                                        sanPham.setTime_product(time_product);
+                                        Favorite favorite = new Favorite();
+                                        favorite.setTb_user(id);
+                                        favorite.setSanPham(sanPham);
+                                        addFavorite(Chitietsanpham.this, favorite);
                                     }
-
                                 } else {
                                     new AlertDialog.Builder(Chitietsanpham.this).setTitle("Notification!!")
                                             .setMessage("You need to log in to add favorites,Do you want to log in??")
@@ -207,30 +206,33 @@ public class Chitietsanpham extends AppCompatActivity {
     }
 
     public void loadFavorite() {
-        if (id.equalsIgnoreCase("")) {
-//            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-        } else {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(id).child("Favorites").child(idproduct)
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            isMyFavorite = snapshot.exists();
-                            if (isMyFavorite) {
-                                img_favorite.setImageResource(R.drawable.favorite_24);
-                            } else {
-                                img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
-                            }
+        Gson gson = new GsonBuilder().setLenient().create();
 
-                        }
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_FAVoRITE)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
+        Call<Favorite> objT = truyenInterface.list_favorite(id, idproduct);
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+        objT.enqueue(new Callback<Favorite>() {
+            @Override
+            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
+                if (response.isSuccessful()) {
+                    isMyFavorite = response.isSuccessful();
+                    Log.e("bl", "BL: " + isMyFavorite);
+                    elapsedTime = System.currentTimeMillis() - startTime;
+                } else {
+                    isMyFavorite = false;
+                }
+            }
 
-                        }
-                    });
-        }
-
+            @Override
+            public void onFailure(Call<Favorite> call, Throwable t) {
+                Log.e("bl", "onFailure: " + t.getLocalizedMessage());
+                isMyFavorite = false;
+            }
+        });
 
     }
 
@@ -240,6 +242,7 @@ public class Chitietsanpham extends AppCompatActivity {
         tv_name = findViewById(R.id.tv_name);
         img_favorite = findViewById(R.id.img_favorite);
         img_backsp = findViewById(R.id.img_backsp);
+
     }
     public void showDialog(Context context, String idproduct, String nameproduct,
                            int priceproduct, String imageproduct, String about) {
@@ -332,11 +335,11 @@ public class Chitietsanpham extends AppCompatActivity {
         btnaddcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CartOrder cartOrder = new CartOrder();
+                DTO_CartOrder cartOrder = new DTO_CartOrder();
                 cartOrder.setId_user(id);
-                cartOrder.setId_product(idproduct);
+                cartOrder.setProduct_id(idproduct);
                 cartOrder.setAmount(1);
-                cartOrder.setProperties("ok");
+                cartOrder.setProperties_id("6535324abdcedbd6d8302681");
 
                 AddCart(cartOrder);
             }
@@ -356,7 +359,7 @@ public class Chitietsanpham extends AppCompatActivity {
         dialog.show();
     }
 
-    void AddCart(CartOrder objcart){
+    void AddCart(DTO_CartOrder objcart){
         //tạo dđối towngj chuyển đổi kiểu dữ liệu
         Gson gson = new GsonBuilder().setLenient().create();
         //Tạo Retrofit
@@ -367,16 +370,15 @@ public class Chitietsanpham extends AppCompatActivity {
         //Khởi tạo Interface
         BillInterface billInterface = retrofit.create(BillInterface.class);
         //Tạo Call
-        Call<CartOrder> objCall = billInterface.addcart(objcart);
+        Call<DTO_CartOrder> objCall = billInterface.addcart(objcart);
 
         //Thực hiệnửi dữ liệu lên server
-        objCall.enqueue(new Callback<CartOrder>() {
+        objCall.enqueue(new Callback<DTO_CartOrder>() {
             @Override
-            public void onResponse(Call<CartOrder> call, Response<CartOrder> response) {
+            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
                 //Kết quẳ server trả về ở đây
                 if(response.isSuccessful()){
                     //Lấy kết quar trả về
-                    CartOrder cartOrder = response.body();
                     Toast.makeText(Chitietsanpham.this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
                 }else {
                     Log.d(TAG, "nguyen1: " + response.message());
@@ -384,63 +386,78 @@ public class Chitietsanpham extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<CartOrder> call, Throwable t) {
+            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
                 //Nếu say ra lỗi sẽ thông báo ở đây
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
             }
         });
     }
 
-    public void addToFavorite(Context context,String idProduct){
-        if (id.equalsIgnoreCase("")){
-            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-        }else{
-            long timestamp = System.currentTimeMillis();
+    void addFavorite(Context context, Favorite favorite) {
+        Gson gson = new GsonBuilder().setLenient().create();
 
-            HashMap<String , Object> hashMap = new HashMap<>();
-            hashMap.put("idProduct",idProduct);
-            hashMap.put("timeStamp",timestamp);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_FAVoRITE)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
+        Call<Favorite> objT = truyenInterface.add_favorite(favorite);
 
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(id).child("Favorites").child(idProduct)
-                    .setValue(hashMap)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "failed to add to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
+        objT.enqueue(new Callback<Favorite>() {
+            @Override
+            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
+                    loadFavorite();
+                    if (isMyFavorite) {
+                        img_favorite.setImageResource(R.drawable.favorite_24);
+                    } else {
+                        img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Favorite> call, Throwable t) {
+                Log.e("bl", "onFailure: " + t.getLocalizedMessage());
+            }
+        });
     }
 
 
-    public void removeToFavorite(Context context,String idProduct ){
-        if (id.equalsIgnoreCase("")){
-            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
-        }else{
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(id).child("Favorites").child(idProduct)
-                    .removeValue()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "failed to remove to favorite due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
+    void removeFavorite(Context context, String tb_user, String tb_product) {
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_FAVoRITE)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
+        Call<Void> objT = truyenInterface.delete_favorite(tb_user, tb_product);
+
+        objT.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
+                    loadFavorite();
+                    if (isMyFavorite) {
+                        img_favorite.setImageResource(R.drawable.favorite_24);
+                    } else {
+                        img_favorite.setImageResource(R.drawable.ic_no_favorite_24);
+                    }
+                } else {
+                    Log.e("bl", "Remove: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("bl", "onFailure: " + t.getLocalizedMessage());
+            }
+        });
     }
+
     public void showDialog() {
 
         fullScreenDialog = new Dialog(Chitietsanpham.this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
