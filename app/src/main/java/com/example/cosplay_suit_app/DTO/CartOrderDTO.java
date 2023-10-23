@@ -1,0 +1,50 @@
+package com.example.cosplay_suit_app.DTO;
+
+public class CartOrderDTO {
+    String id_user;
+    String product_id;
+    int amount;
+    String properties_id;
+
+    public CartOrderDTO() {
+    }
+
+    public CartOrderDTO(String id_user, String product_id, int amount, String properties_id) {
+        this.id_user = id_user;
+        this.product_id = product_id;
+        this.amount = amount;
+        this.properties_id = properties_id;
+    }
+
+    public String getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
+    }
+
+    public String getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(String product_id) {
+        this.product_id = product_id;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public String getProperties_id() {
+        return properties_id;
+    }
+
+    public void setProperties_id(String properties_id) {
+        this.properties_id = properties_id;
+    }
+}

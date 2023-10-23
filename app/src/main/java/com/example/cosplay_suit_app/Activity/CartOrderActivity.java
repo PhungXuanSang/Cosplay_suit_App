@@ -3,7 +3,11 @@ package com.example.cosplay_suit_app.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
@@ -29,9 +33,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CartOrderActivity extends AppCompatActivity {
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
-    ArrayList<DTO_CartOrder> list;
+    String TAG = "cartorderactivity";
+    List<DTO_CartOrder> list;
     Adapter_Cartorder arrayAdapter;
     RecyclerView recyclerView;
+    ImageView img_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +47,25 @@ public class CartOrderActivity extends AppCompatActivity {
         list = new ArrayList<>();
         arrayAdapter = new Adapter_Cartorder(list, this);
         recyclerView.setAdapter(arrayAdapter);
-        GetListSanPham();
+        arrayAdapter.notifyDataSetChanged();
+        SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
+        String id = sharedPreferences.getString("id","");
+
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        GetUserSanPham(id);
     }
 
     public void Anhxa(){
-
+        recyclerView = findViewById(R.id.rcv_cart);
+        img_back = findViewById(R.id.id_back);
     }
 
-    void GetListSanPham() {
+    void GetUserSanPham(String id) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -72,7 +89,7 @@ public class CartOrderActivity extends AppCompatActivity {
         BillInterface billInterface = retrofit.create(BillInterface.class);
 
         // tạo đối tượng
-        Call<List<DTO_CartOrder>> objCall = billInterface.getlistcartorder();
+        Call<List<DTO_CartOrder>> objCall = billInterface.getusercartorder(id);
         objCall.enqueue(new Callback<List<DTO_CartOrder>>() {
             @Override
             public void onResponse(Call<List<DTO_CartOrder>> call, Response<List<DTO_CartOrder>> response) {
@@ -81,6 +98,7 @@ public class CartOrderActivity extends AppCompatActivity {
                     list.clear();
                     list.addAll(response.body());
                     arrayAdapter.notifyDataSetChanged();
+                    Log.d(TAG, "onResponse: "+list.size());
 
                 } else {
                     Toast.makeText(CartOrderActivity.this,
@@ -90,7 +108,7 @@ public class CartOrderActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<DTO_CartOrder>> call, Throwable t) {
-
+                Log.d(TAG, "onFailure: " + t);
             }
         });
 

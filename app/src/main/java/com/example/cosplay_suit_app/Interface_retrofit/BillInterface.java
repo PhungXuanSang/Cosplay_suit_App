@@ -1,5 +1,6 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
+import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 
 import java.util.List;
@@ -16,8 +17,10 @@ public interface BillInterface {
     @GET("getlistcartorder")
     Call<List<DTO_CartOrder>> getlistcartorder();
 
+    @GET("getusercartorder/{id}")
+    Call<List<DTO_CartOrder>> getusercartorder(@Path("id") String id);
     @POST("addcart")
-    Call<DTO_CartOrder> addcart(@Body DTO_CartOrder objT);
+    Call<CartOrderDTO> addcart(@Body CartOrderDTO objT);
 
     @PUT("updatecart/{id}")
     Call<DTO_CartOrder> updatecart(@Path("id") String id, @Body DTO_CartOrder objT);

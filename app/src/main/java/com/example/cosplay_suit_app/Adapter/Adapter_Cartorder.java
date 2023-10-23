@@ -1,6 +1,7 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
         viewHolder.tvnamepro.setText(dtoCartOrder.getDtoSanPham().getNameproduct());
         viewHolder.tvsize.setText(dtoCartOrder.getDtoProperties().getNameproperties());
         viewHolder.tvprice.setText(dtoCartOrder.getDtoSanPham().getPrice() + "VND");
+        Log.d("zzzz", "onBindViewHolder: " + dtoCartOrder.getDtoProperties().getId_properties());
     }
 
     @Override

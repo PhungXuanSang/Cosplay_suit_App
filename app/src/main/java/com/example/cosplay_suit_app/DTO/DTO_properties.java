@@ -7,17 +7,16 @@ public class DTO_properties {
     String id_properties;
     String nameproperties;
     int amount;
-    @SerializedName("id_product")
-    DTO_SanPham dtoSanPham;
+    String id_product;
 
     public DTO_properties() {
     }
 
-    public DTO_properties(String id_properties, String nameproperties, int amount, DTO_SanPham dtoSanPham) {
+    public DTO_properties(String id_properties, String nameproperties, int amount, String id_product) {
         this.id_properties = id_properties;
         this.nameproperties = nameproperties;
         this.amount = amount;
-        this.dtoSanPham = dtoSanPham;
+        this.id_product = id_product;
     }
 
     public String getId_properties() {
@@ -44,11 +43,11 @@ public class DTO_properties {
         this.amount = amount;
     }
 
-    public DTO_SanPham getDtoSanPham() {
-        return dtoSanPham;
+    public String getId_product() {
+        return id_product;
     }
 
-    public void setDtoSanPham(DTO_SanPham dtoSanPham) {
-        this.dtoSanPham = dtoSanPham;
+    public void setId_product(String id_product) {
+        this.id_product = id_product;
     }
 }
