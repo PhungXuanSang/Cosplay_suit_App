@@ -1,4 +1,4 @@
-package com.example.cosplay_suit_app.Package_bill;
+package com.example.cosplay_suit_app.Package_bill.donhang;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,12 +11,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.R;
 
-public class Fragment_layhang extends Fragment {
-
+public class Fragment_dagiao extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View viewok = inflater.inflate(R.layout.fragment_layhang, container, false);
+        View viewok = inflater.inflate(R.layout.fragment_dagiao, container, false);
         return viewok;
     }
 
