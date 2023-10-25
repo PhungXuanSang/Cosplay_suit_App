@@ -43,7 +43,6 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
         viewHolder.tvnamepro.setText(dtoCartOrder.getDtoSanPham().getNameproduct());
         viewHolder.tvsize.setText(dtoCartOrder.getDtoProperties().getNameproperties());
         viewHolder.tvprice.setText(dtoCartOrder.getDtoSanPham().getPrice() + "VND");
-        Log.d("zzzz", "onBindViewHolder: " + dtoCartOrder.getDtoProperties().getId_properties());
     }
 
     @Override

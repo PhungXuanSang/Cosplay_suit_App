@@ -45,15 +45,25 @@
         android:layout_marginBottom="20dp"/>
 
     <TextView
+        android:id="@+id/tv_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Size:"
+        android:text="Size:"
         android:layout_below="@+id/cartimg"
         android:textSize="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="30dp"/>
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_size"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tv_size"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"/>
 
     <TableLayout
         android:layout_width="match_parent"
@@ -67,10 +77,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_button_bg4"
                 android:gravity="center"
-                android:text="Add Cart"
+                android:text="Thêm vào giỏ"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="25dp"
+                android:textSize="22dp"
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_margin="10dp"/>
@@ -81,10 +91,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_button_bg4"
                 android:gravity="center"
-                android:text="Buy now"
+                android:text="Mua ngay"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="25dp"
+                android:textSize="22dp"
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_margin="10dp"/>

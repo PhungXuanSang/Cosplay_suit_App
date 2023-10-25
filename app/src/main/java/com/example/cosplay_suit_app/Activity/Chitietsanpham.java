@@ -28,8 +28,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Adapter.Adapter_Cartorder;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
+import com.example.cosplay_suit_app.Adapter.Adapter_properties;
+import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
@@ -41,9 +45,13 @@ import com.google.gson.GsonBuilder;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,17 +60,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Chitietsanpham extends AppCompatActivity {
     static String url = API.URL;
-    static final String BASE_URL = url + "/product/";
+    static final String BASE_URL_properties = url + "/product/";
     static final String BASE_URL_FAVoRITE = url + "/user/api/";
-
     static final String BASE_URL_CARTORDER = url + "/bill/";
     static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite;
     TextView tv_price, tv_name;
-    ArrayList<DTO_SanPham> mlist;
-    Adapter_SanPham adapter;
-    RecyclerView rcv_5, rcv_bl;
-
+    RecyclerView rcv_properties;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category;
     BottomSheetDialog bottomSheetDialog;
     Dialog fullScreenDialog;
@@ -71,13 +75,14 @@ public class Chitietsanpham extends AppCompatActivity {
     long startTime = System.currentTimeMillis();
     long elapsedTime;
     static String id;
+    List<DTO_properties> listproperties;
+    Adapter_properties adapterProperties;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chitietsanpham);
-        Log.d(TAG, "onCreate: Đã vào chi tiết sp");
+
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
         Intent intent = getIntent();
@@ -198,11 +203,6 @@ public class Chitietsanpham extends AppCompatActivity {
                 });
             }
         });
-
-//        rcv_5 = findViewById(R.id.rcv_5);
-//        mlist = new ArrayList<DTO_SanPham>();
-//        adapter = new Adapter_SanPham(mlist, Chitietsanpham.this);
-//        rcv_5.setAdapter(adapter);
     }
 
     public void loadFavorite() {
@@ -242,7 +242,6 @@ public class Chitietsanpham extends AppCompatActivity {
         tv_name = findViewById(R.id.tv_name);
         img_favorite = findViewById(R.id.img_favorite);
         img_backsp = findViewById(R.id.img_backsp);
-
     }
     public void showDialog(Context context, String idproduct, String nameproduct,
                            int priceproduct, String imageproduct, String about) {
@@ -324,11 +323,20 @@ public class Chitietsanpham extends AppCompatActivity {
 
         // Hiển thị số lượng sản phẩm
         TextView tvslkho = dialog.findViewById(R.id.tv_slkho);
-        tvslkho.setText("WareHouse: " + slkho);
+        tvslkho.setText("Số lượng: " + slkho);
 
         // Hiển thị image sản phẩm
         ImageView imgsp = dialog.findViewById(R.id.imgproduct);
         Glide.with(context).load(imageproduct).centerCrop().into(imgsp);
+
+        //Hiển thị danh sách size
+        rcv_properties = dialog.findViewById(R.id.rc_size);
+
+        listproperties = new ArrayList<>();
+        adapterProperties = new Adapter_properties(listproperties, this);
+        rcv_properties.setAdapter(adapterProperties);
+        adapterProperties.notifyDataSetChanged();
+        Getproperties(idproduct);
 
         //thêm vào giỏ hàng
         Button btnaddcart = dialog.findViewById(R.id.btndialog_addcart);
@@ -493,6 +501,53 @@ public class Chitietsanpham extends AppCompatActivity {
 
         fullScreenDialog.show();
 
+
+    }
+
+    void Getproperties(String idproduct) {
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_properties)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+
+        // tạo đối tượng
+        Call<List<DTO_properties>> objCall = sanPhamInterface.getproperties(idproduct);
+        objCall.enqueue(new Callback<List<DTO_properties>>() {
+            @Override
+            public void onResponse(Call<List<DTO_properties>> call, Response<List<DTO_properties>> response) {
+                if (response.isSuccessful()) {
+
+                    listproperties.clear();
+                    listproperties.addAll(response.body());
+                    adapterProperties.notifyDataSetChanged();
+
+                } else {
+                    Toast.makeText(Chitietsanpham.this,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<DTO_properties>> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
 
     }
 }

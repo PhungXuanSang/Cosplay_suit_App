@@ -155,7 +155,7 @@
                     android:id="@+id/img4"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/cart_24"
+                    android:src="@drawable/imglayhang"
                     android:background="#075E33"
                     android:layout_centerHorizontal="true"/>
                 <TextView
@@ -198,7 +198,7 @@
                     android:id="@+id/img6"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/hoanthanh"
+                    android:src="@drawable/stars_24"
                     android:layout_centerHorizontal="true"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -232,7 +232,7 @@
             android:id="@+id/mg1"
             android:layout_width="26dp"
             android:layout_height="26dp"
-            android:src="@drawable/call_to_action_24"
+            android:src="@drawable/reg_24"
             android:layout_centerVertical="true"/>
         <TextView
             android:id="@+id/textView2"

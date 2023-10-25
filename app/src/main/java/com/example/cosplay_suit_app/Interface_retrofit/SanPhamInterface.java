@@ -1,6 +1,8 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
+import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.Favorite;
 
 import java.util.List;
@@ -24,5 +26,8 @@ public interface SanPhamInterface {
 
     @POST("favorite")
     Call<Favorite> add_favorite(@Body Favorite favorite);
+
+    @GET("getproperties/{idproduct}")
+    Call<List<DTO_properties>> getproperties(@Path("idproduct") String idproduct);
 
 }
