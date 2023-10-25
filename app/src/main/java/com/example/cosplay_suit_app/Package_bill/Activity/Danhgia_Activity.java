@@ -87,7 +87,7 @@ public class Danhgia_Activity extends AppCompatActivity {
         Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
 
         // tạo đối tượng
-        Call<List<BillDetailDTO>> objCall = billDetailDTO.getbilldentail(id);
+        Call<List<BillDetailDTO>> objCall = billDetailDTO.getstatusDone(id);
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {

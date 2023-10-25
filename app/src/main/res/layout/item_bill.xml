@@ -86,7 +86,7 @@
                 android:textSize="13dp" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btndialog_addcart"
+                android:id="@+id/btn_mualai"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
                 android:background="@drawable/my_button_bg4"
@@ -101,7 +101,7 @@
                 android:layout_below="@+id/tv_tongbill"/>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_buy"
+                android:id="@+id/btn_danhgia"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
                 android:background="@drawable/my_button_bg4"

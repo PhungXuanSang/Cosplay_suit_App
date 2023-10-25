@@ -8,6 +8,15 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface Billdentail_Interfece {
-    @GET("getbilldentail/{id}")
-    Call<List<BillDetailDTO>> getbilldentail(@Path("id") String id);
+    @GET("getstatuswait/{id}")
+    Call<List<BillDetailDTO>> getstatuswait(@Path("id") String id);
+
+    @GET("getstatusDelivery/{id}")
+    Call<List<BillDetailDTO>> getstatusDelivery(@Path("id") String id);
+
+    @GET("getstatusPack/{id}")
+    Call<List<BillDetailDTO>> getstatusPack(@Path("id") String id);
+
+    @GET("getstatusDone/{id}")
+    Call<List<BillDetailDTO>> getstatusDone(@Path("id") String id);
 }

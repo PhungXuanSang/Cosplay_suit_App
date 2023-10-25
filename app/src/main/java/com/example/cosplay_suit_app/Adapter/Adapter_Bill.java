@@ -1,9 +1,11 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.example.cosplay_suit_app.R;
 import java.util.List;
 
 public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    String TAG = "adapterbill";
     List<BillDetailDTO> list;
     Context context;
 
@@ -41,6 +44,13 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder1.tvnamepro.setText(billDetailDTO.getDtoSanPham().getNameproduct());
         holder1.tvprice.setText(""+billDetailDTO.getDtoSanPham().getPrice());
         holder1.tvtongbill.setText(""+billDetailDTO.getDtoBill().getTotalPayment());
+        if (billDetailDTO.getDtoBill().getStatus().equals("Done")){
+            holder1.btnmualai.setVisibility(View.VISIBLE);
+            holder1.btndanhgia.setVisibility(View.VISIBLE);
+        }else {
+            holder1.btnmualai.setVisibility(View.GONE);
+            holder1.btndanhgia.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -51,6 +61,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imgproduct;
         TextView tvnamepro, tvsize, tvprice, tvtongbill;
+        Button btnmualai, btndanhgia;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             imgproduct = itemView.findViewById(R.id.img_product);
@@ -58,6 +69,8 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvprice = itemView.findViewById(R.id.tvprice_product);
             tvsize = itemView.findViewById(R.id.tvsize_product);
             tvtongbill = itemView.findViewById(R.id.tv_tongbill);
+            btndanhgia = itemView.findViewById(R.id.btn_danhgia);
+            btnmualai = itemView.findViewById(R.id.btn_mualai);
         }
     }
 }

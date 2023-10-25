@@ -30,6 +30,9 @@ import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.Package_bill.Activity.Danhgia_Activity;
+import com.example.cosplay_suit_app.Package_bill.Activity.Giaohang_Activity;
+import com.example.cosplay_suit_app.Package_bill.Activity.Layhang_Activity;
+import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
 import com.example.cosplay_suit_app.Package_bill.donhang.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
@@ -61,7 +64,7 @@ public class Fragment_profile extends Fragment {
     static String id;
     static String url = API.URL;
     static final String BASE_URL = url +"/user/api/";
-    RelativeLayout rlhoanthanh;
+    RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao;
 
     public Fragment_profile() {
     }
@@ -75,6 +78,31 @@ public class Fragment_profile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_profile, container, false);
         rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
+        rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
+        rllayhang = viewok.findViewById(R.id.rl_layhang);
+        rldanggiao = viewok.findViewById(R.id.rl_danggiao);
+
+        rlxacnhandon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), xannhandon_Activity.class);
+                startActivity(intent);
+            }
+        });
+        rllayhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Layhang_Activity.class);
+                startActivity(intent);
+            }
+        });
+        rldanggiao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Giaohang_Activity.class);
+                startActivity(intent);
+            }
+        });
         rlhoanthanh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +110,7 @@ public class Fragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
+
         return viewok;
     }
 
