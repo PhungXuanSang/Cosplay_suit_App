@@ -29,9 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
-import com.example.cosplay_suit_app.DTO.CartOrderDTO;
-import com.example.cosplay_suit_app.Interface_retrofit.BillInterface;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
@@ -336,7 +335,7 @@ public class Chitietsanpham extends AppCompatActivity {
         btnaddcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CartOrderDTO cartOrder = new CartOrderDTO();
+                DTO_CartOrder cartOrder = new DTO_CartOrder();
                 cartOrder.setId_user(id);
                 cartOrder.setProduct_id(idproduct);
                 cartOrder.setAmount(1);
@@ -360,7 +359,7 @@ public class Chitietsanpham extends AppCompatActivity {
         dialog.show();
     }
 
-    void AddCart(CartOrderDTO objcart){
+    void AddCart(DTO_CartOrder objcart){
         //tạo dđối towngj chuyển đổi kiểu dữ liệu
         Gson gson = new GsonBuilder().setLenient().create();
         //Tạo Retrofit
@@ -369,14 +368,14 @@ public class Chitietsanpham extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         //Khởi tạo Interface
-        BillInterface billInterface = retrofit.create(BillInterface.class);
+        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
         //Tạo Call
-        Call<CartOrderDTO> objCall = billInterface.addcart(objcart);
+        Call<DTO_CartOrder> objCall = billInterface.addcart(objcart);
 
         //Thực hiệnửi dữ liệu lên server
-        objCall.enqueue(new Callback<CartOrderDTO>() {
+        objCall.enqueue(new Callback<DTO_CartOrder>() {
             @Override
-            public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
+            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
                 //Kết quẳ server trả về ở đây
                 if(response.isSuccessful()){
                     //Lấy kết quar trả về
@@ -387,7 +386,7 @@ public class Chitietsanpham extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<CartOrderDTO> call, Throwable t) {
+            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
                 //Nếu say ra lỗi sẽ thông báo ở đây
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
             }

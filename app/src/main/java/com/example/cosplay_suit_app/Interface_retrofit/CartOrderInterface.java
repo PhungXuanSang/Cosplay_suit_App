@@ -1,7 +1,7 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
-import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 
 import java.util.List;
 
@@ -13,19 +13,19 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface BillInterface {
+public interface CartOrderInterface {
     @GET("getlistcartorder")
-    Call<List<DTO_CartOrder>> getlistcartorder();
+    Call<List<CartOrderDTO>> getlistcartorder();
 
     @GET("getusercartorder/{id}")
-    Call<List<DTO_CartOrder>> getusercartorder(@Path("id") String id);
+    Call<List<CartOrderDTO>> getusercartorder(@Path("id") String id);
     @POST("addcart")
-    Call<CartOrderDTO> addcart(@Body CartOrderDTO objT);
+    Call<DTO_CartOrder> addcart(@Body DTO_CartOrder objT);
 
     @PUT("updatecart/{id}")
-    Call<DTO_CartOrder> updatecart(@Path("id") String id, @Body DTO_CartOrder objT);
+    Call<CartOrderDTO> updatecart(@Path("id") String id, @Body CartOrderDTO objT);
 
     @DELETE("deletecart/{id}")
-    Call<DTO_CartOrder> deletecart(@Path("id") String id, @Body DTO_CartOrder objT);
+    Call<CartOrderDTO> deletecart(@Path("id") String id, @Body CartOrderDTO objT);
 
 }

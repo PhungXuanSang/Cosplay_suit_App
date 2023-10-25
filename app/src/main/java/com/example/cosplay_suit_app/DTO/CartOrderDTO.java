@@ -1,19 +1,24 @@
 package com.example.cosplay_suit_app.DTO;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CartOrderDTO {
+
     String id_user;
-    String product_id;
+    @SerializedName("product_id")
+    DTO_SanPham dtoSanPham;
     int amount;
-    String properties_id;
+    @SerializedName("properties_id")
+    DTO_properties dtoProperties;
 
     public CartOrderDTO() {
     }
 
-    public CartOrderDTO(String id_user, String product_id, int amount, String properties_id) {
+    public CartOrderDTO(String id_user, DTO_SanPham dtoSanPham, int amount, DTO_properties dtoProperties) {
         this.id_user = id_user;
-        this.product_id = product_id;
+        this.dtoSanPham = dtoSanPham;
         this.amount = amount;
-        this.properties_id = properties_id;
+        this.dtoProperties = dtoProperties;
     }
 
     public String getId_user() {
@@ -24,12 +29,12 @@ public class CartOrderDTO {
         this.id_user = id_user;
     }
 
-    public String getProduct_id() {
-        return product_id;
+    public DTO_SanPham getDtoSanPham() {
+        return dtoSanPham;
     }
 
-    public void setProduct_id(String product_id) {
-        this.product_id = product_id;
+    public void setDtoSanPham(DTO_SanPham dtoSanPham) {
+        this.dtoSanPham = dtoSanPham;
     }
 
     public int getAmount() {
@@ -40,11 +45,11 @@ public class CartOrderDTO {
         this.amount = amount;
     }
 
-    public String getProperties_id() {
-        return properties_id;
+    public DTO_properties getDtoProperties() {
+        return dtoProperties;
     }
 
-    public void setProperties_id(String properties_id) {
-        this.properties_id = properties_id;
+    public void setDtoProperties(DTO_properties dtoProperties) {
+        this.dtoProperties = dtoProperties;
     }
 }

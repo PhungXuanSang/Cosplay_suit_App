@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_Cartorder;
-import com.example.cosplay_suit_app.Interface_retrofit.BillInterface;
-import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
+import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,7 +34,7 @@ public class CartOrderActivity extends AppCompatActivity {
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     String TAG = "cartorderactivity";
-    List<DTO_CartOrder> list;
+    List<CartOrderDTO> list;
     Adapter_Cartorder arrayAdapter;
     RecyclerView recyclerView;
     ImageView img_back;
@@ -86,13 +86,13 @@ public class CartOrderActivity extends AppCompatActivity {
                 .build();
 
         // sử dụng interface
-        BillInterface billInterface = retrofit.create(BillInterface.class);
+        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
 
         // tạo đối tượng
-        Call<List<DTO_CartOrder>> objCall = billInterface.getusercartorder(id);
-        objCall.enqueue(new Callback<List<DTO_CartOrder>>() {
+        Call<List<CartOrderDTO>> objCall = billInterface.getusercartorder(id);
+        objCall.enqueue(new Callback<List<CartOrderDTO>>() {
             @Override
-            public void onResponse(Call<List<DTO_CartOrder>> call, Response<List<DTO_CartOrder>> response) {
+            public void onResponse(Call<List<CartOrderDTO>> call, Response<List<CartOrderDTO>> response) {
                 if (response.isSuccessful()) {
 
                     list.clear();
@@ -107,7 +107,7 @@ public class CartOrderActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<DTO_CartOrder>> call, Throwable t) {
+            public void onFailure(Call<List<CartOrderDTO>> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t);
             }
         });

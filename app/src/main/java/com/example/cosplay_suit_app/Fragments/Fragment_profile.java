@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
+import com.example.cosplay_suit_app.Package_bill.Activity.Danhgia_Activity;
 import com.example.cosplay_suit_app.Package_bill.donhang.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
@@ -59,6 +61,7 @@ public class Fragment_profile extends Fragment {
     static String id;
     static String url = API.URL;
     static final String BASE_URL = url +"/user/api/";
+    RelativeLayout rlhoanthanh;
 
     public Fragment_profile() {
     }
@@ -71,6 +74,14 @@ public class Fragment_profile extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_profile, container, false);
+        rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
+        rlhoanthanh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Danhgia_Activity.class);
+                startActivity(intent);
+            }
+        });
         return viewok;
     }
 
