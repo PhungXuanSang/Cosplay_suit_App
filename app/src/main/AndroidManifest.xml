@@ -38,7 +38,7 @@
             android:name=".Activity.thongtincanhan"
             android:exported="false" />
         <activity
-            android:name=".Activity.CurMessActivity"
+            android:name=".Activity.ChatActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SignUpActivity"
