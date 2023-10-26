@@ -36,7 +36,8 @@ public interface UserInterface {
 
     @POST("shop/add")
     Call<Shop> new_shop(@Body Shop shop);
-
+    @GET("fUser/{id_user}")
+    Call<User> findUser(@Path("id_user") String id_user);
 
 
 //    @GET("login/{email}")

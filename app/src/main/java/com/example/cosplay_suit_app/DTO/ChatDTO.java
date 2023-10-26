@@ -10,7 +10,6 @@ public class ChatDTO {
 
     long timeStamp;
     String time;
-
     public ChatDTO() {
     }
 
