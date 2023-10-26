@@ -1,4 +1,5 @@
 package com.example.cosplay_suit_app.Activity;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -23,15 +24,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
-import com.example.cosplay_suit_app.Adapter.Adapter_Cartorder;
-import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_properties;
-import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
@@ -64,7 +63,7 @@ public class Chitietsanpham extends AppCompatActivity {
     static final String BASE_URL_FAVoRITE = url + "/user/api/";
     static final String BASE_URL_CARTORDER = url + "/bill/";
     static String TAG = "chitietsp";
-    ImageView img_backsp, img_pro, img_favorite;
+    ImageView img_backsp, img_pro, img_favorite, img_chat;
     TextView tv_price, tv_name;
     RecyclerView rcv_properties;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category;
@@ -199,10 +198,31 @@ public class Chitietsanpham extends AppCompatActivity {
                                 }
                             }
                         });
+
+                        img_chat.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(Chitietsanpham.this, ChatActivity.class);
+                                intent.putExtra("idShop",id_shop);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
             }
         });
+
+
+    }
+
+
+    public void Anhxa() {
+        img_pro = findViewById(R.id.img_pro);
+        tv_price = findViewById(R.id.tv_price);
+        tv_name = findViewById(R.id.tv_name);
+        img_favorite = findViewById(R.id.img_favorite);
+        img_backsp = findViewById(R.id.img_backsp);
+        img_chat = findViewById(R.id.img_chat);
     }
 
     public void loadFavorite() {
@@ -236,13 +256,6 @@ public class Chitietsanpham extends AppCompatActivity {
 
     }
 
-    public void Anhxa() {
-        img_pro = findViewById(R.id.img_pro);
-        tv_price = findViewById(R.id.tv_price);
-        tv_name = findViewById(R.id.tv_name);
-        img_favorite = findViewById(R.id.img_favorite);
-        img_backsp = findViewById(R.id.img_backsp);
-    }
     public void showDialog(Context context, String idproduct, String nameproduct,
                            int priceproduct, String imageproduct, String about) {
         bottomSheetDialog = new BottomSheetDialog(Chitietsanpham.this);
@@ -300,7 +313,7 @@ public class Chitietsanpham extends AppCompatActivity {
         btnaddcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogAddcart(context,idproduct, priceproduct, slkho, imageproduct);
+                dialogAddcart(context, idproduct, priceproduct, slkho, imageproduct);
                 bottomSheetDialog.dismiss();
             }
         });
@@ -308,8 +321,8 @@ public class Chitietsanpham extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    public void dialogAddcart(Context context,String idproduct,
-                                     int priceproduct, int slkho, String imageproduct) {
+    public void dialogAddcart(Context context, String idproduct,
+                              int priceproduct, int slkho, String imageproduct) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_addcart);
@@ -367,12 +380,12 @@ public class Chitietsanpham extends AppCompatActivity {
         dialog.show();
     }
 
-    void AddCart(DTO_CartOrder objcart){
+    void AddCart(DTO_CartOrder objcart) {
         //tạo dđối towngj chuyển đổi kiểu dữ liệu
         Gson gson = new GsonBuilder().setLenient().create();
         //Tạo Retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl( BASE_URL_CARTORDER )
+                .baseUrl(BASE_URL_CARTORDER)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         //Khởi tạo Interface
@@ -385,10 +398,10 @@ public class Chitietsanpham extends AppCompatActivity {
             @Override
             public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
                 //Kết quẳ server trả về ở đây
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     //Lấy kết quar trả về
                     Toast.makeText(Chitietsanpham.this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Log.d(TAG, "nguyen1: " + response.message());
                 }
             }
@@ -543,6 +556,7 @@ public class Chitietsanpham extends AppCompatActivity {
                             "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<List<DTO_properties>> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t);

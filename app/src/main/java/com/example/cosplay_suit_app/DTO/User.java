@@ -11,6 +11,9 @@ public class User {
     private String passwd;
     private String role;
 
+    private String lastMess;
+    private String time;
+
 //    private  boolean check;
 
 
@@ -70,10 +73,29 @@ public class User {
 //        this.check = check;
 //    }
 
+
+    public String getLastMess() {
+        return lastMess;
+    }
+
+    public void setLastMess(String lastMess) {
+        this.lastMess = lastMess;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+
     public User(String phone, String passwd) {
         this.phone = phone;
         this.passwd = passwd;
     }
+
 
     public User() {
     }
