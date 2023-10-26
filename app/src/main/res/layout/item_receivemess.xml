@@ -38,6 +38,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginStart="10dp"
         android:text="12:25 PM"
+        android:visibility="gone"
         android:textSize="10sp" />
 
 </RelativeLayout>

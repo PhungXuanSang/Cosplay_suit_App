@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="8dp"
-    android:layout_marginTop="5dp">
+    android:layout_marginTop="5dp"
+    android:paddingBottom="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar_chat"
@@ -32,14 +32,16 @@
 
     <TextView
         android:id="@+id/tv_lastmess"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxWidth="160dp"
         android:padding="5dp"
         android:text="Hello"
+        android:ellipsize="end"
         android:textSize="12sp"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toLeftOf="@id/tv_nameChat"
-        app:layout_constraintRight_toLeftOf="@id/tv_time"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@id/tv_time"
+        app:layout_constraintStart_toStartOf="@id/tv_nameChat"
         app:layout_constraintTop_toBottomOf="@id/tv_nameChat" />
 
     <TextView
@@ -49,9 +51,7 @@
         android:padding="5dp"
         android:text="10:00 PM"
         android:textSize="12sp"
-        app:layout_constraintLeft_toRightOf="@id/tv_lastmess"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_lastmess" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
