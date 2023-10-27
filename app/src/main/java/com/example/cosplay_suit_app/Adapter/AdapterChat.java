@@ -76,13 +76,32 @@ public class AdapterChat extends RecyclerView.Adapter{
                                 }
                             }).show();
 
-                    return false;
+                    return true;
                 }
             });
+
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView tv_time;
+                if (holder.getClass() == senderVierwHolder.class) {
+                    tv_time = ((senderVierwHolder) holder).tv_time;
+                } else {
+                    tv_time = ((reciverViewHolder) holder).tv_time;
+                }
+
+                if (tv_time.getVisibility() == View.VISIBLE) {
+                    tv_time.setVisibility(View.GONE);
+                } else {
+                    tv_time.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         if (holder.getClass() == senderVierwHolder.class) {
             senderVierwHolder viewHolder = (senderVierwHolder) holder;
+
             viewHolder.msgtxt.setText(messages.getMessage());
             viewHolder.tv_time.setText(messages.getTime());
         } else {

@@ -3,11 +3,15 @@ package com.example.cosplay_suit_app.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
@@ -30,7 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class CartOrderActivity extends AppCompatActivity {
+public class CartOrderActivity extends AppCompatActivity implements Adapter_Cartorder.OnclickCheck{
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     String TAG = "cartorderactivity";
@@ -38,6 +42,8 @@ public class CartOrderActivity extends AppCompatActivity {
     Adapter_Cartorder arrayAdapter;
     RecyclerView recyclerView;
     ImageView img_back;
+    TextView tvtongtien;
+    Button btnbuynow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +51,7 @@ public class CartOrderActivity extends AppCompatActivity {
         Anhxa();
         //danh sách sản phẩm
         list = new ArrayList<>();
-        arrayAdapter = new Adapter_Cartorder(list, this);
+        arrayAdapter = new Adapter_Cartorder(list,CartOrderActivity.this, (Adapter_Cartorder.OnclickCheck) this);
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
@@ -57,12 +63,21 @@ public class CartOrderActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        btnbuynow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CartOrderActivity.this, BuynowActivity.class);
+                startActivity(intent);
+            }
+        });
         GetUserSanPham(id);
     }
 
     public void Anhxa(){
         recyclerView = findViewById(R.id.rcv_cart);
         img_back = findViewById(R.id.id_back);
+        tvtongtien = findViewById(R.id.tv_tongtien);
+        btnbuynow = findViewById(R.id.btn_buynow);
     }
 
     void GetUserSanPham(String id) {
@@ -113,5 +128,13 @@ public class CartOrderActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    public void onCheckboxTrue(int tongtien) {
+        tvtongtien.setText(tongtien + " VND");
+    }
 
+    @Override
+    public void onCheckboxFalse(int tongtien) {
+        tvtongtien.setText(tongtien + " VND");
+    }
 }
