@@ -39,6 +39,7 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
         User user = usersArrayList.get(position);
         holder.tv_lastmess.setText(user.getLastMess());
         holder.tv_time.setText(user.getTime());
+        holder.username.setText(user.getFullname());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
