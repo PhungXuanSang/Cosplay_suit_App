@@ -200,9 +200,26 @@ public class Chitietsanpham extends AppCompatActivity {
                         img_chat.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Intent intent = new Intent(Chitietsanpham.this, ChatActivity.class);
-                                intent.putExtra("idShop",id_shop);
-                                startActivity(intent);
+                                if (!id.equalsIgnoreCase("")) {
+                                    Intent intent = new Intent(Chitietsanpham.this, ChatActivity.class);
+                                    intent.putExtra("idShop", id_shop);
+                                    startActivity(intent);
+                                }else{
+                                    new AlertDialog.Builder(Chitietsanpham.this).setTitle("Thông Báo!!")
+                                            .setMessage("Bạn cần đăng nhập để liên hệ với shop")
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    startActivity(new Intent(Chitietsanpham.this, LoginActivity.class));
+                                                    dialogInterface.dismiss();
+                                                }
+                                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            }).show();
+                                }
                             }
                         });
                     }

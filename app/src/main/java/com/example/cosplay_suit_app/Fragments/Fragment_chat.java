@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ public class Fragment_chat extends Fragment {
     static String url = API.URL;
     static final String BASE_URL = url + "/user/api/";
     RecyclerView rcv_listChat;
+    TextView tv_null;
 
     public static Fragment_chat newInstance() {
         Fragment_chat fragmentChat = new Fragment_chat();
@@ -62,24 +64,33 @@ public class Fragment_chat extends Fragment {
         view = inflater.inflate(R.layout.fragment_chat, container, false);
         database = FirebaseDatabase.getInstance();
         rcv_listChat = view.findViewById(R.id.rcv_listChat);
+        tv_null = view.findViewById(R.id.tv_null);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
 
         idUser = sharedPreferences.getString("id", "");
+        Log.d("DEBUG", "idUserCur: "+idUser);
         user = new User();
         list = new ArrayList<>();
         listIdUser = new ArrayList<>();
         adapter = new AdapterListChat(getContext(),list);
         rcv_listChat.setAdapter(adapter);
 
-        getList();
+//        getList();
 
         return view;
     }
 
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     private void getList() {
+        list.clear();
         DatabaseReference userRoomsReference = database.getReference().child("chats");
 
-        // Khởi tạo một instance duy nhất của Retrofit và UserInterface
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -92,13 +103,23 @@ public class Fragment_chat extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
                     Log.d("DEBUG", "No rooms found for user.");
+                    checkAndUpdateUI();
                     return;
+                }else {
+                    checkAndUpdateUI();
                 }
-
                 list.clear();
                 for (DataSnapshot roomSnapshot : dataSnapshot.getChildren()) {
                     String combinedUserID = roomSnapshot.getKey();
-                    String receiverId = combinedUserID.replace(idUser, "");
+                    String[] ids = combinedUserID.split("_");
+
+                    if (ids.length != 2) {
+                        continue;
+                    }
+                    if (!idUser.equals(ids[0])) {
+                        continue;
+                    }
+                    String receiverId = ids[1];
 
                     DatabaseReference roomLastMessageRef = database.getReference().child("chats").child(combinedUserID).child("messages");
                     roomLastMessageRef.orderByChild("timeStamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -121,9 +142,12 @@ public class Fragment_chat extends Fragment {
                                                 if (fetchedUser != null) {
                                                     fetchedUser.setLastMess(lastMessage.getMessage());
                                                     fetchedUser.setTime(lastMessage.getTime());
-                                                    list.add(fetchedUser);
+                                                    list.add(0, fetchedUser);
                                                     Log.d("DEBUG", "onDataChange: " + fetchedUser.getFullname());
+                                                    Log.d("DEBUG", "onResponse: "+receiverId);
                                                     adapter.notifyDataSetChanged();
+                                                    rcv_listChat.scrollToPosition(0);
+                                                    checkAndUpdateUI();
                                                 }
                                             } else {
                                                 Toast.makeText(getContext(), "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
@@ -137,6 +161,7 @@ public class Fragment_chat extends Fragment {
                                     });
                                 }
                             }
+
                         }
 
                         @Override
@@ -145,6 +170,7 @@ public class Fragment_chat extends Fragment {
                         }
                     });
                 }
+
             }
 
             @Override
@@ -152,12 +178,22 @@ public class Fragment_chat extends Fragment {
                 Log.e("DEBUG", "Error fetching rooms: " + databaseError.getMessage());
             }
         });
+
     }
-
-
+    private void checkAndUpdateUI() {
+        if(list.isEmpty()) {
+            tv_null.setVisibility(View.VISIBLE);
+            rcv_listChat.setVisibility(View.GONE);
+        } else {
+            tv_null.setVisibility(View.GONE);
+            rcv_listChat.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        getList();
     }
+
 }
