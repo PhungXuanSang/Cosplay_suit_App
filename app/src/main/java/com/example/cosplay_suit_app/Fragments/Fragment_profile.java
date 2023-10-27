@@ -24,6 +24,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.FavoriteActivity;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
@@ -175,7 +176,12 @@ public class Fragment_profile extends Fragment {
             });
         }
 
-
+        view.findViewById(R.id.relative_favorite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), FavoriteActivity.class));
+            }
+        });
 
     }
 

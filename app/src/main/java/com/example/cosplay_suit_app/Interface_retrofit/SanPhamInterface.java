@@ -30,4 +30,8 @@ public interface SanPhamInterface {
     @GET("getproperties/{idproduct}")
     Call<List<DTO_properties>> getproperties(@Path("idproduct") String idproduct);
 
+
+    @GET("products/{id}")
+    Call<DTO_SanPham> getbyid(@Path("id") String id);
+
 }
