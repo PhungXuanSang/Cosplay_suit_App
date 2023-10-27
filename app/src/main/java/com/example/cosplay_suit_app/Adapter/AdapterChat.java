@@ -28,10 +28,13 @@ public class AdapterChat extends RecyclerView.Adapter{
     ArrayList<ChatDTO> messagesAdpterArrayList;
     int ITEM_SEND=1;
     int ITEM_RECIVE=2;
+    private String senderRoom, receiverRoom;
 
-    public AdapterChat(Context context, ArrayList<ChatDTO> messagesAdpterArrayList) {
+    public AdapterChat(Context context, ArrayList<ChatDTO> messagesAdpterArrayList, String senderRoom, String receiverRoom) {
         this.context = context;
         this.messagesAdpterArrayList = messagesAdpterArrayList;
+        this.senderRoom = senderRoom;
+        this.receiverRoom = receiverRoom;
     }
 
     @NonNull
@@ -62,11 +65,11 @@ public class AdapterChat extends RecyclerView.Adapter{
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    DatabaseReference mDatabase =  FirebaseDatabase.getInstance().getReference().child("chats").child(messages.getSenderid()+"admin").child("messages");
-                                    mDatabase.child(messages.getId()).removeValue();
+                                    DatabaseReference mDatabaseSender = FirebaseDatabase.getInstance().getReference().child("chats").child(senderRoom).child("messages");
+                                    mDatabaseSender.child(messages.getId()).removeValue();
 
-                                    DatabaseReference mDatabase1 =  FirebaseDatabase.getInstance().getReference().child("chats").child("admin"+messages.getSenderid()).child("messages");
-                                    mDatabase1.child(messages.getId()).removeValue();
+                                    DatabaseReference mDatabaseReceiver = FirebaseDatabase.getInstance().getReference().child("chats").child(receiverRoom).child("messages");
+                                    mDatabaseReceiver.child(messages.getId()).removeValue();
                                     Toast.makeText(context, "Delete Sucessfuly!", Toast.LENGTH_SHORT).show();
                                 }
                             }).setNegativeButton("No", new DialogInterface.OnClickListener() {

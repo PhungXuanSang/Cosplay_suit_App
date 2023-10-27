@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.AdapterChat;
 import com.example.cosplay_suit_app.DTO.ChatDTO;
+import com.example.cosplay_suit_app.DTO.User;
+import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,12 +27,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -44,8 +56,11 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<ChatDTO> list;
 
     String senderRoom,reciverRoom,SenderUID;
-    String reciverUid;
+    String reciverUid,idU;
     SharedPreferences sharedPreferences;
+    TextView tv_nameShop;
+    static String url = API.URL;
+    static final String BASE_URL = url + "/user/api/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,14 +70,15 @@ public class ChatActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         sharedPreferences = getSharedPreferences("User",MODE_PRIVATE);
 
-        String idU = sharedPreferences.getString("id", "");
+        idU = sharedPreferences.getString("id", "");
         SenderUID =  idU;
         reciverUid = getIntent().getStringExtra("idShop");
-
-        senderRoom = SenderUID+reciverUid;
-        reciverRoom = reciverUid+SenderUID;
+        setNameReciver();
+        Log.d("DEBUG", "onCreate: "+reciverUid);
+        senderRoom = SenderUID+"_"+reciverUid;
+        reciverRoom = reciverUid+"_"+SenderUID;
         list = new ArrayList<>();
-        adapter = new AdapterChat(this,list);
+        adapter = new AdapterChat(this,list,senderRoom,reciverRoom);
         getListChat();
         rcv_chat.setAdapter(adapter);
         img_back.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +95,46 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+
+
+    private void initView() {
+        img_back = findViewById(R.id.img_backChat);
+        btn_send = findViewById(R.id.sendbtnn);
+        ed_chat = findViewById(R.id.ed_msg);
+        rcv_chat = findViewById(R.id.rcv_chat);
+        tv_nameShop = findViewById(R.id.tv_nameShop);
+
+    }
+
+    private void setNameReciver() {
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        UserInterface userInterface = retrofit.create(UserInterface.class);
+
+        Call<User> objCall = userInterface.findUser(reciverUid);
+        objCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User fetchedUser = response.body();
+                    if (fetchedUser != null) {
+                        tv_nameShop.setText(fetchedUser.getFullname());
+                    }
+                } else {
+                    Toast.makeText(ChatActivity.this, "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("chuongdk", "onFailure: " + t.getLocalizedMessage());
+            }
+        });
+    }
+
     private void getListChat() {
         chatreference = database.getReference().child("chats").child(senderRoom).child("messages");
 
@@ -87,9 +143,10 @@ public class ChatActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
                 ChatDTO newMessage = dataSnapshot.getValue(ChatDTO.class);
                 list.add(newMessage);
+                Log.d("DEBUG", "onChildAdded: "+newMessage.getMessage());
                 adapter.notifyDataSetChanged();
 
-                // Gửi thông báo cho người nhận
+
 
             }
 
@@ -125,7 +182,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
 
-        // Đặt ChildEventListener vào tham chiếu database
+
         chatreference.addChildEventListener(chatEventListener);
     }
     @Override
@@ -160,20 +217,20 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
+                database.getReference().child("chats")
+                        .child(reciverRoom)
+                        .child("messages")
+                        .child(id).setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
+                            }
+                        });
 
 
 
             }
         });
-
-    }
-
-    private void initView() {
-        img_back = findViewById(R.id.img_backChat);
-        btn_send = findViewById(R.id.sendbtnn);
-        ed_chat = findViewById(R.id.ed_msg);
-        rcv_chat = findViewById(R.id.rcv_chat);
 
     }
 }
