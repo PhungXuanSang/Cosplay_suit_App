@@ -79,10 +79,11 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
                         tonggia = tonggia + dtoCartOrder.getDtoSanPham().getPrice();
                         onclickCheck.onCheckboxTrue(tonggia);
                     }
-//                    CartOrderDTO dto = new CartOrderDTO();
-//                    dto.setAmount(soluong);
-//                    dto.setTotalPayment(tonggia);
-//                    updatedata(dto, dtoCartOrder.getId_cart());
+                    int gia = (dtoCartOrder.getDtoSanPham().getPrice()) * soluong;
+                    CartOrderDTO dto = new CartOrderDTO();
+                    dto.setAmount(soluong);
+                    dto.setTotalPayment(gia);
+                    updatedata(dto, dtoCartOrder.getId_cart());
                 }
             }
         });
@@ -97,10 +98,11 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
                         tonggia = tonggia - dtoCartOrder.getDtoSanPham().getPrice();
                         onclickCheck.onCheckboxTrue(tonggia);
                     }
-//                    CartOrderDTO dto = new CartOrderDTO();
-//                    dto.setAmount(soluong);
-//                    dto.setTotalPayment(tonggia);
-//                    updatedata(dto, dtoCartOrder.getId_cart());
+                    int gia = (dtoCartOrder.getDtoSanPham().getPrice()) * soluong;
+                    CartOrderDTO dto = new CartOrderDTO();
+                    dto.setAmount(soluong);
+                    dto.setTotalPayment(gia);
+                    updatedata(dto, dtoCartOrder.getId_cart());
                 }
             }
         });
@@ -150,41 +152,41 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
-//    public void updatedata(CartOrderDTO dto, String idcart){
-//        //Tạo đối tượng chuyển đổi kiểu dữ liệu
-//        Gson gson = new GsonBuilder().setLenient().create();
-//        //Tạo Retrofit
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .build();
-//        // Khởi  tạo interface
-//
-//        CartOrderInterface cartOrderInterface = retrofit.create(CartOrderInterface.class);
-//
-//
-//        // Tạo Call
-//        Call<CartOrderDTO> objCall = cartOrderInterface.updatecart(idcart, dto);
-//        // Thực hiện gửi dữ liệu lên server
-//        objCall.enqueue(new Callback<CartOrderDTO>() {
-//            @Override
-//            public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
-//                // kết quả server trả về ở đây
-//
-//                if (response.isSuccessful()) {
-//                    // lấy kết quả trả về
-//
-//                } else {
-//                    Log.e(TAG, response.message());
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<CartOrderDTO> call, Throwable t) {
-//                // nếu xảy ra lỗi sẽ thông báo ở đây
-//
-//                Log.e(TAG, t.getLocalizedMessage());
-//            }
-//        });
-//    }
+    public void updatedata(CartOrderDTO dto, String idcart){
+        //Tạo đối tượng chuyển đổi kiểu dữ liệu
+        Gson gson = new GsonBuilder().setLenient().create();
+        //Tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        // Khởi  tạo interface
+
+        CartOrderInterface cartOrderInterface = retrofit.create(CartOrderInterface.class);
+
+
+        // Tạo Call
+        Call<CartOrderDTO> objCall = cartOrderInterface.updatecart(idcart, dto);
+        // Thực hiện gửi dữ liệu lên server
+        objCall.enqueue(new Callback<CartOrderDTO>() {
+            @Override
+            public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
+                // kết quả server trả về ở đây
+
+                if (response.isSuccessful()) {
+                    // lấy kết quả trả về
+
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<CartOrderDTO> call, Throwable t) {
+                // nếu xảy ra lỗi sẽ thông báo ở đây
+
+                Log.e(TAG, t.getLocalizedMessage());
+            }
+        });
+    }
 
 }
