@@ -14,8 +14,8 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface CartOrderInterface {
-    @GET("getlistcartorder")
-    Call<List<CartOrderDTO>> getlistcartorder();
+    @GET("getidCartOder/{id}")
+    Call<List<CartOrderDTO>> getidCartOder(@Path("id") String id);
 
     @GET("getusercartorder/{id}")
     Call<List<CartOrderDTO>> getusercartorder(@Path("id") String id);

@@ -115,10 +115,12 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
                             * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                     onclickCheck.onCheckboxTrue(tonggia);
                 }else {
+                    arrayList.remove(dtoCartOrder.getId_cart());
                     tonggia -= (dtoCartOrder.getDtoSanPham().getPrice())
                             * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                     onclickCheck.onCheckboxFalse(tonggia);
                 }
+                onclickCheck.onIdCart(arrayList);
             }
         });
     }
@@ -129,7 +131,7 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imgproduct, imgcong, imgtru;
-        TextView tvnamepro, tvsize, tvprice, tvsoluong, tvtonggia;
+        TextView tvnamepro, tvsize, tvprice, tvsoluong;
         CheckBox cbkcart;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -141,7 +143,6 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgtru = itemView.findViewById(R.id.imgtru);
             imgcong = itemView.findViewById(R.id.imgcong);
             tvsoluong = itemView.findViewById(R.id.tv_soluong);
-            tvtonggia = itemView.findViewById(R.id.tv_tonggia);
             cbkcart = itemView.findViewById(R.id.cbk_cart);
         }
     }
@@ -149,6 +150,7 @@ public class Adapter_Cartorder extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface OnclickCheck{
         void onCheckboxTrue(int tongtien);
         void onCheckboxFalse(int tongtien);
+        void onIdCart(ArrayList<String> idcart);
 
     }
 

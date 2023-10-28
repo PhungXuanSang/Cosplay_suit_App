@@ -63,13 +63,7 @@ public class CartOrderActivity extends AppCompatActivity implements Adapter_Cart
                 onBackPressed();
             }
         });
-        btnbuynow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CartOrderActivity.this, BuynowActivity.class);
-                startActivity(intent);
-            }
-        });
+
         GetUserSanPham(id);
     }
 
@@ -136,5 +130,17 @@ public class CartOrderActivity extends AppCompatActivity implements Adapter_Cart
     @Override
     public void onCheckboxFalse(int tongtien) {
         tvtongtien.setText(tongtien + " VND");
+    }
+
+    @Override
+    public void onIdCart(ArrayList<String> idcart) {
+        btnbuynow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CartOrderActivity.this, BuynowActivity.class);
+                intent.putStringArrayListExtra("arridcart", idcart);
+                startActivity(intent);
+            }
+        });
     }
 }
