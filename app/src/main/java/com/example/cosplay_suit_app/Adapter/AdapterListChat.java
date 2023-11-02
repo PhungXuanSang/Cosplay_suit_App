@@ -23,11 +23,33 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
 
     Context context;
     ArrayList<User> usersArrayList;
+    ArrayList<User> allUsersArrayList;
+
+
     public AdapterListChat(Context context, ArrayList<User> usersArrayList) {
-        this.context=context;
-        this.usersArrayList=usersArrayList;
+        this.context = context;
+        this.usersArrayList = usersArrayList;
+        this.allUsersArrayList = new ArrayList<>(usersArrayList);
+
     }
-    @NonNull
+    public void filter(String text) {
+        usersArrayList.clear();
+        if (text.isEmpty()) {
+            usersArrayList.addAll(allUsersArrayList);
+        } else {
+            text = text.toLowerCase();
+            for (User user : allUsersArrayList) {
+                String fullName = user.getFullname().toLowerCase();
+                if (fullName.contains(text)) {
+                    usersArrayList.add(user);
+                }
+            }
+        }
+        notifyDataSetChanged();
+        Log.d("DEBUG", "Filtering with text: " + text);
+    }
+
+        @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_listchat,parent,false);
@@ -40,6 +62,7 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
         holder.tv_lastmess.setText(user.getLastMess());
         holder.tv_time.setText(user.getTime());
         holder.username.setText(user.getFullname());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,4 +93,5 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
             tv_time = itemView.findViewById(R.id.tv_time);
         }
     }
+
 }

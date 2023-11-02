@@ -143,7 +143,6 @@ public class ChatActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
                 ChatDTO newMessage = dataSnapshot.getValue(ChatDTO.class);
                 list.add(newMessage);
-                Log.d("DEBUG", "onChildAdded: "+newMessage.getMessage());
                 adapter.notifyDataSetChanged();
 
 
