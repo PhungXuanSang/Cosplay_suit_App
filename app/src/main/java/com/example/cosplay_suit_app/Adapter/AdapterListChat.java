@@ -23,33 +23,18 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
 
     Context context;
     ArrayList<User> usersArrayList;
-    ArrayList<User> allUsersArrayList;
-
 
     public AdapterListChat(Context context, ArrayList<User> usersArrayList) {
         this.context = context;
         this.usersArrayList = usersArrayList;
-        this.allUsersArrayList = new ArrayList<>(usersArrayList);
 
     }
-    public void filter(String text) {
-        usersArrayList.clear();
-        if (text.isEmpty()) {
-            usersArrayList.addAll(allUsersArrayList);
-        } else {
-            text = text.toLowerCase();
-            for (User user : allUsersArrayList) {
-                String fullName = user.getFullname().toLowerCase();
-                if (fullName.contains(text)) {
-                    usersArrayList.add(user);
-                }
-            }
-        }
+    public void updateList(ArrayList<User> userList) {
+        this.usersArrayList = userList;
         notifyDataSetChanged();
-        Log.d("DEBUG", "Filtering with text: " + text);
     }
 
-        @NonNull
+    @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_listchat,parent,false);
@@ -75,12 +60,10 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
             }
         });
     }
-
     @Override
     public int getItemCount() {
         return usersArrayList.size();
     }
-
     public class viewholder extends RecyclerView.ViewHolder {
         CircleImageView userimg;
         TextView username, tv_lastmess,tv_time;
