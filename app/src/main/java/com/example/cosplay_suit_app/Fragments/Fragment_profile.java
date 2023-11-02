@@ -1,8 +1,10 @@
 package com.example.cosplay_suit_app.Fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +26,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.ChatActivity;
+import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.Activity.FavoriteActivity;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.DTO.Shop;
@@ -179,7 +183,25 @@ public class Fragment_profile extends Fragment {
         view.findViewById(R.id.relative_favorite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), FavoriteActivity.class));
+
+                if (!id.equalsIgnoreCase("")) {
+                    startActivity(new Intent(getContext(), FavoriteActivity.class));
+                }else{
+                    new AlertDialog.Builder(getContext()).setTitle("Thông Báo!!")
+                            .setMessage("Bạn cần đăng nhập để xem sản phẩm đã thích.")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    startActivity(new Intent(getContext(), LoginActivity.class));
+                                    dialogInterface.dismiss();
+                                }
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).show();
+                }
             }
         });
 
