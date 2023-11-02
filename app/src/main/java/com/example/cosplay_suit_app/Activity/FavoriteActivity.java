@@ -8,7 +8,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.cosplay_suit_app.Adapter.Adapter_Favorite;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
@@ -26,13 +28,15 @@ public class FavoriteActivity extends AppCompatActivity {
     private Adapter_Favorite adapter;
     private RecyclerView recyclerView;
     String id;
+
+    TextView id_tv;
     ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
         recyclerView = findViewById(R.id.recycler_favorite);
-        showDialog(this);
+        id_tv = findViewById(R.id.id_tv);
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
 
@@ -56,12 +60,19 @@ public class FavoriteActivity extends AppCompatActivity {
                         list.clear();
 
                         for (DataSnapshot ds : snapshot.getChildren()){
+
                             String proId =""+ ds.child("idProduct").getValue();
                             DTO_SanPham pham = new DTO_SanPham();
                             pham.setId(proId);
 
                             list.add(pham);
-                            dialog.dismiss();
+
+                        }
+                        Log.e("zzz", "onDataChange: " + list.size());
+                        if (list.size() != 0){
+                            id_tv.setVisibility(View.INVISIBLE);
+                        }else{
+                            id_tv.setVisibility(View.VISIBLE);
                         }
 
                         adapter = new Adapter_Favorite(FavoriteActivity.this,list);
