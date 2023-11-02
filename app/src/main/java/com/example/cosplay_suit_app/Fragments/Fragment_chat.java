@@ -57,7 +57,7 @@ public class Fragment_chat extends Fragment {
     RecyclerView rcv_listChat;
     TextView tv_null;
     SearchView sv_listChat;
-
+    ArrayList<User> filteredList;
     public static Fragment_chat newInstance() {
         Fragment_chat fragmentChat = new Fragment_chat();
         return fragmentChat;
@@ -72,10 +72,11 @@ public class Fragment_chat extends Fragment {
 
         tv_null = view.findViewById(R.id.tv_null);
         sv_listChat = view.findViewById(R.id.sv_chat);
+
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
 
         idUser = sharedPreferences.getString("id", "");
-
+        filteredList = new ArrayList<>();
         user = new User();
         list = new ArrayList<>();
         listIdUser = new ArrayList<>();
@@ -83,7 +84,26 @@ public class Fragment_chat extends Fragment {
         rcv_listChat.setAdapter(adapter);
 
 //        getList();
-        setupSearchView();
+
+        sv_listChat.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filteredList.clear();
+                for (User user : list) {
+                    if (user.getFullname().toLowerCase().contains(newText.toLowerCase())) {
+                        filteredList.add(user);
+                    }
+                }
+
+                adapter.updateList(filteredList);
+                return true;
+            }
+        });
         return view;
     }
 
@@ -194,24 +214,6 @@ public class Fragment_chat extends Fragment {
             }
         });
 
-    }
-    private void setupSearchView() {
-        sv_listChat.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filter(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filter(newText);
-                return true;
-            }
-        });
-    }
-    private void filter(String text) {
-        adapter.filter(text);
     }
     private void checkAndUpdateUI() {
         if(list.isEmpty()) {
