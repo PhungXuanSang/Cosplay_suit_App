@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,10 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +56,7 @@ public class Fragment_chat extends Fragment {
     static final String BASE_URL = url + "/user/api/";
     RecyclerView rcv_listChat;
     TextView tv_null;
+    SearchView sv_listChat;
 
     public static Fragment_chat newInstance() {
         Fragment_chat fragmentChat = new Fragment_chat();
@@ -64,11 +69,13 @@ public class Fragment_chat extends Fragment {
         view = inflater.inflate(R.layout.fragment_chat, container, false);
         database = FirebaseDatabase.getInstance();
         rcv_listChat = view.findViewById(R.id.rcv_listChat);
+
         tv_null = view.findViewById(R.id.tv_null);
+        sv_listChat = view.findViewById(R.id.sv_chat);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
 
         idUser = sharedPreferences.getString("id", "");
-        Log.d("DEBUG", "idUserCur: "+idUser);
+
         user = new User();
         list = new ArrayList<>();
         listIdUser = new ArrayList<>();
@@ -76,7 +83,7 @@ public class Fragment_chat extends Fragment {
         rcv_listChat.setAdapter(adapter);
 
 //        getList();
-
+        setupSearchView();
         return view;
     }
 
@@ -92,9 +99,18 @@ public class Fragment_chat extends Fragment {
         DatabaseReference userRoomsReference = database.getReference().child("chats");
 
         Gson gson = new GsonBuilder().setLenient().create();
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create(gson)).client(client)
                 .build();
         UserInterface userInterface = retrofit.create(UserInterface.class);
 
@@ -132,7 +148,6 @@ public class Fragment_chat extends Fragment {
                                 ChatDTO lastMessage = lastMessageSnapshot.getValue(ChatDTO.class);
                                 if (lastMessage != null) {
 
-
                                     Call<User> objCall = userInterface.findUser(receiverId);
                                     objCall.enqueue(new Callback<User>() {
                                         @Override
@@ -143,10 +158,10 @@ public class Fragment_chat extends Fragment {
                                                     fetchedUser.setLastMess(lastMessage.getMessage());
                                                     fetchedUser.setTime(lastMessage.getTime());
                                                     list.add(0, fetchedUser);
-                                                    Log.d("DEBUG", "onDataChange: " + fetchedUser.getFullname());
-                                                    Log.d("DEBUG", "onResponse: "+receiverId);
+
+                                                    Log.d("DEBUG", "onResponse: id nguoi nhan =  "+receiverId+"  ten nguoi nhan = "+ fetchedUser.getFullname()+" time "+fetchedUser.getTime());
                                                     adapter.notifyDataSetChanged();
-                                                    rcv_listChat.scrollToPosition(0);
+
                                                     checkAndUpdateUI();
                                                 }
                                             } else {
@@ -180,6 +195,24 @@ public class Fragment_chat extends Fragment {
         });
 
     }
+    private void setupSearchView() {
+        sv_listChat.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
+            }
+        });
+    }
+    private void filter(String text) {
+        adapter.filter(text);
+    }
     private void checkAndUpdateUI() {
         if(list.isEmpty()) {
             tv_null.setVisibility(View.VISIBLE);
@@ -194,6 +227,7 @@ public class Fragment_chat extends Fragment {
     public void onResume() {
         super.onResume();
         getList();
+
     }
 
 }
