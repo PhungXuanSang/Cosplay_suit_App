@@ -2,16 +2,17 @@ package com.example.cosplay_suit_app.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class DTO_SanPham {
     @SerializedName("_id")
     String id;
     String id_shop,id_category,nameproduct,amount,image,description,time_product;
     int price;
 
-    public DTO_SanPham() {
-    }
-
-    public DTO_SanPham(String id, String id_shop, String id_category, String nameproduct, String amount, String image, String description, int price, String time_product) {
+    String size;
+    List<ItemImageDTO> listImage;
+    public DTO_SanPham(String id, String id_shop, String id_category, String nameproduct, String amount, String image, String description, String time_product, int price, String size, List<ItemImageDTO> listImage) {
         this.id = id;
         this.id_shop = id_shop;
         this.id_category = id_category;
@@ -19,8 +20,30 @@ public class DTO_SanPham {
         this.amount = amount;
         this.image = image;
         this.description = description;
-        this.price = price;
         this.time_product = time_product;
+        this.price = price;
+        this.size = size;
+        this.listImage = listImage;
+    }
+
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public DTO_SanPham() {
+    }
+
+    public List<ItemImageDTO> getListImage() {
+        return listImage;
+    }
+
+    public void setListImage(List<ItemImageDTO> listImage) {
+        this.listImage = listImage;
     }
 
     public String getTime_product() {
@@ -95,3 +118,4 @@ public class DTO_SanPham {
         this.price = price;
     }
 }
+
