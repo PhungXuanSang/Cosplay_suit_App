@@ -1,6 +1,7 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
+import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.Favorite;
@@ -34,4 +35,10 @@ public interface SanPhamInterface {
     @GET("products/{id}")
     Call<DTO_SanPham> getbyid(@Path("id") String id);
 
+    @GET("getlistsp/{id_shop}")
+    Call<List<DTO_SanPham>> GetProduct (@Path("id_shop") String tb_user );
+    @POST("addSP")
+    Call<DTO_SanPham> addProduct (@Body DTO_SanPham dtoSanPham );
+    @GET("getCategory")
+    Call<List<CategoryDTO>> ListCategory();
 }

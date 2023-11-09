@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#03A9F4" /> <!-- Màu nền của hình tròn -->
+    <corners android:radius="20dp" /> <!-- Điều này làm cho nó trở thành hình tròn với bán kính lớn -->
+</shape>

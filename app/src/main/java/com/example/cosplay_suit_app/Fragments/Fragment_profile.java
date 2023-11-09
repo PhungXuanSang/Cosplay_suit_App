@@ -30,6 +30,7 @@ import com.example.cosplay_suit_app.Activity.ChatActivity;
 import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.Activity.FavoriteActivity;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
+import com.example.cosplay_suit_app.Activity.QlspActivity;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
@@ -51,7 +52,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Fragment_profile extends Fragment {
 
-    private TextView tv_fullname;
+    private TextView tv_fullname,tv_qlsp;
 
     private ImageView img_profile;
 
@@ -86,6 +87,7 @@ public class Fragment_profile extends Fragment {
         rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
+
 
         rlxacnhandon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +130,15 @@ public class Fragment_profile extends Fragment {
         img_profile = view.findViewById(R.id.img_profile);
         tv_donhangmua = view.findViewById(R.id.donhangmua);
         appCompatButton = view.findViewById(R.id.btn_login_profile);
+        tv_qlsp = view.findViewById(R.id.tvQlsp);
+
+        tv_qlsp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), QlspActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         tv_donhangmua.setOnClickListener(new View.OnClickListener() {
