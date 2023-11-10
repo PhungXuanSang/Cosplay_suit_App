@@ -30,6 +30,8 @@ public interface UserInterface {
 
     @POST("reg")
     Call<SignUpUser> sign_up(@Body User objT);
+    @PUT("doimk/{id}")
+    Call<User> new_pass(@Path("id") String id, @Body User objU);
 
     @PUT("regapp/{id_user}")
     Call<User> udate_role(@Path("id_user") String id_user,@Body User objT);
