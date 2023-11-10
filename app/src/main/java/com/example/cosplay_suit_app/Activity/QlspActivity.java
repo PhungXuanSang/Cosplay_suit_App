@@ -59,7 +59,7 @@ public class QlspActivity extends AppCompatActivity {
         adapter = new QlspAdapter(mlist,this);
         rclvList.setAdapter(adapter);
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", MODE_PRIVATE);
-         id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
