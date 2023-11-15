@@ -4,4 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="mtrl_textinput_default_box_stroke_color">#ffffff</color>
     <color name="hong">#EBB9EC</color>
+    <color name="colortextfirst">#000000</color>
+    <color name="colortextsecond">#777474</color>
+    <color name="color_view">#A5A2A2</color>
+    <color name="colorPrimary">#F6DF15</color>
+
 </resources>

@@ -1,13 +1,12 @@
 package com.example.cosplay_suit_app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -16,9 +15,12 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
-import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,49 +30,55 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NewPasswordActivity extends AppCompatActivity {
-
+public class ForgotPassNewActivity extends AppCompatActivity {
     static String url = API.URL;
     static final String BASE_URL = url + "/user/api/";
-    private EditText OlPasss;
     private EditText NewPass;
     private EditText CheckNewPass;
 
-    private TextInputLayout tilOlPass;
     private TextInputLayout tilNewPass;
     private TextInputLayout tilCheckNewPass;
 
-    String id_u;
-    String username_u;
-    String pass_u;
-
+    CountDownTimer w,w1;
     private int temp = 0;
 
+    String phone;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_password);
-
-        OlPasss = findViewById(R.id.pass_oldpass);
+        setContentView(R.layout.activity_forgot_pass_new);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
         NewPass = findViewById(R.id.pass_newpass);
         CheckNewPass = findViewById(R.id.pass_newpasscheck);
 
-        tilOlPass = findViewById(R.id.pass_tilOldpass);
         tilNewPass = findViewById(R.id.pass_tilnewpass);
         tilCheckNewPass = findViewById(R.id.pass_tilnewpasscheck);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Vui lòng chờ...");
 
-        SharedPreferences sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
-        id_u = sharedPreferences.getString("id", "");
-        username_u = sharedPreferences.getString("username","");
-        pass_u = sharedPreferences.getString("passwd","");
-
+        phone = getIntent().getStringExtra("mobile");
+        Log.e("zzz", "onCreate: " + phone );
         findViewById(R.id.pass_btncancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(NewPasswordActivity.this, MainActivity.class));
+                progressDialog.show();
+                w = new CountDownTimer(3000, 1000) {
+                    public void onTick(long mil) {
+
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        progressDialog.dismiss();
+                        startActivity(new Intent(ForgotPassNewActivity.this, ErrorActivity.class));
+                        finishAffinity();
+
+                    }
+                }.start();
             }
         });
 
@@ -80,6 +88,16 @@ public class NewPasswordActivity extends AppCompatActivity {
                 validate();
                 if(temp ==0){
                     progressDialog.show();
+
+                    if (user != null) {
+                        user.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
+                                });
+                    }
+
                     User u = new User();
                     u.setPasswd(NewPass.getText().toString());
                     Gson gson = new GsonBuilder().setLenient().create();
@@ -89,15 +107,14 @@ public class NewPasswordActivity extends AppCompatActivity {
                             .build();
                     UserInterface userInterface = retrofit.create(UserInterface.class);
 
-                    Call<User> objCall = userInterface.new_pass(id_u,u);
+                    Call<User> objCall = userInterface.forPass("0"+phone,u);
                     objCall.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
                             if (response.isSuccessful()){
                                 progressDialog.dismiss();
-                                sharedPreferences.edit().clear().commit();
-                                Toast.makeText(NewPasswordActivity.this, "Change password successfully.You need to log back into the app!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(NewPasswordActivity.this, LoginActivity.class));
+                                Toast.makeText(getApplicationContext(), "Change password successfully.You need to log back into the app!", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             }else{
                                 Log.e("zzz", "onResponse: " + response.message() );
                             }
@@ -111,25 +128,15 @@ public class NewPasswordActivity extends AppCompatActivity {
                 }else{
                     temp = 0;
                 }
-
             }
         });
-
     }
 
     void validate(){
-        String olpass = OlPasss.getText().toString();
+
         String pass = NewPass.getText().toString();
         String passnew = CheckNewPass.getText().toString();
-        if (OlPasss.getText().length()==0){
-            tilOlPass.setError("Không để trống Old Password!");
-            temp++;
-        }else if(!(olpass.equalsIgnoreCase(pass_u))){
-            tilOlPass.setError("Password cũ không chính xác!");
-        }
-        else{
-            tilOlPass.setError("");
-        }
+
         if (NewPass.getText().length()==0){
             tilNewPass.setError("Không để trống New Password!");
             temp++;
