@@ -3,8 +3,11 @@ package com.example.cosplay_suit_app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cosplay_suit_app.API;
@@ -92,6 +96,7 @@ public class AddProductActivity extends AppCompatActivity {
         imageAdapter = new ImageAdapter(selectedImageList, this);
         binding.rclvImage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.rclvImage.setAdapter(imageAdapter);
+
         //
 
         binding.ivAddProductAddImage.setOnClickListener(new View.OnClickListener() {
@@ -127,24 +132,26 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     public void addProduct() {
-
+        trangThai();
         binding.btnRudProductAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 callapiRes();
-                finish();
+
             }
         });
         binding.ivProductToolbarAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 callapiRes();
-                finish();
 
             }
         });
 
     }
+
     private void callapiRes() {
 
         DTO_SanPham dtoSanPham = new DTO_SanPham();
@@ -178,33 +185,33 @@ public class AddProductActivity extends AppCompatActivity {
         dtoSanPham2.setDescription(Objects.requireNonNull(binding.edtRudProductDescription.getText()).toString());
         //
 
-        if (binding.checkBoxSmall.isChecked()&& !binding.checkBoxBig.isChecked() && !binding.checkBoxFit.isChecked()){
+        if (binding.checkBoxSmall.isChecked() && !binding.checkBoxBig.isChecked() && !binding.checkBoxFit.isChecked()) {
             dtoSanPham.setSize("Nhỏ");
 
-        }else if (!binding.checkBoxSmall.isChecked()&& binding.checkBoxBig.isChecked() && !binding.checkBoxFit.isChecked()){
+        } else if (!binding.checkBoxSmall.isChecked() && binding.checkBoxBig.isChecked() && !binding.checkBoxFit.isChecked()) {
             dtoSanPham.setSize("Lớn");
 
-        }else if (!binding.checkBoxSmall.isChecked()&& !binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()){
+        } else if (!binding.checkBoxSmall.isChecked() && !binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()) {
             dtoSanPham.setSize("Nhỡ");
-        }else if (binding.checkBoxSmall.isChecked() && binding.checkBoxBig.isChecked() && !binding.checkBoxFit.isChecked()){
+        } else if (binding.checkBoxSmall.isChecked() && binding.checkBoxBig.isChecked() && !binding.checkBoxFit.isChecked()) {
             dtoSanPham.setSize("Nhỏ");
             dtoSanPham1.setSize("Lớn");
             callAddProduct(dtoSanPham);
             callAddProduct(dtoSanPham1);
             return;
-        }else if (binding.checkBoxSmall.isChecked() && !binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()){
+        } else if (binding.checkBoxSmall.isChecked() && !binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()) {
             dtoSanPham.setSize("Nhỏ");
             dtoSanPham2.setSize("Nhỡ");
             callAddProduct(dtoSanPham);
             callAddProduct(dtoSanPham2);
             return;
-        }else if (!binding.checkBoxSmall.isChecked() && binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()){
+        } else if (!binding.checkBoxSmall.isChecked() && binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()) {
             dtoSanPham1.setSize("Lớn");
             dtoSanPham2.setSize("Nhỡ");
             callAddProduct(dtoSanPham1);
             callAddProduct(dtoSanPham2);
             return;
-        }else if (binding.checkBoxSmall.isChecked() && binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()){
+        } else if (binding.checkBoxSmall.isChecked() && binding.checkBoxBig.isChecked() && binding.checkBoxFit.isChecked()) {
             dtoSanPham.setSize(("Nhỏ"));
             dtoSanPham1.setSize("Lớn");
             dtoSanPham2.setSize("Nhỡ");
@@ -222,6 +229,92 @@ public class AddProductActivity extends AppCompatActivity {
 
     }
 
+
+
+    private void trangThai(){
+        binding.edtRudProductName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    check();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.edtRudProductDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                check();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.edtRudProductAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                check();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.edtRudProductPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                check();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        check();
+    }
+    private void check() {
+
+        if (binding.edtRudProductName.getText().toString().trim().isEmpty()|| binding.edtRudProductAmount.getText().toString().trim().isEmpty()
+                || binding.edtRudProductPrice.getText().toString().trim().isEmpty() || binding.edtRudProductDescription.getText().toString().trim().isEmpty() ) {
+
+            binding.btnRudProductAdd.setEnabled(false);
+            binding.btnRudProductAdd.setAlpha(0.3f);
+            binding.ivProductToolbarAdd.setEnabled(false);
+            binding.ivProductToolbarAdd.setAlpha(0.3f);
+
+        }else {
+            binding.btnRudProductAdd.setEnabled(true);
+            binding.btnRudProductAdd.setAlpha(1.0f);
+            binding.ivProductToolbarAdd.setEnabled(true);
+            binding.ivProductToolbarAdd.setAlpha(1.0f);
+        }
+    }
     // Phương thức hỗ trợ để chuyển đổi InputStream thành mảng byte
 
     void callAddProduct(DTO_SanPham dtoSanPham) {
@@ -237,10 +330,13 @@ public class AddProductActivity extends AppCompatActivity {
         sanPhamInterface = retrofit.create(SanPhamInterface.class);
 
         // tạo đối tượng
-        Call<DTO_SanPham> objCall = sanPhamInterface.addProduct(dtoSanPham );
+        Call<DTO_SanPham> objCall = sanPhamInterface.addProduct(dtoSanPham);
         objCall.enqueue(new Callback<DTO_SanPham>() {
             @Override
             public void onResponse(@NonNull Call<DTO_SanPham> call, Response<DTO_SanPham> response) {
+
+                startActivity(new Intent(AddProductActivity.this, QlspActivity.class));
+                finishAffinity();
 
 //                Log.d("TAG", "onResponse: oooooo"+response.body());
             }
@@ -328,6 +424,7 @@ public class AddProductActivity extends AppCompatActivity {
         }
         return byteBuffer.toByteArray();
     }
+
     private void uploadImage() {
         if (uri != null) {
             ProgressDialog progressDialog = new ProgressDialog(this);

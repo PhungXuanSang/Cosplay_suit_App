@@ -35,7 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class QlspActivity extends AppCompatActivity {
     static String url = API.URL;
-    static final String BASE_URL = url +"/product/";
+    static final String BASE_URL = url + "/product/";
     ImageView iv_back, iv_add;
     RecyclerView rclvList;
     List<DTO_SanPham> mlist;
@@ -45,6 +45,7 @@ public class QlspActivity extends AppCompatActivity {
 
     SwipeRefreshLayout srlQlsp;
     String id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +55,13 @@ public class QlspActivity extends AppCompatActivity {
         rclvList = findViewById(R.id.rclvQlspListproduct);
         tvQuantity = findViewById(R.id.tvQlspQuantity);
         srlQlsp = findViewById(R.id.srlQlsp);
-        //
-        mlist = new ArrayList<DTO_SanPham>();
-        adapter = new QlspAdapter(mlist,this);
-        rclvList.setAdapter(adapter);
+
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", MODE_PRIVATE);
-        id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id", "");
+
+        mlist = new ArrayList<DTO_SanPham>();
+        adapter = new QlspAdapter(mlist, this);
+        rclvList.setAdapter(adapter);
 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +76,7 @@ public class QlspActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         refresh();
         callApiProduct();
 
@@ -81,66 +84,69 @@ public class QlspActivity extends AppCompatActivity {
 
     private void callApiProduct() {
 
-            // tạo gson
-            Gson gson = new GsonBuilder().setLenient().create();
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
 
-            // Create a new object from HttpLoggingInterceptor
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            // Add Interceptor to HttpClient
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .connectTimeout(20, TimeUnit.SECONDS)
-                    .addInterceptor(interceptor).build();
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client) // Set HttpClient to be used by Retrofit
-                    .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
 
-            // sử dụng interface
-            SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+        // sử dụng interface
+        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
 
-            // tạo đối tượng
-            Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(id);
-            objCall.enqueue(new Callback<List<DTO_SanPham>>() {
-                @Override
-                public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
-                    if (response.isSuccessful()) {
+        // tạo đối tượng
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(id);
+        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
+                if (response.isSuccessful()) {
 
-                        mlist.clear();
-                        mlist.addAll(response.body());
-                        tvQuantity.setText(mlist.size()+" Sản phẩm");
-                        Log.d("TAG", "onResponse: "+response.body());
-                        adapter.notifyDataSetChanged();
+                    mlist.clear();
+                    mlist.addAll(response.body());
+                    tvQuantity.setText(mlist.size() + " Sản phẩm");
+                    Log.d("TAG", "onResponse: " + response.body());
+                    adapter.notifyDataSetChanged();
 
-                        Log.d("TAG", "onResponse: "+mlist.size()+"-----------"+id);
-
-                    }
+                    Log.d("TAG", "onResponse: " + mlist.size() + "-----------" + id);
 
                 }
 
-                @Override
-                public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+            }
 
-                }
-            });
+            @Override
+            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
 
-        }
+            }
+        });
 
-    private void refresh(){
+    }
+
+    private void refresh() {
 
         srlQlsp.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                mlist.clear();
+                mlist = new ArrayList<DTO_SanPham>();
+                adapter = new QlspAdapter(mlist, QlspActivity.this);
+                rclvList.setAdapter(adapter);
+//                mlist.clear();
                 callApiProduct();
                 srlQlsp.setRefreshing(false);
             }
         });
+
     }
 
 
