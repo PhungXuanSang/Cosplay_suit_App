@@ -45,6 +45,8 @@ import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Fragment_profile extends Fragment {
 
-    private TextView tv_fullname, tv_qlsp;
+    private TextView tv_fullname,tv_qlsp;
 
     private ImageView img_profile;
 
@@ -68,10 +70,12 @@ public class Fragment_profile extends Fragment {
 
     String username_u;
     String id_user;
-    static String id;
+    static String id, role;
     static String url = API.URL;
-    static final String BASE_URL = url + "/user/api/";
+    static final String BASE_URL = url +"/user/api/";
     RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao;
+
+    RelativeLayout rlRole;
 
     RelativeLayout relative_newpass;
     View idview5;
@@ -79,7 +83,7 @@ public class Fragment_profile extends Fragment {
     public Fragment_profile() {
     }
 
-    public static Fragment_profile newInstance() {
+    public static Fragment_profile newInstance(){
         Fragment_profile fragmentProfile = new Fragment_profile();
         return fragmentProfile;
     }
@@ -92,6 +96,7 @@ public class Fragment_profile extends Fragment {
         rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
+
 
         rlxacnhandon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,13 +140,18 @@ public class Fragment_profile extends Fragment {
         tv_donhangmua = view.findViewById(R.id.donhangmua);
         appCompatButton = view.findViewById(R.id.btn_login_profile);
         tv_qlsp = view.findViewById(R.id.tvQlsp);
+        View view1 = view.findViewById(R.id.ivView);
+        View view2 = view.findViewById(R.id.idview2);
         relative_newpass = view.findViewById(R.id.relative_newpass);
         idview5 = view.findViewById(R.id.idview5);
-
+        rlRole = view.findViewById(R.id.rlRole);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
         id = sharedPreferences.getString("id", "");
+        role = sharedPreferences.getString("role", "");
+
+        Log.d("TAG", "onViewCreated: "+role);
         tv_fullname.setText(username_u);
         tv_qlsp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +160,7 @@ public class Fragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
+
 
 
         tv_donhangmua.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +205,13 @@ public class Fragment_profile extends Fragment {
 
         if (!id.equalsIgnoreCase("")) {
             appCompatButton.setText("Sign Out");
+            if (Objects.equals(role, "User")){
+                tv_qlsp.setVisibility(View.GONE);
+                view1.setVisibility(View.GONE);
+            }else {
+                rlRole.setVisibility(View.GONE);
+                view2.setVisibility(View.GONE);
+            }
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -203,10 +221,13 @@ public class Fragment_profile extends Fragment {
             });
         } else {
             appCompatButton.setText("Sign In");
+            tv_qlsp.setVisibility(View.GONE);
+            view1.setVisibility(View.GONE);
+
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    startActivity(new Intent(getActivity(),LoginActivity.class));
                 }
             });
         }
@@ -217,7 +238,7 @@ public class Fragment_profile extends Fragment {
 
                 if (!id.equalsIgnoreCase("")) {
                     startActivity(new Intent(getContext(), FavoriteActivity.class));
-                } else {
+                }else{
                     new AlertDialog.Builder(getContext()).setTitle("Thông Báo!!")
                             .setMessage("Bạn cần đăng nhập để xem sản phẩm đã thích.")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -238,7 +259,7 @@ public class Fragment_profile extends Fragment {
 
     }
 
-    public void showDialog(Context context, String name, String address) {
+    public void showDialog(Context context, String name, String address ) {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_register_shop);
@@ -289,26 +310,26 @@ public class Fragment_profile extends Fragment {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create( gson))
                 .build();
         UserInterface userInterface = retrofit.create(UserInterface.class);
 
-        Call<User> objCall = userInterface.udate_role(id_user, u);
+        Call<User> objCall = userInterface.udate_role(id_user,u);
         objCall.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
 
-                if (response.isSuccessful()) {
+                if (response.isSuccessful()){
                     progressDialog.dismiss();
-                    Log.e("zzzz", "onResponse1: " + user.getRole());
+                    Log.e("zzzz", "onResponse1: " +user.getRole());
 
-                    if (u != null) {
-                        Log.e("zzzzz", "onResponse: " + u);
-                        Intent intent = new Intent(getContext(), LoginActivity.class);
+                    if (u != null){
+                        Log.e("zzzzz", "onResponse: " + u );
+                        Intent intent = new Intent(getContext(),LoginActivity.class);
                         startActivity(intent);
                     }
-                } else {
+                }else{
 //                    Log.e("zzz", "onResponse: " +signUpUser.getMessage());
 //                    Log.e(TAG, "onResponse: " + response.message());
                 }
@@ -325,13 +346,12 @@ public class Fragment_profile extends Fragment {
         });
 
     }
-
-    void AddShop(Shop s) {
+    void AddShop(Shop s){
 
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create( gson))
                 .build();
         UserInterface userInterface = retrofit.create(UserInterface.class);
 
@@ -341,12 +361,12 @@ public class Fragment_profile extends Fragment {
             public void onResponse(Call<Shop> call, Response<Shop> response) {
                 Shop shop = response.body();
 
-                if (response.isSuccessful()) {
+                if (response.isSuccessful()){
 
-                    Log.e("zzzzz", "onResponse1: " + shop.getId_user());
+                    Log.e("zzzzz", "onResponse1: " +shop.getId_user());
                     Toast.makeText(getContext(), shop.getId(), Toast.LENGTH_SHORT).show();
 
-                } else {
+                }else{
 //                    Log.e("zzz", "onResponse: " +signUpUser.getMessage());
 //                    Log.e(TAG, "onResponse: " + response.message());
                 }
