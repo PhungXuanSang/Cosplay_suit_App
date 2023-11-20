@@ -84,6 +84,7 @@ public class AddProductActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
+
         FirebaseApp.initializeApp(this);
         storage = FirebaseStorage.getInstance("gs://duantotnghiepcosplaysuit.appspot.com");
         storageReference = storage.getReference();

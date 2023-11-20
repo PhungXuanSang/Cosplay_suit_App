@@ -34,6 +34,7 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_properties;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
+import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
@@ -138,8 +139,13 @@ public class Chitietsanpham extends AppCompatActivity {
                     @Override
                     public void run() {
                         fullScreenDialog.dismiss();
-
-                        Glide.with(Chitietsanpham.this).load(imageproduct).centerCrop().into(img_pro);
+                        // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
+                        Glide.with(Chitietsanpham.this)
+                                .load(imageproduct)
+                                .error(R.drawable.image)
+                                .placeholder(R.drawable.image)
+                                .centerCrop()
+                                .into(img_pro);
                         tv_name.setText(" " + nameproduct + " ");
                         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
                         tv_price.setText("" + decimalFormat.format(priceproduct));
@@ -354,7 +360,14 @@ public class Chitietsanpham extends AppCompatActivity {
 
         // Hiển thị image sản phẩm
         ImageView imgsp = dialog.findViewById(R.id.imgproduct);
-        Glide.with(context).load(imageproduct).centerCrop().into(imgsp);
+        // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
+        Glide.with(context)
+                .load(imageproduct)
+                .error(R.drawable.image)
+                .placeholder(R.drawable.image)
+                .centerCrop()
+                .into(imgsp);
+//        Glide.with(context).load(imageproduct).centerCrop().into(imgsp);
 
         //Hiển thị danh sách size
         rcv_properties = dialog.findViewById(R.id.rc_size);

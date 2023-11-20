@@ -79,6 +79,7 @@ public class Fragment_profile extends Fragment {
 
     RelativeLayout relative_newpass;
     View idview5;
+    SharedPreferences sharedPreferences;
 
     public Fragment_profile() {
     }
@@ -260,12 +261,12 @@ public class Fragment_profile extends Fragment {
     }
 
     public void showDialog(Context context, String name, String address ) {
-        Dialog dialog = new Dialog(getActivity());
+         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_register_shop);
 
         progressDialog = new ProgressDialog(getContext());
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+        sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         id_user = sharedPreferences.getString("id", "");
 
 
@@ -297,7 +298,7 @@ public class Fragment_profile extends Fragment {
                 UpdateRole(us);
 
 
-                dialog.dismiss();
+
             }
         });
 
@@ -321,11 +322,11 @@ public class Fragment_profile extends Fragment {
                 User user = response.body();
 
                 if (response.isSuccessful()){
+                    dialog.dismiss();
+                    sharedPreferences.edit().clear().commit();
                     progressDialog.dismiss();
-                    Log.e("zzzz", "onResponse1: " +user.getRole());
-
                     if (u != null){
-                        Log.e("zzzzz", "onResponse: " + u );
+                        Toast.makeText(getContext(), "Bạn cần đăng nhập lại app!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getContext(),LoginActivity.class);
                         startActivity(intent);
                     }

@@ -19,6 +19,7 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
+import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -72,7 +73,20 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         Adapter_SanPham.ItemViewHolder viewHolder = (Adapter_SanPham.ItemViewHolder) holder;
         viewHolder.tv_nameSanPham.setText(sanPham.getNameproduct());
-        Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
+//        Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
+
+        if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
+            ItemImageDTO firstImage = sanPham.getListImage().get(0);
+            String imageUrl = firstImage.getImage();
+
+            // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
+            Glide.with(context)
+                    .load(imageUrl)
+                    .error(R.drawable.image)
+                    .placeholder(R.drawable.image)
+                    .centerCrop()
+                    .into(viewHolder.img_AnhSp);
+        }
         viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
