@@ -2,27 +2,19 @@ package com.example.cosplay_suit_app.DTO;
 
 public class DTO_CartOrder {
     String id_user;
-    String product_id;
+    String id_product;
     int amount, totalPayment;
-    String properties_id;
+    String id_properties;
 
     public DTO_CartOrder() {
     }
 
-    public DTO_CartOrder(String id_user, String product_id, int amount, int totalPayment, String properties_id) {
+    public DTO_CartOrder(String id_user, String id_product, int amount, int totalPayment, String id_properties) {
         this.id_user = id_user;
-        this.product_id = product_id;
+        this.id_product = id_product;
         this.amount = amount;
         this.totalPayment = totalPayment;
-        this.properties_id = properties_id;
-    }
-
-    public int getTotalPayment() {
-        return totalPayment;
-    }
-
-    public void setTotalPayment(int totalPayment) {
-        this.totalPayment = totalPayment;
+        this.id_properties = id_properties;
     }
 
     public String getId_user() {
@@ -33,12 +25,12 @@ public class DTO_CartOrder {
         this.id_user = id_user;
     }
 
-    public String getProduct_id() {
-        return product_id;
+    public String getId_product() {
+        return id_product;
     }
 
-    public void setProduct_id(String product_id) {
-        this.product_id = product_id;
+    public void setId_product(String id_product) {
+        this.id_product = id_product;
     }
 
     public int getAmount() {
@@ -49,11 +41,19 @@ public class DTO_CartOrder {
         this.amount = amount;
     }
 
-    public String getProperties_id() {
-        return properties_id;
+    public int getTotalPayment() {
+        return totalPayment;
     }
 
-    public void setProperties_id(String properties_id) {
-        this.properties_id = properties_id;
+    public void setTotalPayment(int totalPayment) {
+        this.totalPayment = totalPayment;
+    }
+
+    public String getId_properties() {
+        return id_properties;
+    }
+
+    public void setId_properties(String id_properties) {
+        this.id_properties = id_properties;
     }
 }
