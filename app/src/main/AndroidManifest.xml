@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.ErrorActivity"
             android:exported="false" />
         <activity
@@ -79,6 +82,10 @@
         <activity
             android:name=".Activity.AddProductActivity"
             android:exported="false" />
+        <activity
+            android:name="com.example.cosplay_suit_app.Activity.ProfileActivity"
+            android:exported="false"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true">
