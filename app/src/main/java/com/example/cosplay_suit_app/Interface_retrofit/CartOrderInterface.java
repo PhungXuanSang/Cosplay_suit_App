@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
+import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface CartOrderInterface {
+    @GET("getShop/{id}")
+    Call<List<ShopCartorderDTO>> getShop(@Path("id") String id);
     @GET("getidCartOder/{id}")
     Call<List<CartOrderDTO>> getidCartOder(@Path("id") String id);
 
@@ -27,5 +30,6 @@ public interface CartOrderInterface {
 
     @DELETE("deletecart/{id}")
     Call<CartOrderDTO> deletecart(@Path("id") String id, @Body CartOrderDTO objT);
+
 
 }

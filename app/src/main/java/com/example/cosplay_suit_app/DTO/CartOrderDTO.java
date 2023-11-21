@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class CartOrderDTO {
     String _id,id_user;
-    @SerializedName("product_id")
+    @SerializedName("id_product")
     DTO_SanPham dtoSanPham;
     int amount, totalPayment;
-    @SerializedName("properties_id")
+    @SerializedName("id_properties")
     DTO_properties dtoProperties;
 
     public CartOrderDTO() {

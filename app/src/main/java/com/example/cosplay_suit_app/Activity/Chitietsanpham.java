@@ -385,10 +385,10 @@ public class Chitietsanpham extends AppCompatActivity {
             public void onClick(View view) {
                 DTO_CartOrder cartOrder = new DTO_CartOrder();
                 cartOrder.setId_user(id);
-                cartOrder.setProduct_id(idproduct);
+                cartOrder.setId_product(idproduct);
                 cartOrder.setTotalPayment(priceproduct);
                 cartOrder.setAmount(1);
-                cartOrder.setProperties_id("6535324abdcedbd6d8302681");
+                cartOrder.setId_properties("655c0d2326e98fea694ad80f");
 
                 AddCart(cartOrder);
             }
