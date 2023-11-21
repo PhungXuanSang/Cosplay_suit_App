@@ -13,7 +13,15 @@ public class User {
 
     private String lastMess;
     private String time;
+    private String image;
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 //    private  boolean check;
 
 

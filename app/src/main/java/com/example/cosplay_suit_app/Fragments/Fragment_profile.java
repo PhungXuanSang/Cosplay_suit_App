@@ -26,11 +26,10 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.API;
-import com.example.cosplay_suit_app.Activity.ChatActivity;
-import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.Activity.FavoriteActivity;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.Activity.NewPasswordActivity;
+import com.example.cosplay_suit_app.Activity.ProfileActivity;
 import com.example.cosplay_suit_app.Activity.QlspActivity;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
@@ -97,6 +96,19 @@ public class Fragment_profile extends Fragment {
         rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
+        ImageView imgProfile = viewok.findViewById(R.id.img_profile);
+
+        // Set an OnClickListener for the ImageView
+        imgProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Define the intent to start the new activity (replace NewProfileActivity.class with your actual profile activity class)
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+
+                // Start the new activity
+                startActivity(intent);
+            }
+        });
 
 
         rlxacnhandon.setOnClickListener(new View.OnClickListener() {
