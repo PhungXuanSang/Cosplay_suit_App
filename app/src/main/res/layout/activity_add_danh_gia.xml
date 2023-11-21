@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".Package_bill.Activity.AddDanhGiaActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutTitleCmts"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/white"
+            android:padding="3dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ic_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_back_pink"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_titleCmts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:text="Đánh giá sản phẩm "
+                android:textColor="@color/black"
+                android:textSize="23sp"
+                app:layout_constraintLeft_toRightOf="@id/ic_back"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_sendcmts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_done"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layoutPro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FDF8F8"
+            android:orientation="horizontal"
+            android:padding="6dp"
+            app:layout_constraintTop_toBottomOf="@id/layoutTitleCmts">
+
+            <ImageView
+                android:id="@+id/img_spCmts"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/bgchat2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:text=" Áo xịn đấy,mua đi, mua đi, mua đi,Áo xịn đấy,mua đi, mua đi, mua đi"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view01"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#E1E1E1"
+            app:layout_constraintTop_toBottomOf="@id/layoutPro" />
+
+        <TextView
+            android:id="@+id/tv_clsp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="Chất lượng sản phẩm"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view01" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:numStars="5"
+            android:progressTint="@android:color/holo_orange_dark"
+            android:rating="0"
+            android:stepSize="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_clsp" />
+
+        <TextView
+            android:id="@+id/tv_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="5dp"
+            android:text="Tuyệt vời"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/ratingBar"
+            app:layout_constraintLeft_toRightOf="@id/ratingBar"
+            app:layout_constraintTop_toTopOf="@id/ratingBar" />
+
+        <TextView
+            android:id="@+id/tv_tha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Thêm hình ảnh"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ratingBar" />
+
+        <LinearLayout
+            android:id="@+id/layoutaddImageCmts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/bg_dut"
+            android:orientation="horizontal"
+            android:padding="6dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_tha">
+
+            <ImageView
+                android:id="@+id/img_addCmts"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginEnd="15dp"
+                android:background="@color/white"
+                android:src="@drawable/img_add_cmt" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_imgCmts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_nx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Nhận xét"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutaddImageCmts" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/styleed_cmts"
+
+            android:gravity="top|start"
+            android:hint="Hãy chia sẻ nhận xét của bạn về sản phẩm này!!"
+            android:padding="10dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_nx" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

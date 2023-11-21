@@ -11,4 +11,10 @@
 
     <color name="bgrRong">#6F7A80</color>
     <color name="bgrCoThongTin">#03A9F4</color>
+
+
+    <color name="material_orange_400">#FF3D00</color>
+    <color name="material_green_400">#00E676</color>
+    <color name="ratingStarColor">#FFD700</color>
+
 </resources>
