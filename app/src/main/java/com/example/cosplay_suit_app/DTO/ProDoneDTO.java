@@ -2,6 +2,8 @@ package com.example.cosplay_suit_app.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class ProDoneDTO {
 
     @SerializedName("_id")
@@ -11,6 +13,17 @@ public class ProDoneDTO {
     @SerializedName("id_shop")
     Shop shop;
     int price;
+
+    List<ItemImageDTO> listImage;
+
+
+    public List<ItemImageDTO> getListImage() {
+        return listImage;
+    }
+
+    public void setListImage(List<ItemImageDTO> listImage) {
+        this.listImage = listImage;
+    }
 
     public String getId() {
         return id;

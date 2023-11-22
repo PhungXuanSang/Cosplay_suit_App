@@ -6,6 +6,13 @@ public class ImageCmtsDTO {
     @SerializedName("anhCmts")
     private String anhCmts;
 
+    public ImageCmtsDTO(String anhCmts) {
+        this.anhCmts = anhCmts;
+    }
+
+    public ImageCmtsDTO() {
+    }
+
     public String getAnhCmts() {
         return anhCmts;
     }

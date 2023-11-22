@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#D1CFCF" /> <!-- Màu của khoảng trống -->
+    <size android:height="5dp" /> <!-- Kích thước của khoảng trống -->
+</shape>

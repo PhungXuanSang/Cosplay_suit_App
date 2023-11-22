@@ -229,7 +229,6 @@ public class Fragment_chat extends Fragment {
     public void onResume() {
         super.onResume();
         getList();
-
     }
 
 }
