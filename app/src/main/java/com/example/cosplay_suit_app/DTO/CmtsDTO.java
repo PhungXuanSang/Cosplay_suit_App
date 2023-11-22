@@ -13,6 +13,7 @@ public class CmtsDTO {
     @SerializedName("id_user")
     User user;
 
+    String id_bill;
     String content;
     String time;
     List<ImageCmtsDTO> image;
@@ -21,6 +22,7 @@ public class CmtsDTO {
     public CmtsDTO() {
     }
 
+
     public CmtsDTO(String idPro, User user, String content, String time, List<ImageCmtsDTO> image, int star) {
         this.idPro = idPro;
         this.user = user;
@@ -28,6 +30,22 @@ public class CmtsDTO {
         this.time = time;
         this.image = image;
         this.star = star;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId_bill() {
+        return id_bill;
+    }
+
+    public void setId_bill(String id_bill) {
+        this.id_bill = id_bill;
     }
 
     public String getIdPro() {

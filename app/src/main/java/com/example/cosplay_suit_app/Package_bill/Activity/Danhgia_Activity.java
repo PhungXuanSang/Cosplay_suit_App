@@ -51,8 +51,7 @@ public class Danhgia_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danhgia);
         initView();
-        SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+
 
 
 
@@ -91,52 +90,4 @@ public class Danhgia_Activity extends AppCompatActivity {
         mediator.attach();
     }
 
-    void GetUserBill(String id) {
-        // tạo gson
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        // Create a new object from HttpLoggingInterceptor
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        // Add Interceptor to HttpClient
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client) // Set HttpClient to be used by Retrofit
-                .build();
-
-        // sử dụng interface
-        Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
-
-        // tạo đối tượng
-        Call<List<BillDetailDTO>> objCall = billDetailDTO.getstatusDone(id);
-        objCall.enqueue(new Callback<List<BillDetailDTO>>() {
-            @Override
-            public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-
-                    list.clear();
-                    list.addAll(response.body());
-                    arrayAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "onResponse: "+list.size());
-
-                } else {
-                    Toast.makeText(Danhgia_Activity.this,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t);
-            }
-        });
-
-    }
 }
