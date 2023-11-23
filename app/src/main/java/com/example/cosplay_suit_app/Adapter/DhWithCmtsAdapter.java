@@ -71,13 +71,20 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
 
-        ImageCmtsUserAdapter imageCmtsUserAdapter = new ImageCmtsUserAdapter(cmtsDTO.getImage());
-        viewHolder.rcv_listanh.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        viewHolder.rcv_listanh.setAdapter(imageCmtsUserAdapter);
+        if (cmtsDTO.getImage() != null && !cmtsDTO.getImage().isEmpty()) {
+            ImageCmtsUserAdapter imageCmtsUserAdapter = new ImageCmtsUserAdapter(cmtsDTO.getImage());
+            viewHolder.rcv_listanh.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+            viewHolder.rcv_listanh.setAdapter(imageCmtsUserAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL);
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.divider));
-        viewHolder.rcv_listanh.addItemDecoration(dividerItemDecoration);
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL);
+            dividerItemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.divider));
+            viewHolder.rcv_listanh.addItemDecoration(dividerItemDecoration);
+
+            viewHolder.rcv_listanh.setVisibility(View.VISIBLE);
+        } else {
+
+            viewHolder.rcv_listanh.setVisibility(View.GONE);
+        }
     }
 
     @Override
