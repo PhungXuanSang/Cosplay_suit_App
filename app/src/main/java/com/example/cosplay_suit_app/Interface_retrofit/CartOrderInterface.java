@@ -2,6 +2,8 @@ package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
+import com.example.cosplay_suit_app.DTO.DTO_buynow;
+import com.example.cosplay_suit_app.DTO.DTO_inbuynow;
 import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 
 import java.util.List;
@@ -16,12 +18,15 @@ import retrofit2.http.Path;
 
 public interface CartOrderInterface {
     @GET("getShop/{id}")
+    Call<List<DTO_buynow>> getShopBuynow(@Path("id") String id);
+    @GET("getShop/{id}")
     Call<List<ShopCartorderDTO>> getShop(@Path("id") String id);
     @GET("getidCartOder/{id}")
     Call<List<CartOrderDTO>> getidCartOder(@Path("id") String id);
-
     @GET("getusercartorder/{id}")
     Call<List<CartOrderDTO>> getusercartorder(@Path("id") String id);
+    @GET("getusercartorder/{id}")
+    Call<List<DTO_inbuynow>> getShopidcart(@Path("id") String id);
     @POST("addcart")
     Call<DTO_CartOrder> addcart(@Body DTO_CartOrder objT);
 

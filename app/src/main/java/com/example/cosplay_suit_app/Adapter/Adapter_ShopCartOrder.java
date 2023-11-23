@@ -1,6 +1,7 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,20 +37,19 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
     static final String BASE_URL = url +"/bill/";
     List<ShopCartorderDTO> list;
     Context context;
-    private boolean isOrdersUpdated = false;
     private Map<String, List<CartOrderDTO>> orderMap; // Map lưu trữ danh sách đơn hàng theo idshop
     private List<CartOrderDTO> allOrders;
     AdapterCartorder arrayAdapter;
-    TextView tvthanhtien;
     String TAG = "adaptershopcartorder";
-    int thanhtien = 0;
     public Adapter_ShopCartOrder(List<ShopCartorderDTO> list, Context context) {
         this.list = list;
         this.context = context;
         orderMap = new HashMap<>();
         allOrders = new ArrayList<>();
         // Lấy danh sách đơn hàng của tất cả người dùng
-        getOrdersByUserId("651fc5da0457764a7a047306", new Callback<List<CartOrderDTO>>() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("User", context.MODE_PRIVATE);
+        String id = sharedPreferences.getString("id","");
+        getOrdersByUserId(id, new Callback<List<CartOrderDTO>>() {
             @Override
             public void onResponse(Call<List<CartOrderDTO>> call, Response<List<CartOrderDTO>> response) {
                 if (response.isSuccessful()) {
@@ -85,18 +85,19 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
         ShopCartorderDTO shop = list.get(position);
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
         viewHolder.tvnameshop.setText(shop.getName_shop());
+
         List<CartOrderDTO> ordersForShop = orderMap.get(shop.getId());
         arrayAdapter = new AdapterCartorder(ordersForShop, context, (AdapterCartorder.OnclickCheck) context);
         viewHolder.rcvcart.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
 
-        if (ordersForShop != null) {
-            for (CartOrderDTO order : ordersForShop) {
-                Log.d(TAG, "Order ID: " + order.getTotalPayment()); // Thay "getId()" bằng getter tương ứng trong OrderDTO
-            }
-        } else {
-            Log.d(TAG, "No orders found for shop with ID: " + shop.getId());
-        }
+//        if (ordersForShop != null) {
+//            for (CartOrderDTO order : ordersForShop) {
+//                Log.d(TAG, "Order ID: " + order.getTotalPayment()); // Thay "getId()" bằng getter tương ứng trong OrderDTO
+//            }
+//        } else {
+//            Log.d(TAG, "No orders found for shop with ID: " + shop.getId());
+//        }
     }
 
     @Override

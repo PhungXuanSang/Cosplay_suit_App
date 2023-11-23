@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.AdapterCartorder;
 import com.example.cosplay_suit_app.Adapter.Adapter_ShopCartOrder;
 import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
+import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.R;
@@ -26,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -46,11 +49,13 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     ImageView img_back;
     TextView tvtongtien;
     Button btnbuynow;
+    private TotalPriceManager totalPriceManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_order);
         Anhxa();
+        totalPriceManager = TotalPriceManager.getInstance();
         list = new ArrayList<>();
         arrayAdapter = new Adapter_ShopCartOrder(list, (Context) CartOrderActivity.this);
         recyclerView.setAdapter(arrayAdapter);
@@ -108,7 +113,6 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                     list.clear();
                     list.addAll(response.body());
                     arrayAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "onResponse: "+list.size());
 
                 } else {
                     Toast.makeText(CartOrderActivity.this,
@@ -124,23 +128,26 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     }
 
     @Override
-    public void onCheckboxTrue(int tongtien) {
+    public void onCheckboxTrue() {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        tvtongtien.setText(decimalFormat.format(tongtien) + " VND");
+        int tt = totalPriceManager.getTotalOrderPrice();
+        tvtongtien.setText(decimalFormat.format(tt) + " VND");
     }
 
     @Override
-    public void onCheckboxFalse(int tongtien) {
+    public void onCheckboxFalse() {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        tvtongtien.setText(decimalFormat.format(tongtien) + " VND");
+        int tt = totalPriceManager.getTotalOrderPrice();
+        tvtongtien.setText(decimalFormat.format(tt) + " VND");
     }
 
     @Override
-    public void onIdCart(ArrayList<String> idcart) {
+    public void onIdCart() {
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(CartOrderActivity.this, BuynowActivity.class);
+                startActivity(intent);
             }
         });
     }

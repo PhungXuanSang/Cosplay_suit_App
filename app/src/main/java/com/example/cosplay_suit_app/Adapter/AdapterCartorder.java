@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
+import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
@@ -36,10 +38,10 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     static final String BASE_URL = url +"/bill/";
     List<CartOrderDTO> list;
     Context context;
-    ArrayList<String> arrayList = new ArrayList<>();
     int tonggia = 0, soluong = 1;
     String TAG = "adaptercartorder";
     OnclickCheck onclickCheck;
+    String idcart, idshop;
 
     public AdapterCartorder(List<CartOrderDTO> list, Context context, OnclickCheck onclickCheck) {
         this.list = list;
@@ -59,9 +61,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
         CartOrderDTO order = list.get(position);
-
         if (order != null) {
-            Log.d("checkdata", "checkdata: " + order.getDtoSanPham().getNameproduct());
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
             if (order.getDtoSanPham().getListImage() != null && !order.getDtoSanPham().getListImage().isEmpty()) {
                 ItemImageDTO firstImage = order.getDtoSanPham().getListImage().get(0);
@@ -88,8 +88,9 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         String slmoi = String.valueOf(soluong);
                         viewHolder.tvsoluong.setText(slmoi);
                         if (viewHolder.cbkcart.isChecked()){
-                            tonggia = tonggia + order.getDtoSanPham().getPrice();
-                            onclickCheck.onCheckboxTrue(tonggia);
+                            tonggia = order.getDtoSanPham().getPrice();
+                            TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
+                            onclickCheck.onCheckboxTrue();
                         }
                         int gia = (order.getDtoSanPham().getPrice()) * soluong;
                         CartOrderDTO dto = new CartOrderDTO();
@@ -107,8 +108,9 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         String slmoi = String.valueOf(soluong);
                         viewHolder.tvsoluong.setText(slmoi);
                         if (viewHolder.cbkcart.isChecked()){
-                            tonggia = tonggia - order.getDtoSanPham().getPrice();
-                            onclickCheck.onCheckboxTrue(tonggia);
+                            tonggia = order.getDtoSanPham().getPrice();
+                            TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
+                            onclickCheck.onCheckboxTrue();
                         }
                         int gia = (order.getDtoSanPham().getPrice()) * soluong;
                         CartOrderDTO dto = new CartOrderDTO();
@@ -121,18 +123,28 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.cbkcart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (viewHolder.cbkcart.isChecked()){
-                        arrayList.add(order.getId_cart());
-                        tonggia += (order.getDtoSanPham().getPrice())
-                                * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
-                        onclickCheck.onCheckboxTrue(tonggia);
-                    }else {
-                        arrayList.remove(order.getId_cart());
-                        tonggia -= (order.getDtoSanPham().getPrice())
-                                * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
-                        onclickCheck.onCheckboxFalse(tonggia);
+                    if (viewHolder.cbkcart.isChecked()) {
+                        idcart = order.getId_cart();
+                        idshop = order.getDtoSanPham().getId_shop();
+                        Log.d(TAG, "idshop: " + idshop);
+                        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
+                        TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
+                        TotalPriceManager.getInstance().updateIdcartTrue(idcart);
+                        TotalPriceManager.getInstance().updateidshopTrue(idshop);;
+                        onclickCheck.onCheckboxTrue();
+                        onclickCheck.onIdCart();
+                    } else {
+                        idcart = order.getId_cart();
+                        idshop = order.getDtoSanPham().getId_shop();
+                        Log.d(TAG, "idshop: " + idshop);
+                        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
+                        TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
+                        TotalPriceManager.getInstance().updateIdcartFalse(idcart);
+                        TotalPriceManager.getInstance().updateidshopFalse(idshop);
+                        onclickCheck.onCheckboxFalse();
+                        onclickCheck.onIdCart();
                     }
-                    onclickCheck.onIdCart(arrayList);
+
                 }
             });
 
@@ -163,9 +175,9 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
     public interface OnclickCheck{
-        void onCheckboxTrue(int tongtien);
-        void onCheckboxFalse(int tongtien);
-        void onIdCart(ArrayList<String> idcart);
+        void onCheckboxTrue();
+        void onCheckboxFalse();
+        void onIdCart();
 
     }
 
