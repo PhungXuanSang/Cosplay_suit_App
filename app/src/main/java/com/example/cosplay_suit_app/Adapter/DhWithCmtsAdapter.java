@@ -4,15 +4,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
+import com.example.cosplay_suit_app.DTO.GetCmtsDTO;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
 
@@ -23,10 +26,10 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
     Context context;
-    ArrayList<ItemDoneDTO> list;
+    ArrayList<GetCmtsDTO> list;
 
 
-    public DhWithCmtsAdapter(Context context, ArrayList<ItemDoneDTO> list) {
+    public DhWithCmtsAdapter(Context context, ArrayList<GetCmtsDTO> list) {
         this.context = context;
         this.list = list;
     }
@@ -42,18 +45,20 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ItemDoneDTO itemDoneDTO = list.get(position);
+        GetCmtsDTO cmtsDTO = list.get(position);
 
         DhWithCmtsAdapter.ItemViewHolder viewHolder = (DhWithCmtsAdapter.ItemViewHolder) holder;
 
 
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
-        viewHolder.tv_nameShop.setText(itemDoneDTO.getProDoneDTO().getShop().getNameshop());
-        viewHolder.tv_nameDone.setText(itemDoneDTO.getProDoneDTO().getNameproduct());
-        viewHolder.tv_gia.setText(decimalFormat.format(itemDoneDTO.getProDoneDTO().getPrice())+"đ");
-        if (itemDoneDTO.getProDoneDTO().getListImage() != null && !itemDoneDTO.getProDoneDTO().getListImage().isEmpty()) {
-            ItemImageDTO firstImage = itemDoneDTO.getProDoneDTO().getListImage().get(0);
+        viewHolder.tv_nameU.setText("Fullname: "+cmtsDTO.getUser().getFullname());
+        viewHolder.tv_date.setText(cmtsDTO.getTime());
+        viewHolder.tv_namePro.setText(cmtsDTO.getIdPro().getNameproduct());
+        viewHolder.tv_content.setText(cmtsDTO.getContent());
+        viewHolder.ratingBar.setRating(cmtsDTO.getStar());
+
+        if (cmtsDTO.getIdPro().getListImage() != null && !cmtsDTO.getIdPro().getListImage().isEmpty()) {
+            ItemImageDTO firstImage = cmtsDTO.getIdPro().getListImage().get(0);
             String imageUrl = firstImage.getImage();
 
 
@@ -64,9 +69,15 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     .centerCrop()
                     .into(viewHolder.img_proDone);
         }
-        viewHolder.tv_slDone.setText("Số lượng: x"+itemDoneDTO.getAmount());
-        viewHolder.tv_ttPayment.setText(decimalFormat.format(itemDoneDTO.getTotalPayment())+"đ");
 
+
+        ImageCmtsUserAdapter imageCmtsUserAdapter = new ImageCmtsUserAdapter(cmtsDTO.getImage());
+        viewHolder.rcv_listanh.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        viewHolder.rcv_listanh.setAdapter(imageCmtsUserAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.divider));
+        viewHolder.rcv_listanh.addItemDecoration(dividerItemDecoration);
     }
 
     @Override
@@ -76,20 +87,21 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_nameShop,tv_nameDone,tv_slDone,tv_gia,tv_ttPayment;
+        TextView tv_nameU, tv_namePro,tv_date,tv_content;
         ImageView img_proDone;
-
+        RatingBar ratingBar;
+        RecyclerView rcv_listanh;
 
         public ItemViewHolder(View view) {
             super(view);
 
-            tv_nameShop = view.findViewById(R.id.tv_nameshopdone);
+            tv_nameU = view.findViewById(R.id.tv_nameshopdone);
             img_proDone = view.findViewById(R.id.img_proDone);
-            tv_gia = view.findViewById(R.id.tv_priceDone);
-            tv_nameDone = view.findViewById(R.id.tv_nameDone);
-            tv_slDone = view.findViewById(R.id.tv_sldone);
-            tv_ttPayment = view.findViewById(R.id.tv_totalpayment);
-
+            tv_date = view.findViewById(R.id.tv_ngayCmts);
+            tv_namePro = view.findViewById(R.id.tv_nameDone);
+            ratingBar = view.findViewById(R.id.ratingBarU);
+            rcv_listanh = view.findViewById(R.id.rcv_listimage);
+            tv_content = view.findViewById(R.id.tv_contentCmts);
         }
 
     }

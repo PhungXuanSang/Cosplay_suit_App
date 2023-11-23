@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.CmtsDTO;
+import com.example.cosplay_suit_app.DTO.GetCmtsDTO;
 import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public interface CmtsInterface {
 
     @GET("listDDG/{id}")
     Call<List<ItemDoneDTO>> getListDhWithCmts(@Path("id") String id);
+
+    @GET("listCmtsFU/{id}")
+    Call<List<GetCmtsDTO>> getListCmtsFU(@Path("id") String id);
 
     @POST("addCmts")
     Call<CmtsDTO> addCmts(@Body CmtsDTO cmtsDTO);
