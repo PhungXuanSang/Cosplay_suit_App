@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,11 +28,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Adapter.Adapter_ImageList;
+import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_properties;
+import com.example.cosplay_suit_app.Adapter.ImageAdapter;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
@@ -50,6 +58,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -86,6 +95,9 @@ public class Chitietsanpham extends AppCompatActivity {
     static String id;
     List<DTO_properties> listproperties;
     Adapter_properties adapterProperties;
+    // Thêm biến cho RecyclerView
+    private RecyclerView rvImageList;
+    private Adapter_ImageList adapterImageList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +126,21 @@ public class Chitietsanpham extends AppCompatActivity {
                 id_shop = intent.getStringExtra("id_shop");
                 time_product = intent.getStringExtra("time_product");
                 id_category = intent.getStringExtra("id_category");
+                // Lấy chuỗi JSON từ Intent
+                String listImageJson = intent.getStringExtra("listImage");
+             // Chuyển chuỗi JSON thành danh sách đối tượng
+                List<ItemImageDTO> listImage = new Gson().fromJson(listImageJson, new TypeToken<List<ItemImageDTO>>() {}.getType());
+
+
+// Khởi tạo và thiết lập RecyclerView
+                rvImageList = findViewById(R.id.rvImageList);
+                adapterImageList = new Adapter_ImageList(listImage);
+                rvImageList.setAdapter(adapterImageList);
+                rvImageList.setLayoutManager(new LinearLayoutManager(Chitietsanpham.this, LinearLayoutManager.HORIZONTAL, false));
+
+// Sử dụng PagerSnapHelper để giảm thời gian dừng lại
+                PagerSnapHelper snapHelper = new PagerSnapHelper();
+                snapHelper.attachToRecyclerView(rvImageList);
                 loadFavorite();
 
             }
@@ -140,12 +167,16 @@ public class Chitietsanpham extends AppCompatActivity {
                     public void run() {
                         fullScreenDialog.dismiss();
                         // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
-                        Glide.with(Chitietsanpham.this)
-                                .load(imageproduct)
-                                .error(R.drawable.image)
-                                .placeholder(R.drawable.image)
-                                .centerCrop()
-                                .into(img_pro);
+                        if (!TextUtils.isEmpty(imageproduct)) {
+                            Glide.with(getApplicationContext())
+                                    .load(imageproduct)
+                                    .error(R.drawable.image)
+                                    .placeholder(R.drawable.image)
+                                    .centerCrop()
+                                    .into(img_pro);
+                        } else {
+                            // Xử lý khi imageproduct là rỗng hoặc null
+                        }
                         tv_name.setText(" " + nameproduct + " ");
                         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
                         tv_price.setText("" + decimalFormat.format(priceproduct));

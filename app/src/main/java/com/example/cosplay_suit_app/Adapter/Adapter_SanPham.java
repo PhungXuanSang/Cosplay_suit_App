@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,6 +75,13 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         Adapter_SanPham.ItemViewHolder viewHolder = (Adapter_SanPham.ItemViewHolder) holder;
         viewHolder.tv_nameSanPham.setText(sanPham.getNameproduct());
+        viewHolder.tv_gia.setText(String.valueOf(sanPham.getPrice()+"đ"));
+//        int soLuong = Integer.parseInt(sanPham.getAmount());
+//        if (soLuong == 0) {
+//            viewHolder.tv_soluong.setText("Đã bán 0");
+//        } else {
+//            viewHolder.tv_soluong.setText("Đã bán " + soLuong);
+//        }
 //        Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
 
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
@@ -87,7 +96,9 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .centerCrop()
                     .into(viewHolder.img_AnhSp);
         }
+
         viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
@@ -95,13 +106,16 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("id_product", sanPham.getId());
                 intent.putExtra("name", sanPham.getNameproduct());
                 intent.putExtra("price", sanPham.getPrice());
-                intent.putExtra("image", sanPham.getImage());
                 intent.putExtra("about", sanPham.getDescription());
                 intent.putExtra("slkho", sanPham.getAmount());
                 intent.putExtra("id_shop",sanPham.getId_shop());
                 intent.putExtra("time_product",sanPham.getTime_product());
                 intent.putExtra("id_category",sanPham.getId_category());
+                // Chuyển danh sách thành JSON
+                String listImageJson = new Gson().toJson(sanPham.getListImage());
 
+// Đặt chuỗi JSON vào Intent
+                intent.putExtra("listImage", listImageJson);
                 context.startActivity(intent);
             }
         });
@@ -114,7 +128,7 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_nameSanPham;
+        TextView tv_nameSanPham,tv_gia,tv_soluong;
         ImageView img_AnhSp, img_favorite;
         FrameLayout ll_chitietsp;
 
@@ -125,6 +139,8 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tv_nameSanPham = view.findViewById(R.id.tv_nameSp);
             img_AnhSp = view.findViewById(R.id.anh_sp);
             ll_chitietsp = view.findViewById(R.id.id_chitietsp);
+            tv_gia = view.findViewById(R.id.tv_gia);
+            tv_soluong = view.findViewById(R.id.tv_soluong);
 
         }
 
