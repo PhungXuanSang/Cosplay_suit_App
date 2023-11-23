@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.DhWithCmtsAdapter;
 import com.example.cosplay_suit_app.Adapter.DhWithoutCmtsAdapter;
+import com.example.cosplay_suit_app.DTO.GetCmtsDTO;
 import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.CmtsInterface;
 import com.example.cosplay_suit_app.R;
@@ -44,7 +45,7 @@ public class Fragment_DaDanhGia extends Fragment {
     static final String BASE_URL = url +"/comments/";
     DhWithCmtsAdapter adapter;
     RecyclerView rcv_done;
-    ArrayList<ItemDoneDTO> list;
+    ArrayList<GetCmtsDTO> list;
     View view;
 
     @Override
@@ -101,10 +102,10 @@ public class Fragment_DaDanhGia extends Fragment {
         CmtsInterface cmtsInterface = retrofit.create(CmtsInterface.class);
 
         // tạo đối tượng
-        Call<List<ItemDoneDTO>> objCall = cmtsInterface.getListDhWithCmts(id);
-        objCall.enqueue(new Callback<List<ItemDoneDTO>>() {
+        Call<List<GetCmtsDTO>> objCall = cmtsInterface.getListCmtsFU(id);
+        objCall.enqueue(new Callback<List<GetCmtsDTO>>() {
             @Override
-            public void onResponse(Call<List<ItemDoneDTO>> call, Response<List<ItemDoneDTO>> response) {
+            public void onResponse(Call<List<GetCmtsDTO>> call, Response<List<GetCmtsDTO>> response) {
                 if (response.isSuccessful()) {
                     list.clear();
                     list.addAll(response.body());
@@ -118,7 +119,7 @@ public class Fragment_DaDanhGia extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<ItemDoneDTO>> call, Throwable t) {
+            public void onFailure(Call<List<GetCmtsDTO>> call, Throwable t) {
                 Log.d("CDG", "onFailure: " + t);
             }
         });
