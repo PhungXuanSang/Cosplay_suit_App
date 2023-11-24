@@ -71,8 +71,6 @@ public class Fragment_ChuaDanhGia extends Fragment {
 
 
 
-
-
         return view;
     }
 
