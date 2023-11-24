@@ -18,70 +18,70 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class bill {
-//    private static final String TAG = "addbill";
-//    static String url = API.URL;
-//    static final String BASE_URL_CARTORDER = url + "/bill/";
-//    private Context mContext;
-//
-//    // Constructor để khởi tạo context và base URL
-//    public bill() {
-//    }
-//
-//    public void AddCart(DTO_CartOrder objcart) {
-//        Gson gson = new GsonBuilder().setLenient().create();
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(BASE_URL_CARTORDER)
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .build();
-//        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
-//        Call<DTO_CartOrder> objCall = billInterface.addcart(objcart);
-//
-//        objCall.enqueue(new Callback<DTO_CartOrder>() {
-//            @Override
-//            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
-//                if (response.isSuccessful()) {
-//                    // Sử dụng mContext để hiển thị Toast
-//                    Toast.makeText(mContext, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Log.d(TAG, "nguyen1: " + response.message());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
-//                // Sử dụng mContext để hiển thị thông báo lỗi
-//                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
-//            }
-//        });
-//    }
-//    public void addbill(DTO_Bill dtoBill) {
-//        Gson gson = new GsonBuilder().setLenient().create();
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(BASE_URL_CARTORDER)
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .build();
-//        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
-//        Call<DTO_CartOrder> objCall = billInterface.addcart(dtoBill);
-//
-//        objCall.enqueue(new Callback<DTO_CartOrder>() {
-//            @Override
-//            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
-//                if (response.isSuccessful()) {
-//                    // Sử dụng mContext để hiển thị Toast
-//                    Toast.makeText(mContext, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Log.d(TAG, "nguyen1: " + response.message());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
-//                // Sử dụng mContext để hiển thị thông báo lỗi
-//                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
-//            }
-//        });
-//    }
+    private static final String TAG = "addbill";
+    static String url = API.URL;
+    static final String BASE_URL_CARTORDER = url + "/bill/";
+    private Context mContext;
+
+    // Constructor để khởi tạo context và base URL
+    public bill() {
+    }
+
+    public void AddCart(DTO_CartOrder objcart) {
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
+        Call<DTO_CartOrder> objCall = billInterface.addcart(objcart);
+
+        objCall.enqueue(new Callback<DTO_CartOrder>() {
+            @Override
+            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
+                if (response.isSuccessful()) {
+                    // Sử dụng mContext để hiển thị Toast
+                    Toast.makeText(mContext, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d(TAG, "nguyen1: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
+                // Sử dụng mContext để hiển thị thông báo lỗi
+                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
+    }
+    public void Addbill(DTO_CartOrder dtoBill) {
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
+        Call<DTO_CartOrder> objCall = billInterface.addcart(dtoBill);
+
+        objCall.enqueue(new Callback<DTO_CartOrder>() {
+            @Override
+            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
+                if (response.isSuccessful()) {
+                    // Sử dụng mContext để hiển thị Toast
+                    Toast.makeText(mContext, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d(TAG, "nguyen1: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
+                // Sử dụng mContext để hiển thị thông báo lỗi
+                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
+    }
 
 }

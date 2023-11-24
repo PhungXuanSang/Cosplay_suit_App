@@ -93,17 +93,13 @@ public class Chitietsanpham extends AppCompatActivity {
     static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite, img_chat;
     TextView tv_price, tv_name,tv_slcmts;
-    RecyclerView rcv_properties;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category;
-    BottomSheetDialog bottomSheetDialog;
     Dialog fullScreenDialog;
     int priceproduct, slkho;
     boolean isMyFavorite = false;
     long startTime = System.currentTimeMillis();
     long elapsedTime;
     static String id;
-    List<DTO_properties> listproperties;
-    Adapter_properties adapterProperties;
     // Thêm biến cho RecyclerView
     private RecyclerView rvImageList;
     private Adapter_ImageList adapterImageList;
@@ -120,8 +116,6 @@ public class Chitietsanpham extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
         showDialog();
-
-
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
@@ -213,20 +207,6 @@ public class Chitietsanpham extends AppCompatActivity {
                                 onBackPressed();
                             }
                         });
-                        tv_product.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // Gọi hàm showDialog() và truyền các giá trị cần thiết
-                                Intent intent = getIntent();
-                                String idproduct = intent.getStringExtra("id_product");
-                                String nameproduct = intent.getStringExtra("name");
-                                int priceproduct = intent.getIntExtra("price", 0);
-                                String imageproduct = intent.getStringExtra("image");
-                                String about = intent.getStringExtra("about");
-
-                                showDialog(Chitietsanpham.this, idproduct, nameproduct, priceproduct, imageproduct, about);
-                            }
-                        });
                         img_favorite.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -254,7 +234,6 @@ public class Chitietsanpham extends AppCompatActivity {
                                 }
                             }
                         });
-
                         img_chat.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -284,12 +263,7 @@ public class Chitietsanpham extends AppCompatActivity {
                 });
             }
         });
-
-
     }
-
-
-
     public void Anhxa() {
         img_pro = findViewById(R.id.img_pro);
         tv_price = findViewById(R.id.tv_price);
@@ -300,8 +274,6 @@ public class Chitietsanpham extends AppCompatActivity {
         rcv_bl = findViewById(R.id.rcv_bl);
         tv_slcmts = findViewById(R.id.tv_slcmts);
     }
-
-
     private void getIdUserByShop(String idproduct) {
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -345,7 +317,6 @@ public class Chitietsanpham extends AppCompatActivity {
             }
         });
     }
-
     private void getListCmts(String idproduct) {
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -420,174 +391,6 @@ public class Chitietsanpham extends AppCompatActivity {
 
 
     }
-
-
-    public void showDialog(Context context, String idproduct, String nameproduct,
-                           int priceproduct, String imageproduct, String about) {
-        bottomSheetDialog = new BottomSheetDialog(Chitietsanpham.this);
-
-        View view = getLayoutInflater().inflate(R.layout.dialog_productdetail, null);
-        bottomSheetDialog.setContentView(view);
-
-
-        float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-        float halfScreenHeight = screenHeight / 1.5f;
-        View bottomSheetInternal = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-        if (bottomSheetInternal != null) {
-            ViewGroup.LayoutParams layoutParams = bottomSheetInternal.getLayoutParams();
-
-            if (layoutParams != null) {
-                layoutParams.height = (int) halfScreenHeight;
-                bottomSheetInternal.setLayoutParams(layoutParams);
-
-            }
-        }
-
-        // Hiển thị tên sản phẩm
-        TextView tv_name = bottomSheetDialog.findViewById(R.id.tv_name);
-        tv_name.setText("" + nameproduct);
-
-        // Hiển thị giá sản phẩm
-        TextView tv_price = bottomSheetDialog.findViewById(R.id.tv_price);
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        tv_price.setText("" + decimalFormat.format(priceproduct));
-
-        // Hiển thị thông tin sản phẩm
-        TextView tv_about = bottomSheetDialog.findViewById(R.id.tv_about);
-        tv_about.setText(about);
-        tv_about.setMaxLines(1);
-        tv_about.setEllipsize(TextUtils.TruncateAt.END);
-        TextView tv_read = bottomSheetDialog.findViewById(R.id.tv_read);
-        final int[] count = {0};
-        tv_read.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (count[0] == 0) {
-                    tv_about.setMaxLines(1000);
-                    tv_read.setText("Return");
-                    count[0] = 1;
-                } else {
-                    tv_about.setMaxLines(1);
-                    tv_read.setText("Read more");
-                    count[0] = 0;
-                }
-            }
-        });
-
-        //Thêm sản phẩm vào giỏ hàng
-        Button btnaddcart = bottomSheetDialog.findViewById(R.id.btn_addcart);
-        btnaddcart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogAddcart(context, idproduct, priceproduct, slkho, imageproduct);
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        bottomSheetDialog.show();
-    }
-
-    public void dialogAddcart(Context context, String idproduct,
-                              int priceproduct, int slkho, String imageproduct) {
-        Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_addcart);
-
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-
-        // Hiển thị giá sản phẩm
-        TextView tvgiasp = dialog.findViewById(R.id.tv_giasp);
-        tvgiasp.setText(+priceproduct + " VNĐ");
-
-        // Hiển thị số lượng sản phẩm
-        TextView tvslkho = dialog.findViewById(R.id.tv_slkho);
-        tvslkho.setText("Số lượng: " + slkho);
-
-        // Hiển thị image sản phẩm
-        ImageView imgsp = dialog.findViewById(R.id.imgproduct);
-        // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
-        Glide.with(context)
-                .load(imageproduct)
-                .error(R.drawable.image)
-                .placeholder(R.drawable.image)
-                .centerCrop()
-                .into(imgsp);
-//        Glide.with(context).load(imageproduct).centerCrop().into(imgsp);
-
-        //Hiển thị danh sách size
-        rcv_properties = dialog.findViewById(R.id.rc_size);
-
-        listproperties = new ArrayList<>();
-        adapterProperties = new Adapter_properties(listproperties, this);
-        rcv_properties.setAdapter(adapterProperties);
-        adapterProperties.notifyDataSetChanged();
-        Getproperties(idproduct);
-
-        //thêm vào giỏ hàng
-        Button btnaddcart = dialog.findViewById(R.id.btndialog_addcart);
-        btnaddcart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DTO_CartOrder cartOrder = new DTO_CartOrder();
-                cartOrder.setId_user(id);
-                cartOrder.setId_product(idproduct);
-                cartOrder.setTotalPayment(priceproduct);
-                cartOrder.setAmount(1);
-                cartOrder.setId_properties("655c0d2326e98fea694ad80f");
-
-                AddCart(cartOrder);
-            }
-        });
-
-        // Chiều rộng full màn hình
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        // Chiều cao theo dialog màn hình
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        // Đặt vị trí của dialog ở phía dưới cùng của màn hình
-        layoutParams.gravity = Gravity.BOTTOM;
-
-        window.setAttributes(layoutParams);
-        window.setBackgroundDrawableResource(android.R.color.transparent);
-
-        dialog.show();
-    }
-
-    void AddCart(DTO_CartOrder objcart) {
-        //tạo dđối towngj chuyển đổi kiểu dữ liệu
-        Gson gson = new GsonBuilder().setLenient().create();
-        //Tạo Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_CARTORDER)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        //Khởi tạo Interface
-        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
-        //Tạo Call
-        Call<DTO_CartOrder> objCall = billInterface.addcart(objcart);
-
-        //Thực hiệnửi dữ liệu lên server
-        objCall.enqueue(new Callback<DTO_CartOrder>() {
-            @Override
-            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
-                //Kết quẳ server trả về ở đây
-                if (response.isSuccessful()) {
-                    //Lấy kết quar trả về
-                    Toast.makeText(Chitietsanpham.this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d(TAG, "nguyen1: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
-                //Nếu say ra lỗi sẽ thông báo ở đây
-                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
-            }
-        });
-    }
-
     public void addToFavorite(Context context,String idProduct){
         if (id.equalsIgnoreCase("")){
             Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
@@ -615,8 +418,6 @@ public class Chitietsanpham extends AppCompatActivity {
                     });
         }
     }
-
-
     public void removeToFavorite(Context context,String idProduct ){
         if (id.equalsIgnoreCase("")){
             Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
@@ -638,9 +439,7 @@ public class Chitietsanpham extends AppCompatActivity {
                     });
         }
     }
-
     public void showDialog() {
-
         fullScreenDialog = new Dialog(Chitietsanpham.this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         fullScreenDialog.setContentView(R.layout.dialog_load_chi_tiet_product);
         ImageView imageView = fullScreenDialog.findViewById(R.id.img_pro);
@@ -671,57 +470,6 @@ public class Chitietsanpham extends AppCompatActivity {
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
             window.setAttributes(layoutParams);
         }
-
         fullScreenDialog.show();
-
-
-    }
-
-    void Getproperties(String idproduct) {
-        // tạo gson
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        // Create a new object from HttpLoggingInterceptor
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        // Add Interceptor to HttpClient
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_properties)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client) // Set HttpClient to be used by Retrofit
-                .build();
-
-        // sử dụng interface
-        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
-
-        // tạo đối tượng
-        Call<List<DTO_properties>> objCall = sanPhamInterface.getproperties(idproduct);
-        objCall.enqueue(new Callback<List<DTO_properties>>() {
-            @Override
-            public void onResponse(Call<List<DTO_properties>> call, Response<List<DTO_properties>> response) {
-                if (response.isSuccessful()) {
-
-                    listproperties.clear();
-                    listproperties.addAll(response.body());
-                    adapterProperties.notifyDataSetChanged();
-
-                } else {
-                    Toast.makeText(Chitietsanpham.this,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<DTO_properties>> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t);
-            }
-        });
-
     }
 }
