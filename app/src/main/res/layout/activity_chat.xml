@@ -72,7 +72,16 @@
         android:layout_height="?actionBarSize"
         android:background="#FBE6E6"
         app:layout_constraintBottom_toBottomOf="parent">
-
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/baseline_image_24"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/img_addImage"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_7sdp"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_edChat"
@@ -84,7 +93,7 @@
             android:layout_weight="1"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/_25sdp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/img_addImage"
             app:layout_constraintRight_toLeftOf="@id/sendbtnn"
             app:layout_constraintTop_toTopOf="parent">
 
