@@ -1,60 +1,40 @@
 package com.example.cosplay_suit_app.Adapter;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.Chitietsanpham;
-import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
-import com.example.cosplay_suit_app.DTO.SanPhamInterface;
-import com.example.cosplay_suit_app.MainActivity;
+import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,8 +75,30 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         Adapter_SanPham.ItemViewHolder viewHolder = (Adapter_SanPham.ItemViewHolder) holder;
         viewHolder.tv_nameSanPham.setText(sanPham.getNameproduct());
-        Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
+        viewHolder.tv_gia.setText(String.valueOf(sanPham.getPrice()+"đ"));
+//        int soLuong = Integer.parseInt(sanPham.getAmount());
+//        if (soLuong == 0) {
+//            viewHolder.tv_soluong.setText("Đã bán 0");
+//        } else {
+//            viewHolder.tv_soluong.setText("Đã bán " + soLuong);
+//        }
+//        Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
+
+        if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
+            ItemImageDTO firstImage = sanPham.getListImage().get(0);
+            String imageUrl = firstImage.getImage();
+
+            // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
+            Glide.with(context)
+                    .load(imageUrl)
+                    .error(R.drawable.image)
+                    .placeholder(R.drawable.image)
+                    .centerCrop()
+                    .into(viewHolder.img_AnhSp);
+        }
+
         viewHolder.ll_chitietsp.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
@@ -104,13 +106,16 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("id_product", sanPham.getId());
                 intent.putExtra("name", sanPham.getNameproduct());
                 intent.putExtra("price", sanPham.getPrice());
-                intent.putExtra("image", sanPham.getImage());
                 intent.putExtra("about", sanPham.getDescription());
                 intent.putExtra("slkho", sanPham.getAmount());
                 intent.putExtra("id_shop",sanPham.getId_shop());
                 intent.putExtra("time_product",sanPham.getTime_product());
                 intent.putExtra("id_category",sanPham.getId_category());
+                // Chuyển danh sách thành JSON
+                String listImageJson = new Gson().toJson(sanPham.getListImage());
 
+// Đặt chuỗi JSON vào Intent
+                intent.putExtra("listImage", listImageJson);
                 context.startActivity(intent);
             }
         });
@@ -122,8 +127,8 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mlist.size();
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_nameSanPham;
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_nameSanPham,tv_gia,tv_soluong;
         ImageView img_AnhSp, img_favorite;
         FrameLayout ll_chitietsp;
 
@@ -134,6 +139,8 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tv_nameSanPham = view.findViewById(R.id.tv_nameSp);
             img_AnhSp = view.findViewById(R.id.anh_sp);
             ll_chitietsp = view.findViewById(R.id.id_chitietsp);
+            tv_gia = view.findViewById(R.id.tv_gia);
+            tv_soluong = view.findViewById(R.id.tv_soluong);
 
         }
 

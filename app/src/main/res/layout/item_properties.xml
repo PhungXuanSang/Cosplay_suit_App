@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_size"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/buttom_size"
+        android:gravity="center"
+        android:text="XL"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="10dp"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        android:layout_margin="10dp"/>
+</LinearLayout>

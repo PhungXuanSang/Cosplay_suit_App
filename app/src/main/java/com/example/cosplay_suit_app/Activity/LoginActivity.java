@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,7 +15,7 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.LoginUser;
 import com.example.cosplay_suit_app.DTO.User;
-import com.example.cosplay_suit_app.DTO.UserInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.textfield.TextInputLayout;
@@ -24,9 +23,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -100,6 +96,14 @@ public class LoginActivity extends AppCompatActivity {
                 }else{
                     temp=0;
                 }
+            }
+        });
+
+        findViewById(R.id.tv_forgot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,ForgotPasswdActivity.class));
+                finish();
             }
         });
 

@@ -56,7 +56,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Categories"
+                android:text="Các loại"
                 android:textStyle="bold"
                 android:textSize="22dp"
                 android:layout_below="@+id/cartsearch"
@@ -267,7 +267,7 @@
                 android:id="@+id/tv_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Other"
+                android:text="Gợi ý"
                 android:textStyle="bold"
                 android:textSize="22dp"
                 android:layout_below="@+id/rcv_trending"

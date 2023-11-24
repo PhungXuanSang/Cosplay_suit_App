@@ -2,7 +2,6 @@ package com.example.cosplay_suit_app.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,9 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.SignUpUser;
 import com.example.cosplay_suit_app.DTO.User;
-import com.example.cosplay_suit_app.DTO.UserInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
@@ -141,6 +141,15 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, signUpUser.getMessage(), Toast.LENGTH_SHORT).show();
                     if (signUpUser.getUser() != null){
                         Log.e(TAG, "onResponse: " + signUpUser.getUser().getEmail() );
+
+                        ProfileDTO o = new ProfileDTO();
+                        o.setFullname(signUpUser.getUser().getFullname());
+                        o.setEmail(signUpUser.getUser().getEmail());
+                        o.setPhone(signUpUser.getUser().getPhone());
+                        o.setDiachi("");
+                        o.setId_user(signUpUser.getUser());
+                        addProfile(o);
+
                         Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
                         startActivity(intent);
                     }
@@ -158,6 +167,40 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.e("zzzz", t.getLocalizedMessage());
 
             }
+        });
+
+    }
+
+    private void addProfile( ProfileDTO user) {
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create( gson))
+                .build();
+        UserInterface userInterface = retrofit.create(UserInterface.class);
+
+
+        Call<ProfileDTO> objCall = userInterface.postUserField(user);
+        objCall.enqueue(new Callback<ProfileDTO>() {
+            @Override
+            public void onResponse(Call<ProfileDTO> call, Response<ProfileDTO> response) {
+                ProfileDTO signUpUser = response.body();
+
+                if (response.isSuccessful()){
+                    progressDialog.dismiss();
+
+                }else{
+//                    Log.e("zzz", "onResponse: " +signUpUser.getMessage());
+//                    Log.e(TAG, "onResponse: " + response.message());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ProfileDTO> call, Throwable t) {
+                Log.d("hhh", "onFailure: "+t.getLocalizedMessage());
+            }
+
         });
 
     }

@@ -1,8 +1,5 @@
 package com.example.cosplay_suit_app.Fragments;
 
-import static com.example.cosplay_suit_app.Fragments.Fragment_trangchu.BASE_URL;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -10,11 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +16,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,22 +26,25 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.API;
-import com.example.cosplay_suit_app.Activity.Chitietsanpham;
+import com.example.cosplay_suit_app.Activity.FavoriteActivity;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
-import com.example.cosplay_suit_app.Activity.RegisterShopActivity;
-import com.example.cosplay_suit_app.Activity.SignUpActivity;
+import com.example.cosplay_suit_app.Activity.NewPasswordActivity;
+import com.example.cosplay_suit_app.Activity.ProfileActivity;
+import com.example.cosplay_suit_app.Activity.QlspActivity;
 import com.example.cosplay_suit_app.DTO.Shop;
-import com.example.cosplay_suit_app.DTO.SignUpShop;
 import com.example.cosplay_suit_app.DTO.User;
-import com.example.cosplay_suit_app.DTO.UserInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
-import com.example.cosplay_suit_app.Package_bill.Collection_adapter_bill;
+import com.example.cosplay_suit_app.Package_bill.Activity.Danhgia_Activity;
+import com.example.cosplay_suit_app.Package_bill.Activity.Giaohang_Activity;
+import com.example.cosplay_suit_app.Package_bill.Activity.Layhang_Activity;
+import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
+import com.example.cosplay_suit_app.Package_bill.donhang.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.text.DecimalFormat;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,7 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Fragment_profile extends Fragment {
 
-    private TextView tv_fullname;
+    private TextView tv_fullname,tv_qlsp;
 
     private ImageView img_profile;
 
@@ -72,9 +69,16 @@ public class Fragment_profile extends Fragment {
 
     String username_u;
     String id_user;
-    static String id;
+    static String id, role;
     static String url = API.URL;
     static final String BASE_URL = url +"/user/api/";
+    RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao;
+
+    RelativeLayout rlRole;
+
+    RelativeLayout relative_newpass;
+    View idview5;
+    SharedPreferences sharedPreferences;
 
     public Fragment_profile() {
     }
@@ -83,10 +87,59 @@ public class Fragment_profile extends Fragment {
         Fragment_profile fragmentProfile = new Fragment_profile();
         return fragmentProfile;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_profile, container, false);
+        rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
+        rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
+        rllayhang = viewok.findViewById(R.id.rl_layhang);
+        rldanggiao = viewok.findViewById(R.id.rl_danggiao);
+        ImageView imgProfile = viewok.findViewById(R.id.img_profile);
+
+        // Set an OnClickListener for the ImageView
+        imgProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Define the intent to start the new activity (replace NewProfileActivity.class with your actual profile activity class)
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+
+                // Start the new activity
+                startActivity(intent);
+            }
+        });
+
+
+        rlxacnhandon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), xannhandon_Activity.class);
+                startActivity(intent);
+            }
+        });
+        rllayhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Layhang_Activity.class);
+                startActivity(intent);
+            }
+        });
+        rldanggiao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Giaohang_Activity.class);
+                startActivity(intent);
+            }
+        });
+        rlhoanthanh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Danhgia_Activity.class);
+                startActivity(intent);
+            }
+        });
+
         return viewok;
     }
 
@@ -99,6 +152,28 @@ public class Fragment_profile extends Fragment {
         img_profile = view.findViewById(R.id.img_profile);
         tv_donhangmua = view.findViewById(R.id.donhangmua);
         appCompatButton = view.findViewById(R.id.btn_login_profile);
+        tv_qlsp = view.findViewById(R.id.tvQlsp);
+        View view1 = view.findViewById(R.id.ivView);
+        View view2 = view.findViewById(R.id.idview2);
+        relative_newpass = view.findViewById(R.id.relative_newpass);
+        idview5 = view.findViewById(R.id.idview5);
+        rlRole = view.findViewById(R.id.rlRole);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+        username_u = sharedPreferences.getString("fullname", "");
+        id = sharedPreferences.getString("id", "");
+        role = sharedPreferences.getString("role", "");
+
+        Log.d("TAG", "onViewCreated: "+role);
+        tv_fullname.setText(username_u);
+        tv_qlsp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), QlspActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
         tv_donhangmua.setOnClickListener(new View.OnClickListener() {
@@ -122,18 +197,34 @@ public class Fragment_profile extends Fragment {
                 Intent intent = new Intent();
                 String ed_nameshop = intent.getStringExtra("nameshop");
                 String ed_address = intent.getStringExtra("address");
-               showDialog(getContext(), ed_nameshop , ed_address );
+                showDialog(getContext(), ed_nameshop, ed_address);
             }
         });
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
-        username_u = sharedPreferences.getString("fullname","");
-        id = sharedPreferences.getString("id", "");
-        tv_fullname.setText(username_u);
+        if (id.equalsIgnoreCase("")) {
+            relative_newpass.setVisibility(View.INVISIBLE);
+            idview5.setVisibility(View.INVISIBLE);
+        } else {
+            relative_newpass.setVisibility(View.VISIBLE);
+            idview5.setVisibility(View.VISIBLE);
+        }
+        relative_newpass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), NewPasswordActivity.class));
+                getActivity().finish();
+            }
+        });
 
 
         if (!id.equalsIgnoreCase("")) {
             appCompatButton.setText("Sign Out");
+            if (Objects.equals(role, "User")){
+                tv_qlsp.setVisibility(View.GONE);
+                view1.setVisibility(View.GONE);
+            }else {
+                rlRole.setVisibility(View.GONE);
+                view2.setVisibility(View.GONE);
+            }
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -143,6 +234,9 @@ public class Fragment_profile extends Fragment {
             });
         } else {
             appCompatButton.setText("Sign In");
+            tv_qlsp.setVisibility(View.GONE);
+            view1.setVisibility(View.GONE);
+
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -151,18 +245,41 @@ public class Fragment_profile extends Fragment {
             });
         }
 
+        view.findViewById(R.id.relative_favorite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                if (!id.equalsIgnoreCase("")) {
+                    startActivity(new Intent(getContext(), FavoriteActivity.class));
+                }else{
+                    new AlertDialog.Builder(getContext()).setTitle("Thông Báo!!")
+                            .setMessage("Bạn cần đăng nhập để xem sản phẩm đã thích.")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    startActivity(new Intent(getContext(), LoginActivity.class));
+                                    dialogInterface.dismiss();
+                                }
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).show();
+                }
+            }
+        });
 
     }
 
     public void showDialog(Context context, String name, String address ) {
-        Dialog dialog = new Dialog(getActivity());
+         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_register_shop);
 
         progressDialog = new ProgressDialog(getContext());
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
-        id_user = sharedPreferences.getString("id","");
+        sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+        id_user = sharedPreferences.getString("id", "");
 
 
         Button btn_regisshop = dialog.findViewById(R.id.btn_register_shop);
@@ -174,12 +291,11 @@ public class Fragment_profile extends Fragment {
             public void onClick(View view) {
 
 
-
                 String fname = ed_nameshop.getText().toString();
                 String a = ed_address.getText().toString();
 
 
-                Log.d("zzzz", "id_user: "+ id_user);
+                Log.d("zzzz", "id_user: " + id_user);
                 Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
                 Shop shop = new Shop();
                 shop.setNameshop(fname);
@@ -195,19 +311,14 @@ public class Fragment_profile extends Fragment {
 
 
 
-
-                dialog.dismiss();
             }
         });
 
 
-
-
-
-
         dialog.show();
     }
-    void UpdateRole(User u){
+
+    void UpdateRole(User u) {
         progressDialog.show();
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
@@ -223,11 +334,11 @@ public class Fragment_profile extends Fragment {
                 User user = response.body();
 
                 if (response.isSuccessful()){
+                    dialog.dismiss();
+                    sharedPreferences.edit().clear().commit();
                     progressDialog.dismiss();
-                    Log.e("zzzz", "onResponse1: " +user.getRole());
-
                     if (u != null){
-                        Log.e("zzzzz", "onResponse: " + u );
+                        Toast.makeText(getContext(), "Bạn cần đăng nhập lại app!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getContext(),LoginActivity.class);
                         startActivity(intent);
                     }
@@ -257,38 +368,33 @@ public class Fragment_profile extends Fragment {
                 .build();
         UserInterface userInterface = retrofit.create(UserInterface.class);
 
-        Call<SignUpShop> objCall = userInterface.sign_up_shop(s);
-        objCall.enqueue(new Callback<SignUpShop>() {
+        Call<Shop> objCall = userInterface.new_shop(s);
+        objCall.enqueue(new Callback<Shop>() {
             @Override
-            public void onResponse(Call<SignUpShop> call, Response<SignUpShop> response) {
-                SignUpShop regisShop = response.body();
+            public void onResponse(Call<Shop> call, Response<Shop> response) {
+                Shop shop = response.body();
 
-                if (response.isSuccessful()) {
-                    progressDialog.dismiss();
-                    Log.e("mess", "regisshop: " + regisShop.getResponse());
-                    Toast.makeText(getContext(), regisShop.getResponse()+"", Toast.LENGTH_SHORT).show();
-                    if (regisShop.getShop() != null) {
-                        Log.e("zzzzz", "regisshop: " + regisShop.getShop().getId_user());
-                        Intent intent = new Intent(getContext(), LoginActivity.class);
-                        startActivity(intent);
-                    } else {
+                if (response.isSuccessful()){
+
+                    Log.e("zzzzz", "onResponse1: " +shop.getId_user());
+                    Toast.makeText(getContext(), shop.getId(), Toast.LENGTH_SHORT).show();
+
+                }else{
 //                    Log.e("zzz", "onResponse: " +signUpUser.getMessage());
 //                    Log.e(TAG, "onResponse: " + response.message());
-                    }
                 }
 
-                }
+            }
 
-                @Override
-                public void onFailure (Call < SignUpShop > call, Throwable t){
-                    Toast.makeText(getContext(), "Sign Up Fail", Toast.LENGTH_SHORT).show();
-                    t.printStackTrace();
-                    Log.e("zzzz", t.getLocalizedMessage());
+            @Override
+            public void onFailure(Call<Shop> call, Throwable t) {
+                Toast.makeText(getContext(), "Sign Up Fail", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+                Log.e("zzzz", t.getLocalizedMessage());
 
-                }
-
+            }
         });
 
     }
-    }
 
+}

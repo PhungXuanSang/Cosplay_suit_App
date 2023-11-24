@@ -4,4 +4,17 @@
     <color name="white">#FFFFFFFF</color>
     <color name="mtrl_textinput_default_box_stroke_color">#ffffff</color>
     <color name="hong">#EBB9EC</color>
+    <color name="colortextfirst">#000000</color>
+    <color name="colortextsecond">#777474</color>
+    <color name="color_view">#A5A2A2</color>
+    <color name="colorPrimary">#F6DF15</color>
+
+    <color name="bgrRong">#6F7A80</color>
+    <color name="bgrCoThongTin">#03A9F4</color>
+
+
+    <color name="material_orange_400">#FF3D00</color>
+    <color name="material_green_400">#00E676</color>
+    <color name="ratingStarColor">#FFD700</color>
+
 </resources>
