@@ -10,9 +10,10 @@
 <androidx.core.widget.NestedScrollView
     android:id="@+id/your_nested_scroll_view_id"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    tools:ignore="MissingConstraints">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -46,12 +47,13 @@
         <ImageView
             android:id="@+id/img_chat"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:src="@drawable/ic_chat"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="10dp"/>
 
         <TextView
             android:id="@+id/tv_phu"
@@ -125,7 +127,7 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/id_comment"
+                    android:id="@+id/tv_slcmts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Chưa có đánh giá " />
@@ -320,9 +322,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ct_shop1">
+            app:layout_constraintTop_toBottomOf="@+id/ct_shop1"
+            >
 
             <TextView
                 android:id="@+id/tv_product"
@@ -338,18 +340,16 @@
                 app:layout_constraintVertical_bias="0.5" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_bl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_product"
-                />
+                app:layout_constraintTop_toBottomOf="@id/tv_product" />
 <!--            tools:listitem="@layout/item_binh_luan"-->
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
@@ -359,7 +359,8 @@
         android:layout_height="70dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/layoutMuahang">
 
         <ImageView
             android:id="@+id/im_tinnhan"

@@ -4,6 +4,7 @@ import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.CmtsDTO;
 import com.example.cosplay_suit_app.DTO.GetCmtsDTO;
 import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
+import com.example.cosplay_suit_app.DTO.UserIdResponse;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public interface CmtsInterface {
     @POST("addCmts")
     Call<CmtsDTO> addCmts(@Body CmtsDTO cmtsDTO);
 
-
+    @GET("getOneShop/{id}")
+    Call<UserIdResponse> getidU(@Path("id") String id);
 
 }

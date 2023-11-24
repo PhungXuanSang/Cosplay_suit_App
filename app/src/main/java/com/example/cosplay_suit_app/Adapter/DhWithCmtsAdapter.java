@@ -1,10 +1,12 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.DTO.GetCmtsDTO;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
@@ -85,6 +88,12 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             viewHolder.rcv_listanh.setVisibility(View.GONE);
         }
+        viewHolder.layout_dacmt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
@@ -98,6 +107,7 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView img_proDone;
         RatingBar ratingBar;
         RecyclerView rcv_listanh;
+        LinearLayout layout_dacmt;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -109,6 +119,7 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ratingBar = view.findViewById(R.id.ratingBarU);
             rcv_listanh = view.findViewById(R.id.rcv_listimage);
             tv_content = view.findViewById(R.id.tv_contentCmts);
+            layout_dacmt = view.findViewById(R.id.layoutpro_dacmt);
         }
 
     }
