@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -39,13 +41,18 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_ImageList;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_properties;
+import com.example.cosplay_suit_app.Adapter.DanhgiaAdapter;
 import com.example.cosplay_suit_app.Adapter.ImageAdapter;
+import com.example.cosplay_suit_app.DTO.CmtsDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
+import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.DTO.UserIdResponse;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
+import com.example.cosplay_suit_app.Interface_retrofit.CmtsInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -81,9 +88,11 @@ public class Chitietsanpham extends AppCompatActivity {
     static final String BASE_URL_properties = url + "/product/";
     static final String BASE_URL_FAVoRITE = url + "/user/api/";
     static final String BASE_URL_CARTORDER = url + "/bill/";
+    static final String BASE_URL_CMTS = url +"/comments/";
+    static final String BASE_URL_SHOP = url +"/shop/";
     static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite, img_chat;
-    TextView tv_price, tv_name;
+    TextView tv_price, tv_name,tv_slcmts;
     RecyclerView rcv_properties;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category;
     BottomSheetDialog bottomSheetDialog;
@@ -98,6 +107,10 @@ public class Chitietsanpham extends AppCompatActivity {
     // Thêm biến cho RecyclerView
     private RecyclerView rvImageList;
     private Adapter_ImageList adapterImageList;
+    RecyclerView rcv_bl;
+    ArrayList<CmtsDTO> listCmts;
+    DanhgiaAdapter danhgiaAdapter;
+    String iduser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +156,14 @@ public class Chitietsanpham extends AppCompatActivity {
                 snapHelper.attachToRecyclerView(rvImageList);
                 loadFavorite();
 
+                listCmts = new ArrayList<>();
+                danhgiaAdapter = new DanhgiaAdapter(Chitietsanpham.this,listCmts);
+                rcv_bl.setAdapter(danhgiaAdapter);
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(Chitietsanpham.this, LinearLayoutManager.VERTICAL);
+                dividerItemDecoration.setDrawable(ContextCompat.getDrawable(Chitietsanpham.this, R.drawable.devider1));
+                rcv_bl.addItemDecoration(dividerItemDecoration);
+                getListCmts(idproduct);
+                getIdUserByShop(id_shop);
             }
         });
         executorService.execute(new Runnable() {
@@ -239,7 +260,7 @@ public class Chitietsanpham extends AppCompatActivity {
                             public void onClick(View view) {
                                 if (!id.equalsIgnoreCase("")) {
                                     Intent intent = new Intent(Chitietsanpham.this, ChatActivity.class);
-                                    intent.putExtra("idShop", id_shop);
+                                    intent.putExtra("idShop", iduser);
                                     startActivity(intent);
                                 }else{
                                     new AlertDialog.Builder(Chitietsanpham.this).setTitle("Thông Báo!!")
@@ -268,6 +289,7 @@ public class Chitietsanpham extends AppCompatActivity {
     }
 
 
+
     public void Anhxa() {
         img_pro = findViewById(R.id.img_pro);
         tv_price = findViewById(R.id.tv_price);
@@ -275,9 +297,102 @@ public class Chitietsanpham extends AppCompatActivity {
         img_favorite = findViewById(R.id.img_favorite);
         img_backsp = findViewById(R.id.img_backsp);
         img_chat = findViewById(R.id.img_chat);
+        rcv_bl = findViewById(R.id.rcv_bl);
+        tv_slcmts = findViewById(R.id.tv_slcmts);
     }
 
 
+    private void getIdUserByShop(String idproduct) {
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_SHOP)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        CmtsInterface cmtsInterface = retrofit.create(CmtsInterface.class);
+
+        // tạo đối tượng
+        Call<UserIdResponse> objCall = cmtsInterface.getidU(idproduct);
+        objCall.enqueue(new Callback<UserIdResponse>() {
+            @Override
+            public void onResponse(Call<UserIdResponse> call, Response<UserIdResponse> response) {
+                if (response.isSuccessful()) {
+                    UserIdResponse userIdResponse = response.body();
+                    iduser = userIdResponse.getIdUser();
+                    Log.d(TAG, "onResponse: "+iduser);
+                } else {
+                    Toast.makeText(Chitietsanpham.this,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserIdResponse> call, Throwable t) {
+                Log.d("CDG", "onFailure: " + t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private void getListCmts(String idproduct) {
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CMTS)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        CmtsInterface cmtsInterface = retrofit.create(CmtsInterface.class);
+
+        // tạo đối tượng
+        Call<List<CmtsDTO>> objCall = cmtsInterface.getListCmts(idproduct);
+        objCall.enqueue(new Callback<List<CmtsDTO>>() {
+            @Override
+            public void onResponse(Call<List<CmtsDTO>> call, Response<List<CmtsDTO>> response) {
+                if (response.isSuccessful()) {
+                    listCmts.clear();
+                    listCmts.addAll(response.body());
+                    danhgiaAdapter.notifyDataSetChanged();
+                    tv_slcmts.setText(listCmts.size()+" đánh giá ");
+                    Log.d("CDG", "onResponse: "+listCmts.size());
+
+                } else {
+                    Toast.makeText(Chitietsanpham.this,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CmtsDTO>> call, Throwable t) {
+                Log.d("CDG", "onFailure: " + t);
+            }
+        });
+
+    }
     public void loadFavorite() {
         if (id.equalsIgnoreCase("")) {
 //            Toast.makeText(context, "You're not logged in", Toast.LENGTH_SHORT).show();
