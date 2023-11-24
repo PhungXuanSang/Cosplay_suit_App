@@ -6,6 +6,7 @@ public class DTO_properties {
     @SerializedName("_id")
     String id_properties;
     String nameproperties;
+    @SerializedName("amount")
     int amount;
     String id_product;
 

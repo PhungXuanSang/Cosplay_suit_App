@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bogoc1"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm kích thước"
+        android:textSize="24dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/ed_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên kích thước"
+        android:layout_marginBottom="20dp"
+        />
+
+    <EditText
+        android:id="@+id/ed_mount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số lượng"
+        android:inputType="number"
+        android:layout_marginBottom="20dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        >
+      <Button
+          android:id="@+id/btn_thoat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Thoát"
+          android:textColor="#14AAED"
+          android:backgroundTint="@color/white"
+
+        />
+        <Button
+            android:id="@+id/btn_them"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Thêm"
+            android:textColor="#14AAED"
+            android:backgroundTint="@color/white"
+            />
+    </LinearLayout>
+
+</LinearLayout>

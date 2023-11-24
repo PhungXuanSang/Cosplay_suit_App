@@ -7,12 +7,15 @@ import java.util.List;
 public class DTO_SanPham {
     @SerializedName("_id")
     String id;
-    String id_shop,id_category,nameproduct,amount,image,description,time_product;
-    int price;
+    String id_shop,id_category,nameproduct,image,description,time_product;
+    int price,amount;
 
     String size;
     List<ItemImageDTO> listImage;
-    public DTO_SanPham(String id, String id_shop, String id_category, String nameproduct, String amount, String image, String description, String time_product, int price, String size, List<ItemImageDTO> listImage) {
+
+    List<DTO_properties> listProp;
+
+    public DTO_SanPham(String id, String id_shop, String id_category, String nameproduct, int amount, String image, String description, String time_product, int price, String size, List<ItemImageDTO> listImage, List<DTO_properties> listProp) {
         this.id = id;
         this.id_shop = id_shop;
         this.id_category = id_category;
@@ -24,8 +27,16 @@ public class DTO_SanPham {
         this.price = price;
         this.size = size;
         this.listImage = listImage;
+        this.listProp = listProp;
     }
 
+    public List<DTO_properties> getListProp() {
+        return listProp;
+    }
+
+    public void setListProp(List<DTO_properties> listProp) {
+        this.listProp = listProp;
+    }
 
     public String getSize() {
         return size;
@@ -86,11 +97,11 @@ public class DTO_SanPham {
         this.nameproduct = nameproduct;
     }
 
-    public String getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
