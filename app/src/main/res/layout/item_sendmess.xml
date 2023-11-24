@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
-    <!-- Avatar -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar_sender"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/taikhoan"
         app:civ_border_color="#000000"
-        app:civ_border_width="1dp"/>
+        app:civ_border_width="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Message -->
     <TextView
         android:id="@+id/tv_message_sender"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/avatar_sender"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_message_sender"
         android:padding="10dp"
         android:text="Hello!"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toStartOf="@+id/avatar_sender"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView_sender"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/avatar_sender"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_sender"
+        android:scaleType="fitXY"/>
 
     <TextView
         android:id="@+id/timestamp_sender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_message_sender"
-        android:layout_toStartOf="@id/avatar_sender"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/avatar_sender"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_sender"
         android:text="12:30 PM"
         android:visibility="gone"
         android:textSize="10sp" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

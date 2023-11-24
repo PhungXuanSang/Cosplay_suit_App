@@ -10,16 +10,19 @@ public class ChatDTO {
 
     long timeStamp;
     String time;
+    String image;
     public ChatDTO() {
     }
 
-    public ChatDTO(String id, String message, String senderid, long timeStamp, String time) {
+    public ChatDTO(String id, String message, String senderid, long timeStamp, String time,String image) {
         this.id = id;
         this.message = message;
         this.senderid = senderid;
         this.timeStamp = timeStamp;
         this.time = time;
+        this.image = image;
     }
+
 
     public String getId() {
         return id;
@@ -59,5 +62,13 @@ public class ChatDTO {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

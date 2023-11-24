@@ -1,12 +1,18 @@
 package com.example.cosplay_suit_app.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -20,21 +26,31 @@ import com.example.cosplay_suit_app.DTO.ChatDTO;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.R;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +77,14 @@ public class ChatActivity extends AppCompatActivity {
     TextView tv_nameShop;
     static String url = API.URL;
     static final String BASE_URL = url + "/user/api/";
+    private Uri filePath; // đường dẫn file
+    // khai báo request code để chọn ảnh
+    private final int PICK_IMAGE_REQUEST = 22;
+    private FirebaseStorage storage;
+
+    private StorageReference storageReference;
+    private String link_anh;
+    ImageView img_addImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +93,9 @@ public class ChatActivity extends AppCompatActivity {
         initView();
         database = FirebaseDatabase.getInstance();
         sharedPreferences = getSharedPreferences("User",MODE_PRIVATE);
+        FirebaseApp.initializeApp(this);
+        storageReference = FirebaseStorage.getInstance("gs://duantotnghiepcosplaysuit.appspot.com").getReference();
+
 
         idU = sharedPreferences.getString("id", "");
         SenderUID =  idU;
@@ -90,7 +117,22 @@ public class ChatActivity extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String message = ed_chat.getText().toString().trim();
+
+                if (message.isEmpty()) {
+
+                    Toast.makeText(ChatActivity.this, "Enter The Message or Select Image First", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 addMessage();
+            }
+        });
+        img_addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectImage();
             }
         });
     }
@@ -103,7 +145,7 @@ public class ChatActivity extends AppCompatActivity {
         ed_chat = findViewById(R.id.ed_msg);
         rcv_chat = findViewById(R.id.rcv_chat);
         tv_nameShop = findViewById(R.id.tv_nameShop);
-
+        img_addImage = findViewById(R.id.img_addImage);
     }
 
     private void setNameReciver() {
@@ -193,16 +235,11 @@ public class ChatActivity extends AppCompatActivity {
     }
     private void addMessage() {
         String message = ed_chat.getText().toString();
-        if (message.isEmpty()){
-            Toast.makeText(ChatActivity.this, "Enter The Message First", Toast.LENGTH_SHORT).show();
-            return;
-        }
         ed_chat.setText("");
+
         Date date = new Date();
-
-
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a",Locale.ENGLISH);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
         String formattedTime = timeFormat.format(calendar.getTime());
 
         database = FirebaseDatabase.getInstance();
@@ -210,26 +247,125 @@ public class ChatActivity extends AppCompatActivity {
                 .child(senderRoom)
                 .child("messages");
         String id = databaseReference.push().getKey();
-        ChatDTO messagess = new ChatDTO(id, message, SenderUID, date.getTime(), formattedTime);
+
+        Log.d("Chat", "addMessage: Image URL = " + link_anh);
+
+        ChatDTO messagess = new ChatDTO(id, message, SenderUID, date.getTime(), formattedTime, link_anh);
 
         databaseReference.child(id).setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-
                 database.getReference().child("chats")
                         .child(reciverRoom)
                         .child("messages")
                         .child(id).setValue(messagess).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-
+                                // Cập nhật UI hoặc thực hiện các công việc khác sau khi gửi tin nhắn
                             }
                         });
-
-
-
             }
         });
+    }
+
+    private void SelectImage() {
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Image from here..."), PICK_IMAGE_REQUEST);
+
+    }
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST
+                && resultCode == RESULT_OK
+                && data != null
+                && data.getData() != null) {
+
+            // Lấy dữ liệu từ màn hình chọn ảnh truyền về
+            filePath = data.getData();
+            Log.d("zzzzz", "onActivityResult: " + filePath.toString());
+            try {
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+
+                if (filePath != null) {
+
+                    // Hiển thị dialog
+                    ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setTitle("Uploading...");
+                    progressDialog.show();
+
+                    // Tạo đường dẫn lưu trữ file, images/ là 1 thư mục trên firebase, chuỗi uuid... là tên file, tạm thời có thể phải lên web firebase tạo sẵn thư mục images
+                    StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+                    Log.d("chat", "uploadImage: " + ref.getPath());
+
+                    // Tiến hành upload file
+                    ref.putFile(filePath)
+                            .addOnSuccessListener(
+                                    new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            // upload thành công, tắt dialog
+
+
+                                            progressDialog.dismiss();
+
+
+
+                                        }
+                                    })
+
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    e.printStackTrace(); // có lỗi upload
+                                    progressDialog.dismiss();
+                                    Toast.makeText(ChatActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnProgressListener(
+                                    new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                            // cập nhật tiến trình upload
+                                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                                        }
+                                    })
+                            .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+                                    // gọi task để lấy URL sau khi upload thành công
+                                    return ref.getDownloadUrl();
+                                }
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        Uri downloadUri = task.getResult();
+                                        // upload thành công, lấy được url ảnh, ghi ra log. Bạn có thể ghi vào CSdl....
+                                        link_anh = downloadUri.toString();
+                                        Log.d("Chat", "onComplete: url download = " + downloadUri.toString());
+                                        addMessage();
+                                    } else {
+                                        // lỗi lấy url download
+                                    }
+                                }
+                            });
+                }
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+        }
 
     }
 }

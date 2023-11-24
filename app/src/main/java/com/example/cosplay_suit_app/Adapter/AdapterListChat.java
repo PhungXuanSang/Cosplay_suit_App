@@ -44,10 +44,15 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         User user = usersArrayList.get(position);
-        holder.tv_lastmess.setText(user.getLastMess());
+
         holder.tv_time.setText(user.getTime());
         holder.username.setText(user.getFullname());
 
+        if (user.getLastMess().isEmpty()){
+            holder.tv_lastmess.setText("Đã gửi một ảnh");
+        }else {
+            holder.tv_lastmess.setText(user.getLastMess());
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
