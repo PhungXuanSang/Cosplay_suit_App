@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
@@ -26,6 +27,7 @@ import com.google.gson.JsonElement;
 
 import org.bson.types.ObjectId;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,6 +49,7 @@ public class BuynowActivity extends AppCompatActivity {
     static final String BASE_URL = url +"/bill/";
     String TAG = "buynowactivity";
     ImageView img_back;
+    TextView tv_tongtien;
     Button btnbuynow;
     List<DTO_buynow> list;
     Adapter_buynow arrayAdapter;
@@ -81,12 +84,16 @@ public class BuynowActivity extends AppCompatActivity {
         });
         totalPriceManager = TotalPriceManager.getInstance();
         listidshop = totalPriceManager.getListidshop();
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        tv_tongtien.setText(decimalFormat.format(totalPriceManager.getTotalOrderPrice()) + " VND");
+
         getShopBuynow(id);
     }
     public void Anhxa(){
         img_back = findViewById(R.id.id_back);
         btnbuynow = findViewById(R.id.btn_buynow);
         recyclerView = findViewById(R.id.rcv_cart);
+        tv_tongtien = findViewById(R.id.tv_tongtien);
     }
 
     public void getShopBuynow(String id){

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/id_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chọn thanh toán"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+    </Toolbar>
+
+    <RadioGroup
+        android:id="@+id/rdo_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+        <RadioButton
+            android:id="@+id/rdo_thanhtoansau"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thanh toán khi nhận hàng"
+            android:textSize="22dp"/>
+        <RadioButton
+            android:id="@+id/rdo_thanhtoanVnpay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thanh toán bằng VNpay"
+            android:textSize="22dp"/>
+    </RadioGroup>
+
+</LinearLayout>

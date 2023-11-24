@@ -354,49 +354,54 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/layoutMuahang">
 
-        <ImageView
-            android:id="@+id/im_tinnhan"
-            android:layout_width="120dp"
-            android:layout_height="70dp"
-            android:src="@drawable/ic_comment_24"
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            android:background="#00A469"
+            android:layout_weight="1">
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/im_tinnhan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_chat"
+                        android:layout_weight="1"/>
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="2dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@color/black" />
+                    <ImageView
+                        android:id="@+id/im_thongbao"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:src="@drawable/giohang"
+                        android:layout_weight="1"/>
+                </LinearLayout>
 
-        <ImageView
-            android:id="@+id/im_thongbao"
-            android:layout_width="120dp"
-            android:layout_height="70dp"
-            android:src="@drawable/iccc_notifications_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/im_tinnhan"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/tv_muahang"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:text="Mua Hang"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/im_thongbao"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_muahang"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="Mua Hang"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:background="#FC0303"
+                    android:textSize="20dp"
+                    android:textColor="@color/white"/>
+            </TableRow>
+        </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

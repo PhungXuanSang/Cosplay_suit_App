@@ -1,13 +1,21 @@
 package com.example.cosplay_suit_app.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
+import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_inbuynow;
 import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
@@ -48,6 +57,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     Adapter_inbuynow arrayAdapter;
     String TAG = "adaptershopcartorder";
     private TotalPriceManager totalPriceManager;
+
     public Adapter_buynow(List<DTO_buynow> list, Context context) {
         this.list = list;
         this.context = context;
@@ -104,6 +114,18 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         arrayAdapter = new Adapter_inbuynow(ordersForShop, context);
         viewHolder.recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
+
+        // Tính tổng và hiển thị
+        int totalForShop = calculateTotalForShop(ordersForShop);
+        viewHolder.tv_tonggia.setText( decimalFormat.format(totalForShop) + " VND");
+
+        //Chọn phương thức thanh toán
+        viewHolder.idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogchonthanhtoan(viewHolder);
+            }
+        });
     }
 
     @Override
@@ -113,12 +135,14 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class ItemViewHoldel extends RecyclerView.ViewHolder{
         RecyclerView recyclerView;
+        TextView tv_tonggia, idchonphuongthuc;
         public ItemViewHoldel(@NonNull View itemView) {
             super(itemView);
             recyclerView = itemView.findViewById(R.id.rcv_buynow);
+            tv_tonggia = itemView.findViewById(R.id.tv_tonggia);
+            idchonphuongthuc = itemView.findViewById(R.id.idchonphuongthuc);
         }
     }
-
     public void getOrdersByUserId(String userId, Callback<List<DTO_inbuynow>> callback) {
         // Tạo một OkHttpClient với interceptor để ghi log (nếu cần)
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -144,7 +168,6 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Call<List<DTO_inbuynow>> call = service.getShopidcart(userId);
         call.enqueue(callback);
     }
-
     private void handleOrders(String idShop, DTO_inbuynow order) {
         if (orderMap.containsKey(idShop)) {
             orderMap.get(idShop).add(order);
@@ -154,5 +177,64 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             orderMap.put(idShop, orders);
         }
     }
+    private int calculateTotalForShop(List<DTO_inbuynow> orders) {
+        int total = 0;
+        for (DTO_inbuynow order : orders) {
+            total += order.getAmount() * order.getDtoSanPham().getPrice();
+        }
+        return total;
+    }
+    public void dialogchonthanhtoan(ItemViewHoldel viewHoldel){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_chonthanhtoan);
+
+        //thoát khỏi dialog
+        ImageView icback = dialog.findViewById(R.id.id_back);
+        icback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        //Xử lý công việc trong radiogroup
+        RadioGroup radioGroup = dialog.findViewById(R.id.rdo_group);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                // Lấy RadioButton đã chọn
+                RadioButton selectedRadioButton = dialog.findViewById(checkedId);
+
+                // Lấy ID của RadioButton đã chọn
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+
+                // Xử lý công việc dựa trên ID của RadioButton
+                if (selectedId == R.id.rdo_thanhtoansau) {
+                    // Xử lý công việc rdo_thanhtoansau
+                    viewHoldel.idchonphuongthuc.setText("Thanh toán khi nhận hàng");
+                } else if (selectedId == R.id.rdo_thanhtoanVnpay) {
+                    // Xử lý công việc rdo_thanhtoanVnpay
+                    Toast.makeText(context, "rdo_thanhtoanVnpay", Toast.LENGTH_SHORT).show();
+                    viewHoldel.idchonphuongthuc.setText("Thanh toán VNpay");
+                }
+            }
+        });
+
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao full màn hình
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialog.show();
+    }
+
+
 
 }

@@ -10,43 +10,36 @@
     <androidx.cardview.widget.CardView
         android:outlineSpotShadowColor="@color/black"
         android:outlineAmbientShadowColor="@color/black"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="5dp"
         android:background="#ffffff"
-        android:layout_margin="8dp">
+        android:layout_margin="5dp">
 
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/anh_sp"
-            android:layout_width="170dp"
-            android:layout_height="190dp" />
+            android:layout_width="190dp"
+            android:layout_height="210dp" />
 
         <LinearLayout
             android:background="#F0F8FF"
-            android:layout_width="200dp"
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
-            android:orientation="vertical">
-            <LinearLayout
+            android:orientation="vertical"
+            android:padding="3dp">
+            <TextView
+                android:paddingStart="15dp"
+                android:text="manh dep zai"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="19dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:id="@+id/tv_nameSp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:paddingStart="15dp"
-                    android:text="manh dep zai"
-                    style="@style/TextAppearance.AppCompat.Caption"
-                    android:textSize="18dp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_gravity="center"
-                    android:id="@+id/tv_nameSp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp" />
-
-            </LinearLayout>
+                android:layout_height="30dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,17 +56,16 @@
                     android:gravity="left" />
 
                 <TextView
-                    android:paddingEnd="8dp"
-                    android:textSize="12dp"
                     android:id="@+id/tv_soluong"
+                    android:gravity="right"
+                    android:paddingEnd="9dp"
+                    android:textSize="12dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Đã bán 99"
-                    android:textColor="#7E7676"
-                    android:gravity="right" />
+                    android:textColor="#7E7676" />
             </LinearLayout>
-
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

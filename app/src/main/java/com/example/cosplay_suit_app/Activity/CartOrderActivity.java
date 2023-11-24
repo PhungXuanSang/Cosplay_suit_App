@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -56,10 +57,24 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
         setContentView(R.layout.activity_cart_order);
         Anhxa();
         totalPriceManager = TotalPriceManager.getInstance();
+
+        //Đặt lại listidshop thành rỗng
+        Set<String> emptySet = new HashSet<>();
+        totalPriceManager.setListidshop(emptySet);
+        TotalPriceManager.getInstance().setListidshop(emptySet);
+        //Đặt lại listcart thành rỗng
+        ArrayList<String> listcart = new ArrayList<>();
+        TotalPriceManager.getInstance().setListcart(listcart);
+        //Đặt lại TotalOrderPrice thành rỗng
+        int resertgia = 0;
+        TotalPriceManager.getInstance().setTotalOrderPrice(resertgia);
+
+
         list = new ArrayList<>();
         arrayAdapter = new Adapter_ShopCartOrder(list, (Context) CartOrderActivity.this);
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
+
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         String id = sharedPreferences.getString("id","");
 
