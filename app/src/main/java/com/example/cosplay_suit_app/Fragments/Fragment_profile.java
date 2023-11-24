@@ -81,7 +81,8 @@ public class Fragment_profile extends Fragment {
 
     String username_u;
     String id_user;
-    static String id, role;
+    static String  role;
+    static String id="";
     static final String BASE_URL = url +"/user/api/";
     RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao;
 
@@ -109,6 +110,9 @@ public class Fragment_profile extends Fragment {
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
         tv_sldanhgia = viewok.findViewById(R.id.tv_sldanhgia);
         ImageView imgProfile = viewok.findViewById(R.id.img_profile);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+        username_u = sharedPreferences.getString("fullname", "");
+        id = sharedPreferences.getString("id", "");
 
         // Set an OnClickListener for the ImageView
         imgProfile.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +164,7 @@ public class Fragment_profile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         tv_fullname = view.findViewById(R.id.tv_fullname_profile);
         btn_login_profile = view.findViewById(R.id.btn_login_profile);
         tv_dky_shop = view.findViewById(R.id.tv_dky_shop);
@@ -176,10 +181,15 @@ public class Fragment_profile extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
         id = sharedPreferences.getString("id", "");
+//        if (id != null) {
+//            getsoluongdg();
+//        }
         role = sharedPreferences.getString("role", "");
 
         Log.d("TAG", "onViewCreated: "+role);
         tv_fullname.setText(username_u);
+        tv_sldanhgia.setVisibility(View.GONE);
+
         tv_qlsp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -414,7 +424,11 @@ public class Fragment_profile extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getsoluongdg();
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+        id = sharedPreferences.getString("id", "");
+        if (id != null && !id.isEmpty()) {
+            getsoluongdg();
+        }
     }
 
     private void getsoluongdg() {
@@ -436,10 +450,9 @@ public class Fragment_profile extends Fragment {
                 .client(client) // Set HttpClient to be used by Retrofit
                 .build();
 
-        // sử dụng interface
+
         CmtsInterface cmtsInterface = retrofit.create(CmtsInterface.class);
 
-        // tạo đối tượng
         Call<List<ItemDoneDTO>> objCall = cmtsInterface.getListDhWithoutCmts(id);
         objCall.enqueue(new Callback<List<ItemDoneDTO>>() {
             @Override
@@ -462,7 +475,6 @@ public class Fragment_profile extends Fragment {
                             "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<List<ItemDoneDTO>> call, Throwable t) {
                 Log.d("CDG", "onFailure: " + t);
