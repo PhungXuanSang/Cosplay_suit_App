@@ -10,7 +10,8 @@
     <color name="colorPrimary">#F6DF15</color>
 
     <color name="bgrRong">#6F7A80</color>
-    <color name="bgrCoThongTin">#03A9F4</color>
+    <color name="bgrCoThongTin">#12B4FD</color>
+    <color name="bgrthemthanhcong">#81CFF3</color>
 
 
     <color name="material_orange_400">#FF3D00</color>

@@ -16,12 +16,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.QlspAdapter;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.LoginUser;
+import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +40,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class QlspActivity extends AppCompatActivity {
     static String url = API.URL;
     static final String BASE_URL = url + "/product/";
+
+    static final String BASE_URL_SHOP = url + "/shop/";
     ImageView iv_back, iv_add;
     RecyclerView rclvList;
     List<DTO_SanPham> mlist;
@@ -44,6 +50,7 @@ public class QlspActivity extends AppCompatActivity {
     TextView tvQuantity;
 
     SwipeRefreshLayout srlQlsp;
+    String idshop;
     String id;
 
     @Override
@@ -58,6 +65,8 @@ public class QlspActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
+        SharedPreferences sharedPreferences2 = this.getSharedPreferences("shops", MODE_PRIVATE);
+        idshop = sharedPreferences2.getString("id", "");
 
         mlist = new ArrayList<DTO_SanPham>();
         adapter = new QlspAdapter(mlist, this);
@@ -78,7 +87,10 @@ public class QlspActivity extends AppCompatActivity {
         });
 
         refresh();
+
+        callApiShop();
         callApiProduct();
+
 
     }
 
@@ -107,7 +119,7 @@ public class QlspActivity extends AppCompatActivity {
         SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
 
         // tạo đối tượng
-        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(id);
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(idshop);
         objCall.enqueue(new Callback<List<DTO_SanPham>>() {
             @Override
             public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
@@ -127,11 +139,70 @@ public class QlspActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
-
+                Log.d("TAG", "onFailure: "+t.getMessage());
             }
         });
 
     }
+    private void callApiShop() {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_SHOP)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        ShopInterface shopInterface = retrofit.create(ShopInterface.class);
+
+        // tạo đối tượng
+        Call<List<Shop>> objCall = shopInterface.listShop(id);
+        objCall.enqueue(new Callback<List<Shop>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Shop>> call, @NonNull Response<List<Shop>> response) {
+                List<Shop> shopList = response.body();
+
+                if (response.isSuccessful()) {
+
+                    if (shopList != null && !shopList.isEmpty()) {
+                        remenber(shopList.get(0).getId());
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("id", shopList.get(0).getId());
+//                        idshop = String.valueOf(shopList.get(0).getId());
+
+                        Log.d("TAG", "onResponse: "+idshop);// Lưu giá trị vào biến instance
+                    }
+                }
+
+            }
+            @Override
+            public void onFailure(Call<List<Shop>> call, Throwable t) {
+                Log.d("TAG",t.getLocalizedMessage());
+            }
+        });
+
+    }
+    public void remenber(String id){
+        SharedPreferences preferences = getSharedPreferences("shops",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("id",id);
+
+        editor.apply();
+    }
+
 
     private void refresh() {
 
@@ -148,6 +219,5 @@ public class QlspActivity extends AppCompatActivity {
         });
 
     }
-
 
 }
