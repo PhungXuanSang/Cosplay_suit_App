@@ -274,7 +274,7 @@ public class AddProductActivity extends AppCompatActivity {
         });
 
     }
-
+//
     private void callapiRes() {
 
         DTO_SanPham dtoSanPham = new DTO_SanPham();
