@@ -226,6 +226,8 @@ public class Chitietsanpham extends AppCompatActivity {
                                 }
                             }
                         });
+
+
                         img_chat.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
