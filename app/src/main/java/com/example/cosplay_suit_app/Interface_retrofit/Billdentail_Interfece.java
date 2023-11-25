@@ -1,10 +1,14 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
+import com.example.cosplay_suit_app.DTO.DTO_Bill;
+import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface Billdentail_Interfece {
@@ -19,4 +23,7 @@ public interface Billdentail_Interfece {
 
     @GET("getstatusDone/{id}")
     Call<List<BillDetailDTO>> getstatusDone(@Path("id") String id);
+
+    @POST("addbilldetail")
+    Call<DTO_billdetail> addbilldetail(@Body DTO_billdetail dtoBill);
 }

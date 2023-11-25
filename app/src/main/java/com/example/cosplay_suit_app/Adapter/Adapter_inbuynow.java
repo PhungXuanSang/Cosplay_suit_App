@@ -61,7 +61,7 @@ public class Adapter_inbuynow extends RecyclerView.Adapter<RecyclerView.ViewHold
                         .into(viewHolder.imgproduct);
             }
             viewHolder.tvnamepro.setText(order.getDtoSanPham().getNameproduct());
-            viewHolder.tvsize.setText("Size: "+order.getDtoProperties().getNameproperties());
+            viewHolder.tvsize.setText("Size: "+order.getId_properties());
             viewHolder.tvprice.setText(decimalFormat.format(order.getDtoSanPham().getPrice()) + " VND");
             viewHolder.tvsoluong.setText("Số lượng: "+order.getAmount());
 

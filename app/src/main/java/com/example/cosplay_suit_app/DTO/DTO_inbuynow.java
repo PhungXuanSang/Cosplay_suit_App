@@ -8,18 +8,18 @@ public class DTO_inbuynow {
     DTO_SanPham dtoSanPham;
     int amount, totalPayment;
     @SerializedName("id_properties")
-    DTO_properties dtoProperties;
+    String id_properties;
 
     public DTO_inbuynow() {
     }
 
-    public DTO_inbuynow(String _id, String id_user, DTO_SanPham dtoSanPham, int amount, int totalPayment, DTO_properties dtoProperties) {
+    public DTO_inbuynow(String _id, String id_user, DTO_SanPham dtoSanPham, int amount, int totalPayment, String id_properties) {
         this._id = _id;
         this.id_user = id_user;
         this.dtoSanPham = dtoSanPham;
         this.amount = amount;
         this.totalPayment = totalPayment;
-        this.dtoProperties = dtoProperties;
+        this.id_properties = id_properties;
     }
 
     public String get_id() {
@@ -62,11 +62,11 @@ public class DTO_inbuynow {
         this.totalPayment = totalPayment;
     }
 
-    public DTO_properties getDtoProperties() {
-        return dtoProperties;
+    public String getId_properties() {
+        return id_properties;
     }
 
-    public void setDtoProperties(DTO_properties dtoProperties) {
-        this.dtoProperties = dtoProperties;
+    public void setId_properties(String id_properties) {
+        this.id_properties = id_properties;
     }
 }

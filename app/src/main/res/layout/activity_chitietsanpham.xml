@@ -368,7 +368,7 @@
                         android:layout_gravity="center"
                         android:background="@color/black" />
                     <ImageView
-                        android:id="@+id/im_thongbao"
+                        android:id="@+id/img_themgiohang"
                         android:layout_width="wrap_content"
                         android:layout_height="45dp"
                         android:src="@drawable/giohang"
