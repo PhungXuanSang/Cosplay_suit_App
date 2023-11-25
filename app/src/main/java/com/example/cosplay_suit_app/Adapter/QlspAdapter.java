@@ -46,7 +46,7 @@ public class QlspAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }else {
             viewHolder.tvName.setText(sanPham.getNameproduct() +"--"+ sanPham.getSize());
         }
-//        viewHolder.tvAmount.setText(sanPham.getAmount());
+        viewHolder.tvAmount.setText(String.valueOf(sanPham.getAmount()));
         viewHolder.tvPrice.setText(sanPham.getPrice()+"");
 
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
