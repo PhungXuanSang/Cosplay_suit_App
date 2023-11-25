@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
@@ -93,7 +94,19 @@ public class Adapter_Favorite extends RecyclerView.Adapter<Adapter_Favorite.Hold
                     holder.pro_name.setText(dto_sanPham.getNameproduct());
                     holder.pro_description.setText(dto_sanPham.getDescription());
                     holder.pro_time_product.setText(dto_sanPham.getTime_product());
-                    Glide.with(context).load(dto_sanPham.getImage()).centerCrop().into(holder.img_pro);
+
+                    if (dto_sanPham.getListImage()!= null && !dto_sanPham.getListImage().isEmpty()) {
+                        ItemImageDTO firstImage = dto_sanPham.getListImage().get(0);
+                        String imageUrl = firstImage.getImage();
+
+                        // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
+                        Glide.with(context)
+                                .load(imageUrl)
+                                .error(R.drawable.image)
+                                .placeholder(R.drawable.image)
+                                .centerCrop()
+                                .into(holder.img_pro);
+                    }
                 }
 
             }
