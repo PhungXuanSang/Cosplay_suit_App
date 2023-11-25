@@ -79,7 +79,8 @@ public class BuynowActivity extends AppCompatActivity {
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // Gọi phương thức trong Adapter khi nút được nhấn
+                arrayAdapter.performActionOnAllItems();
             }
         });
         totalPriceManager = TotalPriceManager.getInstance();

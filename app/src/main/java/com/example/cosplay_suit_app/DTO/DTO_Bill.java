@@ -1,10 +1,25 @@
 package com.example.cosplay_suit_app.DTO;
 
+import com.google.gson.annotations.SerializedName;
+
 public class DTO_Bill {
-    String _id,id_user, id_shop, timestart, timeend, status, id_voucher;
+    @SerializedName("_id")
+    String _id;
+    String id_user, id_shop, timestart, timeend, status, ma_voucher;
     int totalPayment;
 
     public DTO_Bill() {
+    }
+
+    public DTO_Bill(String _id, String id_user, String id_shop, String timestart, String timeend, String status, String ma_voucher, int totalPayment) {
+        this._id = _id;
+        this.id_user = id_user;
+        this.id_shop = id_shop;
+        this.timestart = timestart;
+        this.timeend = timeend;
+        this.status = status;
+        this.ma_voucher = ma_voucher;
+        this.totalPayment = totalPayment;
     }
 
     public String get_id() {
@@ -13,17 +28,6 @@ public class DTO_Bill {
 
     public void set_id(String _id) {
         this._id = _id;
-    }
-
-    public DTO_Bill(String _id, String id_user, String id_shop, String timestart, String timeend, String status, String id_voucher, int totalPayment) {
-        this._id = _id;
-        this.id_user = id_user;
-        this.id_shop = id_shop;
-        this.timestart = timestart;
-        this.timeend = timeend;
-        this.status = status;
-        this.id_voucher = id_voucher;
-        this.totalPayment = totalPayment;
     }
 
     public String getId_user() {
@@ -66,12 +70,12 @@ public class DTO_Bill {
         this.status = status;
     }
 
-    public String getId_voucher() {
-        return id_voucher;
+    public String getMa_voucher() {
+        return ma_voucher;
     }
 
-    public void setId_voucher(String id_voucher) {
-        this.id_voucher = id_voucher;
+    public void setMa_voucher(String ma_voucher) {
+        this.ma_voucher = ma_voucher;
     }
 
     public int getTotalPayment() {
