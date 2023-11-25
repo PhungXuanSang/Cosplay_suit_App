@@ -20,6 +20,7 @@ import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         progressDialog = new ProgressDialog(this);
-
+        progressDialog.setTitle("Vui lòng chờ...");
         tvSignup = findViewById(R.id.tv_signup);
 
         edlogin = findViewById(R.id.login_login);
@@ -146,10 +147,13 @@ public class LoginActivity extends AppCompatActivity {
                     if (dto.getUser() != null){
                         Log.e(TAG, "onResponse: " + dto.getUser().getEmail() );
                         remenber(dto.getUser().getId(),dto.getUser().getFullname(),dto.getUser().getPasswd(),dto.getUser().getEmail(),dto.getUser().getPhone(),dto.getUser().getRole());
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("id", dto.getUser().getId());
-                        map.put("fullname", dto.getUser().getFullname());
-                        database.getReference().child("Users").child(dto.getUser().getId()).setValue(map);
+
+                        DatabaseReference myRefId = database.getReference("Users/" + dto.getUser().getId() + "/id");
+                        myRefId.setValue(dto.getUser().getId());
+
+                        DatabaseReference myRefFullname = database.getReference("Users/" + dto.getUser().getId() + "/fullname");
+                        myRefFullname.setValue(dto.getUser().getFullname());
+                        Log.e(TAG, "onResponse: " + dto.getUser().getId() );
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finishAffinity();
                     }

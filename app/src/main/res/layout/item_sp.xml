@@ -27,7 +27,7 @@
                 android:layout_height="215dp" />
 
             <LinearLayout
-                android:background="#F0F8FF"
+                android:background="#FAFBFB"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
@@ -62,7 +62,7 @@
                     <TextView
                         android:id="@+id/tv_soluong"
                         android:gravity="right"
-                        android:paddingEnd="10dp"
+                        android:paddingEnd="15dp"
                         android:textSize="12dp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
