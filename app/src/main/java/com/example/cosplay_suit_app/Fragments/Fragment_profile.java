@@ -26,6 +26,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.ChatActivity;
+import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.Activity.FavoriteActivity;
 import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.Activity.NewPasswordActivity;
@@ -163,10 +165,27 @@ public class Fragment_profile extends Fragment {
         tv_dky_shop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                String ed_nameshop = intent.getStringExtra("nameshop");
-                String ed_address = intent.getStringExtra("address");
-                showDialog(getContext(), ed_nameshop, ed_address);
+                if (!id.equalsIgnoreCase("")) {
+                    Intent intent = new Intent();
+                    String ed_nameshop = intent.getStringExtra("nameshop");
+                    String ed_address = intent.getStringExtra("address");
+                    showDialog(getContext(), ed_nameshop, ed_address);
+                }else{
+                    new AlertDialog.Builder(getContext()).setTitle("Thông Báo!!")
+                            .setMessage("Bạn cần đăng nhập để có thể sử dụng chức năng!!")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    startActivity(new Intent(getContext(), LoginActivity.class));
+                                    dialogInterface.dismiss();
+                                }
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).show();
+                }
             }
         });
         if (id.equalsIgnoreCase("")) {
