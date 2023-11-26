@@ -104,11 +104,6 @@ public class Fragment_profile extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_profile, container, false);
-        rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
-        rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
-        rllayhang = viewok.findViewById(R.id.rl_layhang);
-        rldanggiao = viewok.findViewById(R.id.rl_danggiao);
-        tv_sldanhgia = viewok.findViewById(R.id.tv_sldanhgia);
         ImageView imgProfile = viewok.findViewById(R.id.img_profile);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
@@ -125,38 +120,6 @@ public class Fragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-        rlxacnhandon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), xannhandon_Activity.class);
-                startActivity(intent);
-            }
-        });
-        rllayhang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Layhang_Activity.class);
-                startActivity(intent);
-            }
-        });
-        rldanggiao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Giaohang_Activity.class);
-                startActivity(intent);
-            }
-        });
-        rlhoanthanh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Danhgia_Activity.class);
-                startActivity(intent);
-            }
-        });
-        list = new ArrayList<>();
-        adapter = new DhWithoutCmtsAdapter(getContext(),list);
 
         return viewok;
     }
@@ -185,10 +148,7 @@ public class Fragment_profile extends Fragment {
 //            getsoluongdg();
 //        }
         role = sharedPreferences.getString("role", "");
-
-        Log.d("TAG", "onViewCreated: "+role);
         tv_fullname.setText(username_u);
-        tv_sldanhgia.setVisibility(View.GONE);
 
         tv_qlsp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,9 +157,6 @@ public class Fragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-
         tv_donhangmua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -239,7 +196,6 @@ public class Fragment_profile extends Fragment {
             }
         });
 
-
         if (!id.equalsIgnoreCase("")) {
             appCompatButton.setText("Sign Out");
             if (Objects.equals(role, "User")){
@@ -268,7 +224,6 @@ public class Fragment_profile extends Fragment {
                 }
             });
         }
-
         view.findViewById(R.id.relative_favorite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -419,66 +374,5 @@ public class Fragment_profile extends Fragment {
             }
         });
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
-        id = sharedPreferences.getString("id", "");
-        if (id != null && !id.isEmpty()) {
-            getsoluongdg();
-        }
-    }
-
-    private void getsoluongdg() {
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        // Create a new object from HttpLoggingInterceptor
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        // Add Interceptor to HttpClient
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_SLDG)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client) // Set HttpClient to be used by Retrofit
-                .build();
-
-
-        CmtsInterface cmtsInterface = retrofit.create(CmtsInterface.class);
-
-        Call<List<ItemDoneDTO>> objCall = cmtsInterface.getListDhWithoutCmts(id);
-        objCall.enqueue(new Callback<List<ItemDoneDTO>>() {
-            @Override
-            public void onResponse(Call<List<ItemDoneDTO>> call, Response<List<ItemDoneDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    list.addAll(response.body());
-                    adapter.notifyDataSetChanged();
-                    int soLuongDanhGia = list.size();
-                    if (soLuongDanhGia > 0) {
-                        tv_sldanhgia.setVisibility(View.VISIBLE);
-                        tv_sldanhgia.setText(String.valueOf(soLuongDanhGia));
-                    } else {
-                        tv_sldanhgia.setVisibility(View.GONE);
-                    }
-                    Log.d("CDG", "onResponse: "+list.size());
-
-                } else {
-                    Toast.makeText(getContext(),
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<List<ItemDoneDTO>> call, Throwable t) {
-                Log.d("CDG", "onFailure: " + t);
-            }
-        });
     }
 }

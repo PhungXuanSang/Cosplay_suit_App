@@ -4,6 +4,8 @@
         android:icon="@drawable/home_24"/>
     <item android:title="Tin Nhắn" android:id="@+id/nav_tinnhan"
         android:icon="@drawable/ic_chat1"/>
+    <item android:title="Đơn hàng" android:id="@+id/nav_donhang"
+        android:icon="@drawable/call_to_action_24"/>
     <item android:title="Tài Khoản" android:id="@+id/nav_taikhoan"
         android:icon="@drawable/taikhoan"/>
 </menu>
