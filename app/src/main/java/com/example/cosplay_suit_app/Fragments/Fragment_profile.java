@@ -61,16 +61,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Fragment_profile extends Fragment {
-
     static String url = API.URL;
-    static final String BASE_URL_SLDG = url +"/comments/";
-    DhWithoutCmtsAdapter adapter;
-    ArrayList<ItemDoneDTO> list;
-    private TextView tv_fullname,tv_qlsp,tv_sldanhgia;
+    static final String BASE_URL = url +"/user/api/";
+    private TextView tv_fullname,tv_qlsp, tv_dky_shop, tv_donhangmua;
 
     private ImageView img_profile;
-
-    private TextView tv_dky_shop, tv_donhangmua;
     private Button btn_login_profile;
 
     private AppCompatButton appCompatButton;
@@ -78,17 +73,10 @@ public class Fragment_profile extends Fragment {
     private ProgressDialog progressDialog;
 
     Dialog dialog;
-
-    String username_u;
-    String id_user;
+    String username_u, id_user;
     static String  role;
     static String id="";
-    static final String BASE_URL = url +"/user/api/";
-    RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao;
-
-    RelativeLayout rlRole;
-
-    RelativeLayout relative_newpass;
+    RelativeLayout rlRole, relative_newpass;
     View idview5;
     SharedPreferences sharedPreferences;
 
