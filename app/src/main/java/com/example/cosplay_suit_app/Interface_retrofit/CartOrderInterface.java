@@ -35,7 +35,7 @@ public interface CartOrderInterface {
     Call<CartOrderDTO> updatecart(@Path("id") String id, @Body CartOrderDTO objT);
 
     @DELETE("deletecart/{id}")
-    Call<CartOrderDTO> deletecart(@Path("id") String id, @Body CartOrderDTO objT);
+    Call<CartOrderDTO> deletecart(@Path("id") String id);
 
 
 }

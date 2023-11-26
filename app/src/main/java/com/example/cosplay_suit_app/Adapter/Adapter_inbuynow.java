@@ -22,8 +22,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 public class Adapter_inbuynow extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    static String url = API.URL;
-    static final String BASE_URL = url +"/bill/";
     List<DTO_inbuynow> list;
     Context context;
     String TAG = "adaptercartorder";
@@ -88,6 +86,7 @@ public class Adapter_inbuynow extends RecyclerView.Adapter<RecyclerView.ViewHold
             tvsize = itemView.findViewById(R.id.tvsize_product);
             tvsoluong = itemView.findViewById(R.id.tv_soluong);
             tv_thanhtien = itemView.findViewById(R.id.tv_thanhtien);
+
         }
     }
 }

@@ -209,6 +209,13 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         return arraysize;
     }
+    private ArrayList<String> arridcart(List<DTO_inbuynow> orders) {
+        ArrayList<String> arrayidcart= new ArrayList<>();
+        for (DTO_inbuynow order : orders) {
+            arrayidcart.add(order.get_id());
+        }
+        return arrayidcart;
+    }
     public void dialogchonthanhtoan(ItemViewHoldel viewHoldel){
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -283,11 +290,12 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ArrayList<Integer> listamoutForItem = arramount(orderMap.get(item.get_id()));
             ArrayList<String> listsizeForItem = arrsize(orderMap.get(item.get_id()));
             ArrayList<Integer> listtotalpaymentForItem = arraTotalPayment(orderMap.get(item.get_id()));
+            ArrayList<String> listidcartForItem = arridcart(orderMap.get(item.get_id()));
             billController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
                 @Override
                 public void onAddBillComplete() {
                     // Gọi databilldetail khi Addbill đã hoàn thành
-                    billController.databilldetail(listidproductForItem, listamoutForItem,
+                    billController.databilldetail(listidproductForItem,listidcartForItem ,listamoutForItem,
                             listsizeForItem, listtotalpaymentForItem,  item.get_id());
                 }
             });

@@ -3,7 +3,9 @@ package com.example.cosplay_suit_app.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Cart_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -165,5 +168,20 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onClickXoa(String idcart){
+        new AlertDialog.Builder(CartOrderActivity.this)
+                .setTitle("Thông Báo")
+                .setMessage("Bạn có muôn xóa user này")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Cart_controller cartController = new Cart_controller(CartOrderActivity.this);
+                        cartController.DeleteCartorder(idcart);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
     }
 }

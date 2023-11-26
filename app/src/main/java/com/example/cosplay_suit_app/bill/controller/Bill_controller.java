@@ -6,18 +6,14 @@ import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
-import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
-import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
-import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,14 +72,17 @@ public class Bill_controller {
         });
     }
 
-    public void databilldetail(ArrayList<String> listidproduct, ArrayList<Integer> listamout, ArrayList<String> listsize,
+    public void databilldetail(ArrayList<String> listidproduct, ArrayList<String> listidcartForItem, ArrayList<Integer> listamout, ArrayList<String> listsize,
                                ArrayList<Integer> listtotalpayment, String idshop){
-        int size = Math.min(listidproduct.size(), Math.min(listamout.size(), Math.min(listsize.size(), listtotalpayment.size())));
+        int size = Math.min(listidproduct.size(),Math.min(listidcartForItem.size(), Math.min(listamout.size(), Math.min(listsize.size(), listtotalpayment.size()))));
+        Cart_controller cartController = new Cart_controller(mContext);
         for (int i = 0; i < size; i++) {
             String idProduct = listidproduct.get(i);
             int amount = listamout.get(i);
             String sizeValue = listsize.get(i);
             int totalPayment = listtotalpayment.get(i);
+            String idcart = listidcartForItem.get(i);
+            cartController.DeleteCartorder(idcart);
             if (idshop.equals(dtoIdbill.getId_shop())){
                 DTO_billdetail dtoBilldetail = new DTO_billdetail();
                 dtoBilldetail.setAmount(amount);
@@ -97,7 +96,6 @@ public class Bill_controller {
             }
         }
     }
-
     public void Addbilldetail(DTO_billdetail dtoBill) {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()

@@ -145,6 +145,12 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 }
             });
+            viewHolder.tv_xoa.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onclickCheck.onClickXoa(order.get_id());
+                }
+            });
 
         } else {
             Log.d("Adapter_ShopCartOrder", "No orders found for shop with ID: ");
@@ -157,7 +163,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imgproduct, imgcong, imgtru;
-        TextView tvnamepro, tvsize, tvprice, tvsoluong;
+        TextView tvnamepro, tvsize, tvprice, tvsoluong, tv_xoa;
         CheckBox cbkcart;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -170,13 +176,14 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             imgcong = itemView.findViewById(R.id.imgcong);
             tvsoluong = itemView.findViewById(R.id.tv_soluong);
             cbkcart = itemView.findViewById(R.id.cbk_cart);
+            tv_xoa = itemView.findViewById(R.id.tv_xoa);
         }
     }
     public interface OnclickCheck{
         void onCheckboxTrue();
         void onCheckboxFalse();
         void onIdCart();
-
+        void onClickXoa(String idcart);
     }
 
 

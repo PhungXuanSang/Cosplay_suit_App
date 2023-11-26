@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.CartOrderActivity;
+import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.google.gson.Gson;
@@ -55,6 +57,36 @@ public class Cart_controller {
                 // Sử dụng mContext để hiển thị thông báo lỗi
                 Toast.makeText(context, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void DeleteCartorder(String idcart){
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        // sử dụng interface
+        CartOrderInterface cartOrderInterface = retrofit.create(CartOrderInterface.class);
+
+        //tạo đối tượng
+        Call<CartOrderDTO> objCall = cartOrderInterface.deletecart(idcart);
+        objCall.enqueue(new Callback<CartOrderDTO>() {
+            @Override
+            public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
+                if (response.isSuccessful()) {
+
+                } else {
+                    Log.e(TAG, response.message());
+
+                }
+            }
+            @Override
+            public void onFailure(Call<CartOrderDTO> call, Throwable t) {
+                Log.e(TAG, t.getLocalizedMessage());
             }
         });
     }
