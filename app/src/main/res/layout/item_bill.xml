@@ -5,7 +5,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_marginBottom="20dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F4F4F4">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/shop"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"/>
+            <TextView
+                android:id="@+id/tv_nameshop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên cửa hàng"
+                android:layout_marginLeft="60dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="23dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv_trangthai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đã hoàn thành"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:textStyle="bold"
+                android:textColor="#DF6464"/>
+        </RelativeLayout>
 
+    </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,6 +89,15 @@
                 android:layout_margin="2dp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xem chi tiết"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="17dp"
+        android:layout_gravity="center_horizontal"/>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,13 +107,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total quantity( 1 product ): "
-                android:textSize="16dp"
-                android:layout_margin="10dp"
-                android:textStyle="bold"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Thành tiền x1: "
+                android:textSize="19dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_tongbill"
@@ -83,12 +130,17 @@
                 android:layout_marginBottom="10dp"
                 android:text="900.000 VND"
                 android:textColor="#FD0000"
-                android:textSize="13dp" />
-
+                android:textSize="19dp" />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_mualai"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
+                android:layout_below="@+id/tv_tongbill"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/my_button_bg4"
                 android:gravity="center"
                 android:text="Mua lại"
@@ -96,24 +148,6 @@
                 android:textColor="@color/white"
                 android:textSize="15dp"
                 android:textStyle="bold"
-                android:layout_weight="1"
-                android:layout_margin="10dp"
-                android:layout_below="@+id/tv_tongbill"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_danhgia"
-                android:layout_width="90dp"
-                android:layout_height="30dp"
-                android:background="@drawable/my_button_bg4"
-                android:gravity="center"
-                android:text="Đánh giá"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                android:layout_margin="10dp"
-                android:layout_below="@+id/tv_tongbill"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

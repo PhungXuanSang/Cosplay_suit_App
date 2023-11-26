@@ -58,6 +58,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     String TAG = "adaptershopcartorder";
     private TotalPriceManager totalPriceManager;
     int totalForShop;
+    String id;
 
     public Adapter_buynow(List<DTO_buynow> list, Context context) {
         this.list = list;
@@ -68,7 +69,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ArrayList<String> listStringIDcart = totalPriceManager.getListcart();
         // Lấy danh sách đơn hàng của tất cả người dùng
         SharedPreferences sharedPreferences = context.getSharedPreferences("User", context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
         getOrdersByUserId(id, new Callback<List<DTO_inbuynow>>() {
             @Override
             public void onResponse(Call<List<DTO_inbuynow>> call, Response<List<DTO_inbuynow>> response) {
@@ -266,7 +267,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         for (DTO_buynow item : list) {
             String currentDateTime = getCurrentDateTime();
             DTO_Bill dtoBill = new DTO_Bill();
-            dtoBill.setId_user(item.getId_user());
+            dtoBill.setId_user(id);
             dtoBill.setId_shop(item.get_id());
             dtoBill.setTimestart(currentDateTime);
             dtoBill.setTimeend("");

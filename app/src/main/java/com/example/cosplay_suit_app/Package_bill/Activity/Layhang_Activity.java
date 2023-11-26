@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
-import com.example.cosplay_suit_app.Adapter.Adapter_Bill;
+import com.example.cosplay_suit_app.Package_bill.Adapter.Adapter_Bill;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
 import com.example.cosplay_suit_app.R;
@@ -87,17 +87,23 @@ public class Layhang_Activity extends AppCompatActivity {
         Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
 
         // tạo đối tượng
-        Call<List<BillDetailDTO>> objCall = billDetailDTO.getstatusPack(id);
+        Call<List<BillDetailDTO>> objCall = billDetailDTO.getstatuswait(id);
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
                 if (response.isSuccessful()) {
-
                     list.clear();
-                    list.addAll(response.body());
-                    arrayAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "onResponse: "+list.size());
-
+                    List<BillDetailDTO> billDetailList = response.body();
+                    if (billDetailList != null && !billDetailList.isEmpty()) {
+                        for (BillDetailDTO billDetail : billDetailList) {
+                            if (billDetail.getDtoBill().getStatus().equals("Pack")){
+                                list.add(billDetail);
+                                arrayAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(Layhang_Activity.this, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(Layhang_Activity.this,
                             "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();

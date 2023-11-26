@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.DTO.DTO_properties;
@@ -24,7 +26,6 @@ public class Adapter_properties extends RecyclerView.Adapter<RecyclerView.ViewHo
     public String getSelectedNameProperties() {
         return selectedNameProperties;
     }
-
     public Adapter_properties(List<DTO_properties> list, Context context) {
         this.list = list;
         this.context = context;
@@ -44,12 +45,21 @@ public class Adapter_properties extends RecyclerView.Adapter<RecyclerView.ViewHo
         Adapter_properties.ItemViewHolder viewHolder = (Adapter_properties.ItemViewHolder) holder;
         viewHolder.btn_size.setText(dtoProperties.getNameproperties());
         viewHolder.btn_size.setText(dtoProperties.getNameproperties());
-
+        // Kiểm tra xem mục hiện tại có phải là mục được chọn không
+        if (dtoProperties.getNameproperties().equals(selectedNameProperties)) {
+            // Nếu có, thay đổi màu của nút
+            viewHolder.btn_size.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.Red)));
+        } else {
+            // Nếu không phải, đặt màu gốc
+            viewHolder.btn_size.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.C6DAC6)));
+        }
         viewHolder.btn_size.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Lưu giá trị nameproperties vào biến selectedNameProperties
                 selectedNameProperties = dtoProperties.getNameproperties();
+                // Thông báo cho adapter biết rằng bộ dữ liệu đã thay đổi để kích hoạt onBindViewHolder
+                notifyDataSetChanged();
             }
         });
     }

@@ -40,35 +40,6 @@ public class Bill_controller {
     public Bill_controller(Context context) {
         this.mContext = context;
     }
-
-    public void AddCart(DTO_CartOrder objcart) {
-        Gson gson = new GsonBuilder().setLenient().create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_CARTORDER)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
-        Call<DTO_CartOrder> objCall = billInterface.addcart(objcart);
-
-        objCall.enqueue(new Callback<DTO_CartOrder>() {
-            @Override
-            public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
-                if (response.isSuccessful()) {
-                    // Sử dụng mContext để hiển thị Toast
-                    Toast.makeText(mContext, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d(TAG, "nguyen1: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DTO_CartOrder> call, Throwable t) {
-                // Sử dụng mContext để hiển thị thông báo lỗi
-                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
-            }
-        });
-    }
     public void Addbill(DTO_Bill dtoBill) {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
@@ -120,6 +91,7 @@ public class Bill_controller {
                 dtoBilldetail.setTotalPayment(totalPayment);
                 dtoBilldetail.setId_bill(dtoIdbill.get_id());
                 dtoBilldetail.setId_product(idProduct);
+                dtoBilldetail.setSize(sizeValue);
 
                 Addbilldetail(dtoBilldetail);
             }

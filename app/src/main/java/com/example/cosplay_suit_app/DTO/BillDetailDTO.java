@@ -1,18 +1,19 @@
 package com.example.cosplay_suit_app.DTO;
 
+import com.example.cosplay_suit_app.Package_bill.DTO.BillDTO;
 import com.google.gson.annotations.SerializedName;
 
 public class BillDetailDTO {
     @SerializedName("id_product")
     DTO_SanPham dtoSanPham;
     @SerializedName("id_bill")
-    DTO_Bill dtoBill;
+    BillDTO dtoBill;
     int amount, totalPayment;
 
     public BillDetailDTO() {
     }
 
-    public BillDetailDTO(DTO_SanPham dtoSanPham, DTO_Bill dtoBill, int amount, int totalPayment) {
+    public BillDetailDTO(DTO_SanPham dtoSanPham, BillDTO dtoBill, int amount, int totalPayment) {
         this.dtoSanPham = dtoSanPham;
         this.dtoBill = dtoBill;
         this.amount = amount;
@@ -27,11 +28,11 @@ public class BillDetailDTO {
         this.dtoSanPham = dtoSanPham;
     }
 
-    public DTO_Bill getDtoBill() {
+    public BillDTO getDtoBill() {
         return dtoBill;
     }
 
-    public void setDtoBill(DTO_Bill dtoBill) {
+    public void setDtoBill(BillDTO dtoBill) {
         this.dtoBill = dtoBill;
     }
 

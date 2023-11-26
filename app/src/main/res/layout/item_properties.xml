@@ -3,6 +3,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:radius="3dp">
+
+    </androidx.cardview.widget.CardView>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_size"
         android:layout_width="40dp"

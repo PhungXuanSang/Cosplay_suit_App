@@ -41,9 +41,10 @@ import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.DTO.UserIdResponse;
+import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.CmtsInterface;
 import com.example.cosplay_suit_app.R;
-import com.example.cosplay_suit_app.bill.controller.Bill_controller;
+import com.example.cosplay_suit_app.bill.controller.Cart_controller;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -100,6 +101,7 @@ public class Chitietsanpham extends AppCompatActivity {
     List<ItemImageDTO> listImage;
     ArrayList<DTO_properties> listsize = new ArrayList<>();
     Adapter_properties adapterProperties;
+    String checkcart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -473,6 +475,65 @@ public class Chitietsanpham extends AppCompatActivity {
         }
         fullScreenDialog.show();
     }
+    public void CheckAddCart(String id, String idproduct, int priceproduct, String selectedNameProperties){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        CartOrderInterface cartOrderInterface = retrofit.create(CartOrderInterface.class);
+
+        // tạo đối tượng
+        Call<String> objCall = cartOrderInterface.checkaddcart(this.idproduct);
+        objCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    String result = response.body();
+                    if (result.equals("No")){
+                        Cart_controller cartController = new Cart_controller(Chitietsanpham.this);
+                        if (selectedNameProperties != null) {
+
+                            DTO_CartOrder cartOrder = new DTO_CartOrder();
+                            cartOrder.setId_user(id);
+                            cartOrder.setId_product(idproduct);
+                            cartOrder.setTotalPayment(priceproduct);
+                            cartOrder.setAmount(1);
+                            cartOrder.setId_properties(selectedNameProperties);
+
+                            cartController.AddCart(cartOrder);
+                        }
+                    }else {
+                        Toast.makeText(Chitietsanpham.this, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(Chitietsanpham.this,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+
+    }
     public void dialogaddcart(){
         Dialog dialog = new Dialog(Chitietsanpham.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -531,17 +592,8 @@ public class Chitietsanpham extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String selectedNameProperties = adapterProperties.getSelectedNameProperties();
-                if (selectedNameProperties != null) {
-                    DTO_CartOrder cartOrder = new DTO_CartOrder();
-                    cartOrder.setId_user(id);
-                    cartOrder.setId_product(idproduct);
-                    cartOrder.setTotalPayment(priceproduct);
-                    cartOrder.setAmount(1);
-                    cartOrder.setId_properties(selectedNameProperties);
+                CheckAddCart(id,idproduct, priceproduct, selectedNameProperties);
 
-                    Bill_controller billController = new Bill_controller(Chitietsanpham.this);
-                    billController.AddCart(cartOrder);
-                }
             }
         });
 

@@ -29,7 +29,8 @@ public interface CartOrderInterface {
     Call<List<DTO_inbuynow>> getShopidcart(@Path("id") String id);
     @POST("addcart")
     Call<DTO_CartOrder> addcart(@Body DTO_CartOrder objT);
-
+    @POST("checkaddcart/{id}")
+    Call<String> checkaddcart(@Path("id") String id);
     @PUT("updatecart/{id}")
     Call<CartOrderDTO> updatecart(@Path("id") String id, @Body CartOrderDTO objT);
 
