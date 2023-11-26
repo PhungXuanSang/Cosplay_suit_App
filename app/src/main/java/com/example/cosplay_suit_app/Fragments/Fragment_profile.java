@@ -31,8 +31,11 @@ import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.Activity.NewPasswordActivity;
 import com.example.cosplay_suit_app.Activity.ProfileActivity;
 import com.example.cosplay_suit_app.Activity.QlspActivity;
+import com.example.cosplay_suit_app.Adapter.DhWithoutCmtsAdapter;
+import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
+import com.example.cosplay_suit_app.Interface_retrofit.CmtsInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.Package_bill.Activity.Danhgia_Activity;
@@ -44,8 +47,13 @@ import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,12 +61,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Fragment_profile extends Fragment {
-
-    private TextView tv_fullname,tv_qlsp;
+    static String url = API.URL;
+    static final String BASE_URL = url +"/user/api/";
+    private TextView tv_fullname,tv_qlsp, tv_dky_shop, tv_donhangmua;
 
     private ImageView img_profile;
-
-    private TextView tv_dky_shop, tv_donhangmua;
     private Button btn_login_profile;
 
     private AppCompatButton appCompatButton;
@@ -66,17 +73,10 @@ public class Fragment_profile extends Fragment {
     private ProgressDialog progressDialog;
 
     Dialog dialog;
-
-    String username_u;
-    String id_user;
-    static String id, role;
-    static String url = API.URL;
-    static final String BASE_URL = url +"/user/api/";
-    RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao;
-
-    RelativeLayout rlRole;
-
-    RelativeLayout relative_newpass;
+    String username_u, id_user;
+    static String  role;
+    static String id="";
+    RelativeLayout rlRole, relative_newpass;
     View idview5;
     SharedPreferences sharedPreferences;
 
@@ -92,11 +92,10 @@ public class Fragment_profile extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_profile, container, false);
-        rlhoanthanh = viewok.findViewById(R.id.rl_hoanthanh);
-        rlxacnhandon = viewok.findViewById(R.id.rl_xacnhandon);
-        rllayhang = viewok.findViewById(R.id.rl_layhang);
-        rldanggiao = viewok.findViewById(R.id.rl_danggiao);
         ImageView imgProfile = viewok.findViewById(R.id.img_profile);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+        username_u = sharedPreferences.getString("fullname", "");
+        id = sharedPreferences.getString("id", "");
 
         // Set an OnClickListener for the ImageView
         imgProfile.setOnClickListener(new View.OnClickListener() {
@@ -110,42 +109,13 @@ public class Fragment_profile extends Fragment {
             }
         });
 
-
-        rlxacnhandon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), xannhandon_Activity.class);
-                startActivity(intent);
-            }
-        });
-        rllayhang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Layhang_Activity.class);
-                startActivity(intent);
-            }
-        });
-        rldanggiao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Giaohang_Activity.class);
-                startActivity(intent);
-            }
-        });
-        rlhoanthanh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Danhgia_Activity.class);
-                startActivity(intent);
-            }
-        });
-
         return viewok;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         tv_fullname = view.findViewById(R.id.tv_fullname_profile);
         btn_login_profile = view.findViewById(R.id.btn_login_profile);
         tv_dky_shop = view.findViewById(R.id.tv_dky_shop);
@@ -162,10 +132,12 @@ public class Fragment_profile extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
         id = sharedPreferences.getString("id", "");
+//        if (id != null) {
+//            getsoluongdg();
+//        }
         role = sharedPreferences.getString("role", "");
-
-        Log.d("TAG", "onViewCreated: "+role);
         tv_fullname.setText(username_u);
+
         tv_qlsp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,9 +145,6 @@ public class Fragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-
         tv_donhangmua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -215,7 +184,6 @@ public class Fragment_profile extends Fragment {
             }
         });
 
-
         if (!id.equalsIgnoreCase("")) {
             appCompatButton.setText("Sign Out");
             if (Objects.equals(role, "User")){
@@ -244,7 +212,6 @@ public class Fragment_profile extends Fragment {
                 }
             });
         }
-
         view.findViewById(R.id.relative_favorite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -396,5 +363,4 @@ public class Fragment_profile extends Fragment {
         });
 
     }
-
 }

@@ -61,9 +61,12 @@ public class Adapter_inbuynow extends RecyclerView.Adapter<RecyclerView.ViewHold
                         .into(viewHolder.imgproduct);
             }
             viewHolder.tvnamepro.setText(order.getDtoSanPham().getNameproduct());
-            viewHolder.tvsize.setText("Size: "+order.getDtoProperties().getNameproperties());
+            viewHolder.tvsize.setText("Size: "+order.getId_properties());
             viewHolder.tvprice.setText(decimalFormat.format(order.getDtoSanPham().getPrice()) + " VND");
             viewHolder.tvsoluong.setText("Số lượng: "+order.getAmount());
+
+            int thanhtien = order.getAmount() * order.getDtoSanPham().getPrice();
+            viewHolder.tv_thanhtien.setText("Thành tiền: " + decimalFormat.format(thanhtien) + " VND");
         } else {
             Log.d("Adapter_ShopCartOrder", "No orders found for shop with ID: ");
         }
@@ -75,7 +78,7 @@ public class Adapter_inbuynow extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imgproduct;
-        TextView tvnamepro, tvsize, tvprice, tvsoluong;
+        TextView tvnamepro, tvsize, tvprice, tvsoluong, tv_thanhtien;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +87,7 @@ public class Adapter_inbuynow extends RecyclerView.Adapter<RecyclerView.ViewHold
             tvprice = itemView.findViewById(R.id.tvprice_product);
             tvsize = itemView.findViewById(R.id.tvsize_product);
             tvsoluong = itemView.findViewById(R.id.tv_soluong);
+            tv_thanhtien = itemView.findViewById(R.id.tv_thanhtien);
         }
     }
 }

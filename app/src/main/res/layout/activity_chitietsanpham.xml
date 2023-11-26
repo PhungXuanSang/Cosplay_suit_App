@@ -10,9 +10,10 @@
 <androidx.core.widget.NestedScrollView
     android:id="@+id/your_nested_scroll_view_id"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    tools:ignore="MissingConstraints">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -43,32 +44,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/img_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:src="@drawable/ic_chat"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_phu"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="259dp"
+            android:layout_marginTop="300dp"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:gravity="center"
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="13dp"
-            android:background="@drawable/vien_textview"
+            android:layout_marginLeft="3dp"
             android:fontFamily="serif"
-            android:text=""
-            android:textColor="@color/white"
+            android:text="hakudhakshd"
+            android:textColor="@color/black"
             android:textSize="22.87dp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -78,10 +70,11 @@
             tools:layout_editor_absoluteY="260dp" />
 
         <LinearLayout
+            android:id="@id/abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2.8dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="10dp"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -116,16 +109,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_img_pro">
+            app:layout_constraintTop_toBottomOf="@+id/abc">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/id_comment"
+                    android:id="@+id/tv_slcmts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Chưa có đánh giá " />
@@ -173,19 +169,33 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_dathue"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ln_123"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đã thuê: 99"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.027"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/id_linear_all" />
+            app:layout_constraintTop_toBottomOf="@+id/id_linear_all">
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đã thuê: "
+                android:textStyle="bold"
+                />
+            <TextView
+                android:textStyle="bold"
+                android:textColor="#FF0000"
+                android:id="@+id/tv_dathue"
+                android:text="99"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
 
         <View
+            android:layout_marginTop="5dp"
             android:id="@+id/v_mau"
             android:layout_width="match_parent"
             android:layout_height="5dp"
@@ -193,14 +203,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dathue" />
+            app:layout_constraintTop_toBottomOf="@+id/ln_123" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_margin="5dp"
             android:id="@+id/ct_shop"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/v_mau">
 
@@ -214,16 +224,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
                 android:id="@+id/your_first_textview_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Shopacc.net"
-                app:layout_constraintBottom_toTopOf="@+id/your_second_textview_id"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.174"
-                app:layout_constraintStart_toEndOf="@+id/your_imageview_id"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintLeft_toRightOf="@id/your_imageview_id"/>
 
             <TextView
                 android:id="@+id/your_second_textview_id"
@@ -231,28 +239,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:text="Địa chỉ"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/your_button_id"
-                app:layout_constraintHorizontal_bias="0.269"
-                app:layout_constraintStart_toEndOf="@+id/your_imageview_id"
-                app:layout_constraintTop_toBottomOf="@+id/your_first_textview_id"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Button
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toBottomOf="@id/your_first_textview_id"
+                app:layout_constraintLeft_toRightOf="@id/your_imageview_id" />
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/your_button_id"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Xem shop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
-
+                app:layout_constraintVertical_bias="0.5"
+                android:layout_marginEnd="16dp"
+                android:text="Xem shop"
+                android:textColor="#F40606"
+                android:background="@drawable/my_bottom_chi_tiet"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
+            android:layout_marginTop="5dp"
             android:id="@+id/v1"
             android:layout_width="match_parent"
             android:layout_height="5dp"
@@ -320,82 +326,71 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ct_shop1">
-
-            <TextView
-                android:id="@+id/tv_product"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:text="Product Details - >>"
-                android:textSize="17dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
-
+            app:layout_constraintTop_toBottomOf="@+id/ct_shop1"
+            >
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_bl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_product"
-                />
+                app:layout_constraintRight_toRightOf="parent" />
 <!--            tools:listitem="@layout/item_binh_luan"-->
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/im_tinnhan"
-            android:layout_width="120dp"
-            android:layout_height="70dp"
-            android:src="@drawable/ic_comment_24"
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            android:background="#00A469"
+            android:layout_weight="1">
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/img_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:src="@drawable/ic_chat"
+                        android:layout_weight="1"/>
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="2dp"
+                        android:layout_height="33dp"
+                        android:layout_gravity="center"
+                        android:background="@color/black" />
+                    <ImageView
+                        android:id="@+id/img_themgiohang"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:src="@drawable/giohang"
+                        android:layout_weight="1"/>
+                </LinearLayout>
 
-        <ImageView
-            android:id="@+id/im_thongbao"
-            android:layout_width="120dp"
-            android:layout_height="70dp"
-            android:src="@drawable/iccc_notifications_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/im_tinnhan"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/tv_muahang"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:text="Mua Hang"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/im_thongbao"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_muahang"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center"
+                    android:text="Mua Hang"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:background="#FC0303"
+                    android:textSize="20dp"
+                    android:textColor="@color/white"/>
+            </TableRow>
+        </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

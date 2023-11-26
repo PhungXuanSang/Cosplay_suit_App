@@ -1,31 +1,40 @@
 package com.example.cosplay_suit_app.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
+import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_inbuynow;
-import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +57,8 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     Adapter_inbuynow arrayAdapter;
     String TAG = "adaptershopcartorder";
     private TotalPriceManager totalPriceManager;
+    int totalForShop;
+
     public Adapter_buynow(List<DTO_buynow> list, Context context) {
         this.list = list;
         this.context = context;
@@ -83,15 +94,12 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
     }
-
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_buynow, parent, false);
         return new ItemViewHoldel(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DTO_buynow shopCartorderDTO = list.get(position);
@@ -104,21 +112,33 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         arrayAdapter = new Adapter_inbuynow(ordersForShop, context);
         viewHolder.recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
-    }
 
+        // Tính tổng và hiển thị
+        totalForShop = calculateTotalForShop(ordersForShop);
+        viewHolder.tv_tonggia.setText( decimalFormat.format(totalForShop) + " VND");
+        shopCartorderDTO.setTongbill(totalForShop);
+        //Chọn phương thức thanh toán
+        viewHolder.idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogchonthanhtoan(viewHolder);
+            }
+        });
+    }
     @Override
     public int getItemCount() {
         return list.size();
     }
-
     public class ItemViewHoldel extends RecyclerView.ViewHolder{
         RecyclerView recyclerView;
+        TextView tv_tonggia, idchonphuongthuc;
         public ItemViewHoldel(@NonNull View itemView) {
             super(itemView);
             recyclerView = itemView.findViewById(R.id.rcv_buynow);
+            tv_tonggia = itemView.findViewById(R.id.tv_tonggia);
+            idchonphuongthuc = itemView.findViewById(R.id.idchonphuongthuc);
         }
     }
-
     public void getOrdersByUserId(String userId, Callback<List<DTO_inbuynow>> callback) {
         // Tạo một OkHttpClient với interceptor để ghi log (nếu cần)
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -144,7 +164,6 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Call<List<DTO_inbuynow>> call = service.getShopidcart(userId);
         call.enqueue(callback);
     }
-
     private void handleOrders(String idShop, DTO_inbuynow order) {
         if (orderMap.containsKey(idShop)) {
             orderMap.get(idShop).add(order);
@@ -153,6 +172,135 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             orders.add(order);
             orderMap.put(idShop, orders);
         }
+    }
+    private int calculateTotalForShop(List<DTO_inbuynow> orders) {
+        int total = 0;
+        for (DTO_inbuynow order : orders) {
+            total += order.getAmount() * order.getDtoSanPham().getPrice();
+        }
+        return total;
+    }
+    private ArrayList<String> arrproduct(List<DTO_inbuynow> orders) {
+        ArrayList<String> arrayidpro= new ArrayList<>();
+        for (DTO_inbuynow order : orders) {
+            arrayidpro.add(order.getDtoSanPham().getId()) ;
+        }
+        return arrayidpro;
+    }
+    private ArrayList<Integer> arramount(List<DTO_inbuynow> orders) {
+        ArrayList<Integer> arrayamount = new ArrayList<>();
+        for (DTO_inbuynow order : orders) {
+            arrayamount.add(order.getAmount()) ;
+        }
+        return arrayamount;
+    }
+    private ArrayList<Integer> arraTotalPayment(List<DTO_inbuynow> orders) {
+        ArrayList<Integer> arrayTotalPayment = new ArrayList<>();
+        for (DTO_inbuynow order : orders) {
+            arrayTotalPayment.add(order.getTotalPayment()) ;
+        }
+        return arrayTotalPayment;
+    }
+    private ArrayList<String> arrsize(List<DTO_inbuynow> orders) {
+        ArrayList<String> arraysize= new ArrayList<>();
+        for (DTO_inbuynow order : orders) {
+            arraysize.add(order.getId_properties());
+        }
+        return arraysize;
+    }
+    public void dialogchonthanhtoan(ItemViewHoldel viewHoldel){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_chonthanhtoan);
+
+        //thoát khỏi dialog
+        ImageView icback = dialog.findViewById(R.id.id_back);
+        icback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        //Xử lý công việc trong radiogroup
+        RadioGroup radioGroup = dialog.findViewById(R.id.rdo_group);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                // Lấy RadioButton đã chọn
+                RadioButton selectedRadioButton = dialog.findViewById(checkedId);
+
+                // Lấy ID của RadioButton đã chọn
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+
+                // Xử lý công việc dựa trên ID của RadioButton
+                if (selectedId == R.id.rdo_thanhtoansau) {
+                    // Xử lý công việc rdo_thanhtoansau
+                    viewHoldel.idchonphuongthuc.setText("Thanh toán khi nhận hàng");
+                } else if (selectedId == R.id.rdo_thanhtoanVnpay) {
+                    // Xử lý công việc rdo_thanhtoanVnpay
+                    Toast.makeText(context, "rdo_thanhtoanVnpay", Toast.LENGTH_SHORT).show();
+                    viewHoldel.idchonphuongthuc.setText("Thanh toán VNpay");
+                }
+            }
+        });
+
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao full màn hình
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialog.show();
+    }
+    public interface OnAddBillCompleteListener {
+        void onAddBillComplete();
+    }
+    public void performActionOnAllItems() {
+        // Thực hiện công việc cần thiết trên tất cả các item
+        for (DTO_buynow item : list) {
+            String currentDateTime = getCurrentDateTime();
+            DTO_Bill dtoBill = new DTO_Bill();
+            dtoBill.setId_user(item.getId_user());
+            dtoBill.setId_shop(item.get_id());
+            dtoBill.setTimestart(currentDateTime);
+            dtoBill.setTimeend("");
+            dtoBill.setStatus("Wait");
+            dtoBill.setMa_voucher("");
+            dtoBill.setTotalPayment(item.getTongbill());
+
+            Bill_controller billController = new Bill_controller(context);
+            billController.Addbill(dtoBill);
+
+            // Lấy danh sách các sản phẩm, số lượng và thuộc tính cho từng item
+            ArrayList<String> listidproductForItem = arrproduct(orderMap.get(item.get_id()));
+            ArrayList<Integer> listamoutForItem = arramount(orderMap.get(item.get_id()));
+            ArrayList<String> listsizeForItem = arrsize(orderMap.get(item.get_id()));
+            ArrayList<Integer> listtotalpaymentForItem = arraTotalPayment(orderMap.get(item.get_id()));
+            billController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                @Override
+                public void onAddBillComplete() {
+                    // Gọi databilldetail khi Addbill đã hoàn thành
+                    billController.databilldetail(listidproductForItem, listamoutForItem,
+                            listsizeForItem, listtotalpaymentForItem,  item.get_id());
+                }
+            });
+
+//            billController.databilldetail(listidproductForItem, listamoutForItem, listsizeForItem);
+        }
+        notifyDataSetChanged(); // Cập nhật RecyclerView sau khi thay đổi dữ liệu
+    }
+
+    //Lấy ngày giờ hiện tại
+    private String getCurrentDateTime() {
+        Date currentDate = Calendar.getInstance().getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return dateFormat.format(currentDate);
     }
 
 }

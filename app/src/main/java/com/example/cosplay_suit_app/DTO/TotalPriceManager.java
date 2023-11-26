@@ -34,6 +34,10 @@ public class TotalPriceManager {
         this.totalOrderPrice = totalOrderPrice;
     }
 
+    public void setListcart(ArrayList<String> listcart) {
+        this.listcart = listcart;
+    }
+
     public ArrayList<String> getListcart() {
         return listcart;
     }

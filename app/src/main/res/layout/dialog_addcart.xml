@@ -84,20 +84,6 @@
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_margin="10dp"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_buy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/my_button_bg4"
-                android:gravity="center"
-                android:text="Mua ngay"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="22dp"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                android:layout_margin="10dp"/>
         </TableRow>
     </TableLayout>
 

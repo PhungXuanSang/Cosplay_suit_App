@@ -8,11 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
@@ -21,6 +21,16 @@ import com.example.cosplay_suit_app.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.spec.KeySpec;
+import java.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,12 +61,11 @@ public class NewPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_password);
-
-        OlPasss = findViewById(R.id.pass_oldpass);
+//        OlPasss = findViewById(R.id.pass_oldpass);
         NewPass = findViewById(R.id.pass_newpass);
         CheckNewPass = findViewById(R.id.pass_newpasscheck);
 
-        tilOlPass = findViewById(R.id.pass_tilOldpass);
+//        tilOlPass = findViewById(R.id.pass_tilOldpass);
         tilNewPass = findViewById(R.id.pass_tilnewpass);
         tilCheckNewPass = findViewById(R.id.pass_tilnewpasscheck);
 
@@ -118,18 +127,21 @@ public class NewPasswordActivity extends AppCompatActivity {
     }
 
     void validate(){
+
         String olpass = OlPasss.getText().toString();
         String pass = NewPass.getText().toString();
         String passnew = CheckNewPass.getText().toString();
-        if (OlPasss.getText().length()==0){
-            tilOlPass.setError("Không để trống Old Password!");
-            temp++;
-        }else if(!(olpass.equalsIgnoreCase(pass_u))){
-            tilOlPass.setError("Password cũ không chính xác!");
-        }
-        else{
-            tilOlPass.setError("");
-        }
+//        if (OlPasss.getText().length()==0){
+//            tilOlPass.setError("Không để trống Old Password!");
+//            temp++;
+//        }else if(!(olpass.equalsIgnoreCase(pass_u))){
+//            tilOlPass.setError("Password cũ không chính xác!");
+//            temp++;
+//        }
+//        else{
+//            tilOlPass.setError("");
+//        }
+
         if (NewPass.getText().length()==0){
             tilNewPass.setError("Không để trống New Password!");
             temp++;

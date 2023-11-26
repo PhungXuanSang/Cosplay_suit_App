@@ -7,27 +7,27 @@ public class CartOrderDTO {
     @SerializedName("id_product")
     DTO_SanPham dtoSanPham;
     int amount, totalPayment;
-    @SerializedName("id_properties")
-    DTO_properties dtoProperties;
+
+    String id_properties;
 
     public CartOrderDTO() {
     }
 
-    public CartOrderDTO(String _id, String id_user, DTO_SanPham dtoSanPham, int amount, int totalPayment, DTO_properties dtoProperties) {
+    public CartOrderDTO(String _id, String id_user, DTO_SanPham dtoSanPham, int amount, int totalPayment, String id_properties) {
         this._id = _id;
         this.id_user = id_user;
         this.dtoSanPham = dtoSanPham;
         this.amount = amount;
         this.totalPayment = totalPayment;
-        this.dtoProperties = dtoProperties;
+        this.id_properties = id_properties;
     }
 
-    public int getTotalPayment() {
-        return totalPayment;
+    public String get_id() {
+        return _id;
     }
 
-    public void setTotalPayment(int totalPayment) {
-        this.totalPayment = totalPayment;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getId_user() {
@@ -54,19 +54,19 @@ public class CartOrderDTO {
         this.amount = amount;
     }
 
-    public DTO_properties getDtoProperties() {
-        return dtoProperties;
+    public int getTotalPayment() {
+        return totalPayment;
     }
 
-    public void setDtoProperties(DTO_properties dtoProperties) {
-        this.dtoProperties = dtoProperties;
+    public void setTotalPayment(int totalPayment) {
+        this.totalPayment = totalPayment;
     }
 
-    public String getId_cart() {
-        return _id;
+    public String getId_properties() {
+        return id_properties;
     }
 
-    public void setId_cart(String id_cart) {
-        this._id = id_cart;
+    public void setId_properties(String id_properties) {
+        this.id_properties = id_properties;
     }
 }

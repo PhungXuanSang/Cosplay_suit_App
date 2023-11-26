@@ -10,74 +10,70 @@
     <androidx.cardview.widget.CardView
         android:outlineSpotShadowColor="@color/black"
         android:outlineAmbientShadowColor="@color/black"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="5dp"
         android:background="#ffffff"
-        android:layout_margin="8dp">
-
-        <ImageView
-            android:layout_gravity="center"
-            android:id="@+id/anh_sp"
-            android:layout_width="170dp"
-            android:layout_height="190dp" />
+        android:layout_margin="5dp">
 
         <LinearLayout
-            android:background="#F0F8FF"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
             android:orientation="vertical">
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/anh_sp"
+                android:layout_width="190dp"
+                android:layout_height="215dp" />
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:background="#FAFBFB"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
                 android:orientation="vertical"
-                >
+                android:padding="3dp">
                 <TextView
                     android:paddingStart="15dp"
                     android:text="manh dep zai"
                     style="@style/TextAppearance.AppCompat.Caption"
-                    android:textSize="18dp"
+                    android:textSize="19dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:layout_gravity="center"
                     android:id="@+id/tv_nameSp"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:paddingStart="15dp"
-                    android:id="@+id/tv_gia"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="99.999đ"
-                    android:textColor="#DF1717"
-                    android:gravity="left" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:paddingEnd="8dp"
-                    android:textSize="12dp"
-                    android:id="@+id/tv_soluong"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Đã bán 99"
-                    android:textColor="#7E7676"
-                    android:gravity="right" />
+                    <TextView
+                        android:paddingStart="15dp"
+                        android:id="@+id/tv_gia"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="99.999đ"
+                        android:textColor="#DF1717"
+                        android:gravity="left" />
+
+                    <TextView
+                        android:id="@+id/tv_soluong"
+                        android:gravity="right"
+                        android:paddingEnd="15dp"
+                        android:textSize="12dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Đã bán 99"
+                        android:textColor="#7E7676" />
+                </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 
+
     </androidx.cardview.widget.CardView>
-
-
 
 </FrameLayout>

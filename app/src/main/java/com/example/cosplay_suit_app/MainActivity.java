@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.cosplay_suit_app.Fragments.Fragment_chat;
+import com.example.cosplay_suit_app.Fragments.Fragment_donhang;
 import com.example.cosplay_suit_app.Fragments.Fragment_profile;
 import com.example.cosplay_suit_app.Fragments.Fragment_trangchu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -39,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
                     ralaceFragment(Fragment_profile.newInstance());
                 }else if(id == R.id.nav_tinnhan){
                     ralaceFragment(Fragment_chat.newInstance());
-                }else{
-
+                }else if (id == R.id.nav_donhang){
+                    ralaceFragment(Fragment_donhang.newInstance());
                 }
                 return true;
             }

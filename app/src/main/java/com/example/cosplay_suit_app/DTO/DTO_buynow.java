@@ -4,17 +4,27 @@ import java.util.List;
 
 public class DTO_buynow {
     String _id, nameshop, address, id_user;
+    int tongbill;
     List<CartOrderDTO> list;
 
     public DTO_buynow() {
     }
 
-    public DTO_buynow(String _id, String nameshop, String address, String id_user, List<CartOrderDTO> list) {
+    public DTO_buynow(String _id, String nameshop, String address, String id_user, List<CartOrderDTO> list, int tongbill) {
         this._id = _id;
         this.nameshop = nameshop;
         this.address = address;
         this.id_user = id_user;
         this.list = list;
+        this.tongbill = tongbill;
+    }
+
+    public int getTongbill() {
+        return tongbill;
+    }
+
+    public void setTongbill(int tongbill) {
+        this.tongbill = tongbill;
     }
 
     public String get_id() {

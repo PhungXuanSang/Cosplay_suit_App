@@ -76,7 +76,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         .into(viewHolder.imgproduct);
             }
             viewHolder.tvnamepro.setText(order.getDtoSanPham().getNameproduct());
-            viewHolder.tvsize.setText("Size: "+order.getDtoProperties().getNameproperties());
+            viewHolder.tvsize.setText("Size: "+order.getId_properties());
             viewHolder.tvprice.setText(decimalFormat.format(order.getDtoSanPham().getPrice()) + " VND");
             viewHolder.tvsoluong.setText(""+order.getAmount());
 
@@ -96,7 +96,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         CartOrderDTO dto = new CartOrderDTO();
                         dto.setAmount(soluong);
                         dto.setTotalPayment(gia);
-                        updatedata(dto, order.getId_cart());
+                        updatedata(dto, order.get_id());
                     }
                 }
             });
@@ -116,7 +116,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         CartOrderDTO dto = new CartOrderDTO();
                         dto.setAmount(soluong);
                         dto.setTotalPayment(gia);
-                        updatedata(dto, order.getId_cart());
+                        updatedata(dto, order.get_id());
                     }
                 }
             });
@@ -124,19 +124,17 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                 @Override
                 public void onClick(View view) {
                     if (viewHolder.cbkcart.isChecked()) {
-                        idcart = order.getId_cart();
+                        idcart = order.get_id();
                         idshop = order.getDtoSanPham().getId_shop();
-                        Log.d(TAG, "idshop: " + idshop);
                         tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                         TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
                         TotalPriceManager.getInstance().updateIdcartTrue(idcart);
-                        TotalPriceManager.getInstance().updateidshopTrue(idshop);;
+                        TotalPriceManager.getInstance().updateidshopTrue(idshop);
                         onclickCheck.onCheckboxTrue();
                         onclickCheck.onIdCart();
                     } else {
-                        idcart = order.getId_cart();
+                        idcart = order.get_id();
                         idshop = order.getDtoSanPham().getId_shop();
-                        Log.d(TAG, "idshop: " + idshop);
                         tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                         TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
                         TotalPriceManager.getInstance().updateIdcartFalse(idcart);
