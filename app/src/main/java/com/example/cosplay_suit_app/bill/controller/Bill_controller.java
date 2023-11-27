@@ -8,8 +8,11 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
+import com.example.cosplay_suit_app.DTO.DTO_idbill;
+import com.example.cosplay_suit_app.DTO.DTO_thanhtoan;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
+import com.example.cosplay_suit_app.Interface_retrofit.Thanhtoan_interface;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -25,6 +28,7 @@ public class Bill_controller {
     private static final String TAG = "addbill";
     static String url = API.URL;
     static final String BASE_URL_CARTORDER = url + "/bill/";
+    static final String BASE_URL_Thanhtoan = url + "/thanhtoan/";
     Context mContext;
     DTO_idbill dtoIdbill;
     private Adapter_buynow.OnAddBillCompleteListener onAddBillCompleteListener;
@@ -118,6 +122,35 @@ public class Bill_controller {
 
             @Override
             public void onFailure(Call<DTO_billdetail> call, Throwable t) {
+                // Sử dụng mContext để hiển thị thông báo lỗi
+                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void AddThanhtoan(DTO_thanhtoan dtoThanhtoan){
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_Thanhtoan)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        Thanhtoan_interface thanhtoanInterface = retrofit.create(Thanhtoan_interface.class);
+        Call<DTO_thanhtoan> objCall = thanhtoanInterface.Addthanhtoan(dtoThanhtoan);
+
+        objCall.enqueue(new Callback<DTO_thanhtoan>() {
+            @Override
+            public void onResponse(Call<DTO_thanhtoan> call, Response<DTO_thanhtoan> response) {
+                if (response.isSuccessful()) {
+                    // Sử dụng mContext để hiển thị Toast
+
+                } else {
+                    Log.d(TAG, "nguyen1: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTO_thanhtoan> call, Throwable t) {
                 // Sử dụng mContext để hiển thị thông báo lỗi
                 Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());

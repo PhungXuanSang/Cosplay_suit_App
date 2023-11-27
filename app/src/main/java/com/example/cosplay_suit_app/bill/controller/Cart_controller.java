@@ -45,8 +45,9 @@ public class Cart_controller {
             @Override
             public void onResponse(Call<DTO_CartOrder> call, Response<DTO_CartOrder> response) {
                 if (response.isSuccessful()) {
-                    // Sử dụng mContext để hiển thị Toast
-                    Toast.makeText(context, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                    String title = "Thông báo giỏ hàng";
+                    String message = "Thêm vào giỏ hàng thành công";
+                    Dialogthongbao.showSuccessDialog(context, title, message);
                 } else {
                     Log.d(TAG, "nguyen1: " + response.message());
                 }
@@ -78,10 +79,11 @@ public class Cart_controller {
             @Override
             public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
                 if (response.isSuccessful()) {
-
+                    String title = "Thông báo giỏ hàng";
+                    String message = "Xóa sản phẩm khỏi giỏ hàng thành công";
+                    Dialogthongbao.showSuccessDialog(context, title, message);
                 } else {
                     Log.e(TAG, response.message());
-
                 }
             }
             @Override

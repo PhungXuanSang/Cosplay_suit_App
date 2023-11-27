@@ -174,7 +174,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     public void onClickXoa(String idcart){
         new AlertDialog.Builder(CartOrderActivity.this)
                 .setTitle("Thông Báo")
-                .setMessage("Bạn có muôn xóa user này")
+                .setMessage("Bạn có muôn xóa sản phẩm này khỏi giỏ hàng không ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Cart_controller cartController = new Cart_controller(CartOrderActivity.this);

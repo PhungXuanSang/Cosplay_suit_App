@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -119,12 +120,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         viewHolder.tv_tonggia.setText( decimalFormat.format(totalForShop) + " VND");
         shopCartorderDTO.setTongbill(totalForShop);
         //Chọn phương thức thanh toán
-        viewHolder.idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogchonthanhtoan(viewHolder);
-            }
-        });
+
     }
     @Override
     public int getItemCount() {
@@ -132,12 +128,11 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
     public class ItemViewHoldel extends RecyclerView.ViewHolder{
         RecyclerView recyclerView;
-        TextView tv_tonggia, idchonphuongthuc;
+        TextView tv_tonggia;
         public ItemViewHoldel(@NonNull View itemView) {
             super(itemView);
             recyclerView = itemView.findViewById(R.id.rcv_buynow);
             tv_tonggia = itemView.findViewById(R.id.tv_tonggia);
-            idchonphuongthuc = itemView.findViewById(R.id.idchonphuongthuc);
         }
     }
     public void getOrdersByUserId(String userId, Callback<List<DTO_inbuynow>> callback) {
@@ -216,56 +211,6 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         return arrayidcart;
     }
-    public void dialogchonthanhtoan(ItemViewHoldel viewHoldel){
-        Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_chonthanhtoan);
-
-        //thoát khỏi dialog
-        ImageView icback = dialog.findViewById(R.id.id_back);
-        icback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        //Xử lý công việc trong radiogroup
-        RadioGroup radioGroup = dialog.findViewById(R.id.rdo_group);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                // Lấy RadioButton đã chọn
-                RadioButton selectedRadioButton = dialog.findViewById(checkedId);
-
-                // Lấy ID của RadioButton đã chọn
-                int selectedId = radioGroup.getCheckedRadioButtonId();
-
-                // Xử lý công việc dựa trên ID của RadioButton
-                if (selectedId == R.id.rdo_thanhtoansau) {
-                    // Xử lý công việc rdo_thanhtoansau
-                    viewHoldel.idchonphuongthuc.setText("Thanh toán khi nhận hàng");
-                } else if (selectedId == R.id.rdo_thanhtoanVnpay) {
-                    // Xử lý công việc rdo_thanhtoanVnpay
-                    Toast.makeText(context, "rdo_thanhtoanVnpay", Toast.LENGTH_SHORT).show();
-                    viewHoldel.idchonphuongthuc.setText("Thanh toán VNpay");
-                }
-            }
-        });
-
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-
-        // Chiều rộng full màn hình
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        // Chiều cao full màn hình
-        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-
-        window.setAttributes(layoutParams);
-        window.setBackgroundDrawableResource(android.R.color.transparent);
-
-        dialog.show();
-    }
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
     }
@@ -281,7 +226,6 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             dtoBill.setStatus("Wait");
             dtoBill.setMa_voucher("");
             dtoBill.setTotalPayment(item.getTongbill());
-
             Bill_controller billController = new Bill_controller(context);
             billController.Addbill(dtoBill);
 
@@ -299,8 +243,6 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             listsizeForItem, listtotalpaymentForItem,  item.get_id());
                 }
             });
-
-//            billController.databilldetail(listidproductForItem, listamoutForItem, listsizeForItem);
         }
         notifyDataSetChanged(); // Cập nhật RecyclerView sau khi thay đổi dữ liệu
     }

@@ -1,4 +1,4 @@
-package com.example.cosplay_suit_app.bill.controller;
+package com.example.cosplay_suit_app.DTO;
 
 public class DTO_idbill {
     String _id;
