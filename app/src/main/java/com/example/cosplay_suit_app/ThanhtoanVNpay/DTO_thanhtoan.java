@@ -1,13 +1,14 @@
 package com.example.cosplay_suit_app.ThanhtoanVNpay;
 
 public class DTO_thanhtoan {
-    String idthanhtoan, vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType, vnp_OrderInfo, vnp_PayDate, vnp_ResponseCode,
+    String id_bill,idthanhtoan, vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType, vnp_OrderInfo, vnp_PayDate, vnp_ResponseCode,
             vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus, vnp_TxnRef, vnp_SecureHash;
 
     public DTO_thanhtoan() {
     }
 
-    public DTO_thanhtoan(String idthanhtoan, String vnp_Amount, String vnp_BankCode, String vnp_BankTranNo, String vnp_CardType, String vnp_OrderInfo, String vnp_PayDate, String vnp_ResponseCode, String vnp_TmnCode, String vnp_TransactionNo, String vnp_TransactionStatus, String vnp_TxnRef, String vnp_SecureHash) {
+    public DTO_thanhtoan(String id_bill,String idthanhtoan, String vnp_Amount, String vnp_BankCode, String vnp_BankTranNo, String vnp_CardType, String vnp_OrderInfo, String vnp_PayDate, String vnp_ResponseCode, String vnp_TmnCode, String vnp_TransactionNo, String vnp_TransactionStatus, String vnp_TxnRef, String vnp_SecureHash) {
+        this.id_bill= id_bill;
         this.idthanhtoan = idthanhtoan;
         this.vnp_Amount = vnp_Amount;
         this.vnp_BankCode = vnp_BankCode;
@@ -21,6 +22,14 @@ public class DTO_thanhtoan {
         this.vnp_TransactionStatus = vnp_TransactionStatus;
         this.vnp_TxnRef = vnp_TxnRef;
         this.vnp_SecureHash = vnp_SecureHash;
+    }
+
+    public String getId_bill() {
+        return id_bill;
+    }
+
+    public void setId_bill(String id_bill) {
+        this.id_bill = id_bill;
     }
 
     public String getIdthanhtoan() {

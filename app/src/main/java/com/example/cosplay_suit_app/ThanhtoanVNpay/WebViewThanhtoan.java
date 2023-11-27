@@ -18,7 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
+import com.example.cosplay_suit_app.Fragments.Fragment_trangchu;
+import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -104,8 +107,15 @@ public class WebViewThanhtoan extends AppCompatActivity {
                         @Override
                         public void run() {
                             finish();// Kết thúc WebViewThanhtoan
+                            // Chuyển đến hoạt động chính (Trang chủ)
+                            Intent intent = new Intent(WebViewThanhtoan.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            String title = "Thông báo mua hàng";
+                            String message = "Đặt hàng thành công";
+                            Dialogthongbao.showSuccessDialog(WebViewThanhtoan.this, title, message);
                         }
-                    }, 5000);
+                    }, 4000);
                 }
             }
         });

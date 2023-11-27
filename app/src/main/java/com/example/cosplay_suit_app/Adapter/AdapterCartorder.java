@@ -131,7 +131,6 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         TotalPriceManager.getInstance().updateIdcartTrue(idcart);
                         TotalPriceManager.getInstance().updateidshopTrue(idshop);
                         onclickCheck.onCheckboxTrue();
-                        onclickCheck.onIdCart();
                     } else {
                         idcart = order.get_id();
                         idshop = order.getDtoSanPham().getId_shop();
@@ -140,7 +139,6 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         TotalPriceManager.getInstance().updateIdcartFalse(idcart);
                         TotalPriceManager.getInstance().updateidshopFalse(idshop);
                         onclickCheck.onCheckboxFalse();
-                        onclickCheck.onIdCart();
                     }
 
                 }
@@ -182,7 +180,6 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     public interface OnclickCheck{
         void onCheckboxTrue();
         void onCheckboxFalse();
-        void onIdCart();
         void onClickXoa(String idcart);
     }
 

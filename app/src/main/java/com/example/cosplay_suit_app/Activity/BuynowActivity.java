@@ -1,5 +1,7 @@
 package com.example.cosplay_suit_app.Activity;
 
+import static android.text.format.DateUtils.formatDateTime;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,19 +26,30 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
-import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_vnpay;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.Vnpay_Retrofit;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.WebViewThanhtoan;
+import com.example.cosplay_suit_app.bill.controller.Bill_controller;
+import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -86,7 +99,22 @@ public class BuynowActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (checkphuongthuc != null) {
                     if (checkphuongthuc.equals("thanhtoansau")) {
-                        Toast.makeText(BuynowActivity.this, "ok", Toast.LENGTH_SHORT).show();
+                        UUID uuid = UUID.randomUUID();
+                        String vnp_TxnRef = uuid.toString().trim();
+                        // Lấy đối tượng Date hiện tại
+                        Date currentDate = new Date();
+                        // Định dạng ngày giờ theo yyyyMMddHHmmss
+                        String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
+
+                        DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
+                        dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
+                        dtovnpay.setVnp_Amount(String.valueOf(totalPriceManager.getTotalOrderPrice()));
+                        dtovnpay.setVnp_PayDate(formattedDateTime);
+                        dtovnpay.setVnp_TxnRef(vnp_TxnRef);
+                        Bill_controller billController = new Bill_controller(BuynowActivity.this);
+                        billController.AddThanhtoan(dtovnpay);
+
+                        arrayAdapter.performActionOnAllItems(vnp_TxnRef);
                     }
                     if (checkphuongthuc.equals("thanhtoanvnpay")) {
                         DTO_vnpay dtovnpay = new DTO_vnpay();
@@ -97,8 +125,6 @@ public class BuynowActivity extends AppCompatActivity {
                 }else {
                     Toast.makeText(BuynowActivity.this, "Bạn phải chọn phương thức", Toast.LENGTH_SHORT).show();
                 }
-//                // Gọi phương thức trong Adapter khi nút được nhấn
-//                arrayAdapter.performActionOnAllItems();
             }
         });
         totalPriceManager = TotalPriceManager.getInstance();
@@ -302,9 +328,33 @@ public class BuynowActivity extends AppCompatActivity {
                     Log.d(TAG, ": vnp_TxnRef" +vnp_TxnRef);
                     Log.d(TAG, ": vnp_SecureHash" +vnp_SecureHash);
 
-                    // Xử lý các tham số khác
+                    DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
+                    dtovnpay.setVnp_CardType(vnp_CardType);
+                    dtovnpay.setVnp_Amount(vnp_Amount);
+                    dtovnpay.setVnp_BankCode(vnp_BankCode);
+                    dtovnpay.setVnp_BankTranNo(vnp_BankTranNo);
+                    dtovnpay.setVnp_OrderInfo(vnp_OrderInfo);
+                    dtovnpay.setVnp_PayDate(vnp_PayDate);
+                    dtovnpay.setVnp_ResponseCode(vnp_ResponseCode);
+                    dtovnpay.setVnp_TmnCode(vnp_TmnCode);
+                    dtovnpay.setVnp_TransactionNo(vnp_TransactionNo);
+                    dtovnpay.setVnp_TransactionStatus(vnp_TransactionStatus);
+                    dtovnpay.setVnp_SecureHash(vnp_SecureHash);
+                    dtovnpay.setVnp_TxnRef(vnp_TxnRef);
+                    Bill_controller billController = new Bill_controller(this);
+                    billController.AddThanhtoan(dtovnpay);
+
+                    arrayAdapter.performActionOnAllItems(vnp_TxnRef);
                 }
             }
     );
+
+    public static String formatDateTime(Date date, String format) {
+        // Tạo đối tượng SimpleDateFormat với định dạng
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+
+        // Chuyển đổi Date thành chuỗi định dạng
+        return sdf.format(date);
+    }
 
 }

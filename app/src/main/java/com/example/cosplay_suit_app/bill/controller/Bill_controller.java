@@ -9,10 +9,10 @@ import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.DTO.DTO_idbill;
-import com.example.cosplay_suit_app.DTO.DTO_thanhtoan;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
 import com.example.cosplay_suit_app.Interface_retrofit.Thanhtoan_interface;
+import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -58,10 +58,13 @@ public class Bill_controller {
                     dtoIdbill = new DTO_idbill();
                     dtoIdbill.set_id(result.get_id());
                     dtoIdbill.setId_shop(result.getId_shop());
+
+                    DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
+
+                    Log.d(TAG, "dtovnpay: " + dtovnpay.getVnp_Amount());
                     if (onAddBillCompleteListener != null) {
                         onAddBillCompleteListener.onAddBillComplete();
                     }
-                    Toast.makeText(mContext, "Đã thêm đơn hàng thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d(TAG, "nguyen1: " + response.message());
                 }
@@ -143,7 +146,6 @@ public class Bill_controller {
             public void onResponse(Call<DTO_thanhtoan> call, Response<DTO_thanhtoan> response) {
                 if (response.isSuccessful()) {
                     // Sử dụng mContext để hiển thị Toast
-
                 } else {
                     Log.d(TAG, "nguyen1: " + response.message());
                 }

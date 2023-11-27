@@ -25,6 +25,7 @@ import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Cart_controller;
+import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -54,6 +55,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     TextView tvtongtien;
     Button btnbuynow;
     private TotalPriceManager totalPriceManager;
+    ArrayList<String> totalPriceManagerListcart = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +89,21 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                 onBackPressed();
             }
         });
+        btnbuynow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                totalPriceManagerListcart = totalPriceManager.getListcart();
+                if (totalPriceManagerListcart == null || totalPriceManagerListcart.isEmpty()){
+                    String title = "Thông báo giỏ hàng";
+                    String message = "Bạn chưa chọn sản phẩm nào!";
+                    Dialogthongbao.showSuccessDialog(CartOrderActivity.this, title, message);
+                }else {
+                    Intent intent = new Intent(CartOrderActivity.this, BuynowActivity.class);
+                    startActivity(intent);
+                }
 
+            }
+        });
         getShop(id);
     }
 
@@ -160,17 +176,6 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     }
 
     @Override
-    public void onIdCart() {
-        btnbuynow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CartOrderActivity.this, BuynowActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
     public void onClickXoa(String idcart){
         new AlertDialog.Builder(CartOrderActivity.this)
                 .setTitle("Thông Báo")
@@ -178,7 +183,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Cart_controller cartController = new Cart_controller(CartOrderActivity.this);
-                        cartController.DeleteCartorder(idcart);
+                        cartController.chonDeleteCartorder(idcart);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)

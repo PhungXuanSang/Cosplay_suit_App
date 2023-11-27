@@ -79,6 +79,34 @@ public class Cart_controller {
             @Override
             public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
                 if (response.isSuccessful()) {
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<CartOrderDTO> call, Throwable t) {
+                Log.e(TAG, t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void chonDeleteCartorder(String idcart){
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        // sử dụng interface
+        CartOrderInterface cartOrderInterface = retrofit.create(CartOrderInterface.class);
+
+        //tạo đối tượng
+        Call<CartOrderDTO> objCall = cartOrderInterface.deletecart(idcart);
+        objCall.enqueue(new Callback<CartOrderDTO>() {
+            @Override
+            public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
+                if (response.isSuccessful()) {
                     String title = "Thông báo giỏ hàng";
                     String message = "Xóa sản phẩm khỏi giỏ hàng thành công";
                     Dialogthongbao.showSuccessDialog(context, title, message);
