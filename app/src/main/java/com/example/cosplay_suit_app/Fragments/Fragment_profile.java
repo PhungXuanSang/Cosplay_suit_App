@@ -33,6 +33,7 @@ import com.example.cosplay_suit_app.Activity.LoginActivity;
 import com.example.cosplay_suit_app.Activity.NewPasswordActivity;
 import com.example.cosplay_suit_app.Activity.ProfileActivity;
 import com.example.cosplay_suit_app.Activity.QlspActivity;
+import com.example.cosplay_suit_app.Activity.Shopcuatoi_Activity;
 import com.example.cosplay_suit_app.Adapter.DhWithoutCmtsAdapter;
 import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
 import com.example.cosplay_suit_app.DTO.Shop;
@@ -78,7 +79,7 @@ public class Fragment_profile extends Fragment {
     String username_u, id_user;
     static String  role;
     static String id="";
-    RelativeLayout rlRole, relative_newpass;
+    RelativeLayout rlRole, relative_newpass, rll_shopcuatoi;
     View idview5;
     SharedPreferences sharedPreferences;
 
@@ -130,6 +131,7 @@ public class Fragment_profile extends Fragment {
         relative_newpass = view.findViewById(R.id.relative_newpass);
         idview5 = view.findViewById(R.id.idview5);
         rlRole = view.findViewById(R.id.rlRole);
+        rll_shopcuatoi = view.findViewById(R.id.rll_shopcuatoi);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
@@ -140,17 +142,18 @@ public class Fragment_profile extends Fragment {
         role = sharedPreferences.getString("role", "");
         tv_fullname.setText(username_u);
 
+        rll_shopcuatoi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Shopcuatoi_Activity.class);
+                startActivity(intent);
+            }
+        });
+
         tv_qlsp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), QlspActivity.class);
-                startActivity(intent);
-            }
-        });
-        tv_donhangmua.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Collection_adapter_bill.class);
                 startActivity(intent);
             }
         });
@@ -206,6 +209,7 @@ public class Fragment_profile extends Fragment {
         if (!id.equalsIgnoreCase("")) {
             appCompatButton.setText("Sign Out");
             if (Objects.equals(role, "User")){
+                rll_shopcuatoi.setVisibility(View.GONE);
                 tv_qlsp.setVisibility(View.GONE);
                 view1.setVisibility(View.GONE);
             }else {
@@ -221,6 +225,7 @@ public class Fragment_profile extends Fragment {
             });
         } else {
             appCompatButton.setText("Sign In");
+            rll_shopcuatoi.setVisibility(View.GONE);
             tv_qlsp.setVisibility(View.GONE);
             view1.setVisibility(View.GONE);
 
