@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.cosplay_suit_app.R;
 import com.google.android.material.tabs.TabLayout;
@@ -21,6 +23,14 @@ public class Collection_adapter_bill extends AppCompatActivity {
         pagerAdapter = new PagerAdapter(Collection_adapter_bill.this);
         viewPager2 = findViewById(R.id.pager2);
         viewPager2.setAdapter( pagerAdapter );
+
+        ImageView icback = findViewById(R.id.icback);
+        icback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         /// làm việc với Tab
         TabLayout tabLayout01 = findViewById(R.id.idtablayout);

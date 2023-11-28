@@ -123,7 +123,9 @@ public class BuynowActivity extends AppCompatActivity {
                         postthamso(dtovnpay);
                     }
                 }else {
-                    Toast.makeText(BuynowActivity.this, "Bạn phải chọn phương thức", Toast.LENGTH_SHORT).show();
+                    String tile = "Thông báo mua hàng";
+                    String msg = "Bạn phải chọn phương thức";
+                    Dialogthongbao.showSuccessDialog(BuynowActivity.this,tile, msg);
                 }
             }
         });

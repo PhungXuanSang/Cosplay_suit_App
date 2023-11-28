@@ -90,14 +90,6 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
         arrayAdapter = new AdapterCartorder(ordersForShop, context, (AdapterCartorder.OnclickCheck) context);
         viewHolder.rcvcart.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
-
-//        if (ordersForShop != null) {
-//            for (CartOrderDTO order : ordersForShop) {
-//                Log.d(TAG, "Order ID: " + order.getTotalPayment()); // Thay "getId()" bằng getter tương ứng trong OrderDTO
-//            }
-//        } else {
-//            Log.d(TAG, "No orders found for shop with ID: " + shop.getId());
-//        }
     }
 
     @Override

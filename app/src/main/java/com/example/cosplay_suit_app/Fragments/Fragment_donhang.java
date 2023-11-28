@@ -23,6 +23,7 @@ import com.example.cosplay_suit_app.Package_bill.Activity.Danhgia_Activity;
 import com.example.cosplay_suit_app.Package_bill.Activity.Giaohang_Activity;
 import com.example.cosplay_suit_app.Package_bill.Activity.Layhang_Activity;
 import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
+import com.example.cosplay_suit_app.Package_bill.donhang.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,7 +48,7 @@ public class Fragment_donhang extends Fragment {
     static String id="";
     String username_u;
     RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao;
-    TextView tv_sldanhgia;
+    TextView tv_sldanhgia, tvdonhangmua;
 
     public Fragment_donhang() {
     }
@@ -65,6 +66,7 @@ public class Fragment_donhang extends Fragment {
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
         tv_sldanhgia = viewok.findViewById(R.id.tv_sldanhgia);
+        tvdonhangmua = viewok.findViewById(R.id.donhangmua);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
         id = sharedPreferences.getString("id", "");
@@ -93,6 +95,13 @@ public class Fragment_donhang extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Danhgia_Activity.class);
+                startActivity(intent);
+            }
+        });
+        tvdonhangmua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Collection_adapter_bill.class);
                 startActivity(intent);
             }
         });

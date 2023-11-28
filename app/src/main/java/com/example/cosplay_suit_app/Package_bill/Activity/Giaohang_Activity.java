@@ -15,6 +15,7 @@ import com.example.cosplay_suit_app.Package_bill.Adapter.Adapter_Bill;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -58,65 +59,12 @@ public class Giaohang_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        GetUserBill(id);
+        Bill_controller billController = new Bill_controller(Giaohang_Activity.this);
+        billController.GetUserBill(id, list, arrayAdapter, "Delivery");
     }
 
     public void Anhxa(){
         recyclerView = findViewById(R.id.rcv_danhgia);
         img_back = findViewById(R.id.id_back);
-    }
-    void GetUserBill(String id) {
-        // tạo gson
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        // Create a new object from HttpLoggingInterceptor
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        // Add Interceptor to HttpClient
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client) // Set HttpClient to be used by Retrofit
-                .build();
-
-        // sử dụng interface
-        Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
-
-        // tạo đối tượng
-        Call<List<BillDetailDTO>> objCall = billDetailDTO.getstatuswait(id);
-        objCall.enqueue(new Callback<List<BillDetailDTO>>() {
-            @Override
-            public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    List<BillDetailDTO> billDetailList = response.body();
-                    if (billDetailList != null && !billDetailList.isEmpty()) {
-                        for (BillDetailDTO billDetail : billDetailList) {
-                            if (billDetail.getDtoBill().getStatus().equals("Delivery")){
-                                list.add(billDetail);
-                                arrayAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    } else {
-                        Toast.makeText(Giaohang_Activity.this, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(Giaohang_Activity.this,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t);
-            }
-        });
-
     }
 }
