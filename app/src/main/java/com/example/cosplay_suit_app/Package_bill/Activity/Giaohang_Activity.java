@@ -32,14 +32,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Giaohang_Activity extends AppCompatActivity {
-    static String url = API.URL;
-    static final String BASE_URL = url +"/bill/";
     String TAG = "Danhgiaactivity";
     List<BillDetailDTO> list;
     Adapter_Bill arrayAdapter;
     RecyclerView recyclerView;
     ImageView img_back;
 
+    String checkactivity = "", checkstatus= "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +46,7 @@ public class Giaohang_Activity extends AppCompatActivity {
         Anhxa();
         //danh sách sản phẩm
         list = new ArrayList<>();
-        arrayAdapter = new Adapter_Bill(list, this);
+        arrayAdapter = new Adapter_Bill(list, this, checkactivity,checkstatus);
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
@@ -60,7 +59,7 @@ public class Giaohang_Activity extends AppCompatActivity {
             }
         });
         Bill_controller billController = new Bill_controller(Giaohang_Activity.this);
-        billController.GetUserBill(id, list, arrayAdapter, "Delivery");
+        billController.GetUserBillDelivery(id, list, arrayAdapter, "Delivery","user");
     }
 
     public void Anhxa(){

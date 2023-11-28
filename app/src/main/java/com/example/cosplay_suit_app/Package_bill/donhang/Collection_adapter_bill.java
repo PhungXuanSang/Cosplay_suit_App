@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -20,9 +22,15 @@ public class Collection_adapter_bill extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conllection_pager_bill);
-        pagerAdapter = new PagerAdapter(Collection_adapter_bill.this);
+
+        Intent intent = getIntent();
+        String checkactivity = intent.getStringExtra("checkactivity");
+
+        pagerAdapter = new PagerAdapter(Collection_adapter_bill.this, checkactivity);
         viewPager2 = findViewById(R.id.pager2);
         viewPager2.setAdapter( pagerAdapter );
+
+
 
         ImageView icback = findViewById(R.id.icback);
         icback.setOnClickListener(new View.OnClickListener() {

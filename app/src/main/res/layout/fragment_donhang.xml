@@ -7,13 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#077A88">
-        <ImageView
-            android:id="@+id/id_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_back"/>
         <TextView
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đơn hàng"
             android:textSize="20dp"
@@ -25,7 +20,8 @@
     </androidx.appcompat.widget.Toolbar>
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <TableRow android:padding="5dp">
 
@@ -140,7 +136,7 @@
         </TableRow>
     </TableLayout>
     <View
-        android:id="@+id/view2"
+        android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center"
@@ -178,5 +174,14 @@
             android:layout_marginRight="20dp"
             android:src="@drawable/ic_daulonhon" />
     </RelativeLayout>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="#A89494" />
 
 </LinearLayout>

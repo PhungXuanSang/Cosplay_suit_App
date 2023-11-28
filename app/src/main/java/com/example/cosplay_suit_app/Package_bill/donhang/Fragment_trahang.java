@@ -12,6 +12,11 @@ import androidx.fragment.app.Fragment;
 import com.example.cosplay_suit_app.R;
 
 public class Fragment_trahang extends Fragment {
+    String checkactivity;
+
+    public Fragment_trahang(String checkactivity) {
+        this.checkactivity = checkactivity;
+    }
 
     @Nullable
     @Override

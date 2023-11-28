@@ -37,6 +37,7 @@ public class Shopcuatoi_Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Shopcuatoi_Activity.this, Collection_adapter_bill.class);
+                intent.putExtra("checkactivity","shop");
                 startActivity(intent);
             }
         });

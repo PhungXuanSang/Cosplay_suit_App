@@ -27,6 +27,11 @@ public class Fragment_dagiao extends Fragment {
     Adapter_Bill arrayAdapter;
     RecyclerView recyclerView;
     Context context;
+    String checkactivity, checkstatus;
+
+    public Fragment_dagiao(String checkactivity) {
+        this.checkactivity = checkactivity;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,16 +39,16 @@ public class Fragment_dagiao extends Fragment {
         recyclerView = viewok.findViewById(R.id.rcv_danhgia);
         //danh sách sản phẩm
         list = new ArrayList<>();
-        arrayAdapter = new Adapter_Bill(list, getContext());
+        arrayAdapter = new Adapter_Bill(list, getContext(), checkactivity, checkstatus);
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         String id = sharedPreferences.getString("id","");
         if (id != null && !id.isEmpty()) {
-            Bill_controller billController = new Bill_controller(context);
-            billController.GetUserBill(id, list, arrayAdapter, "Done");
+            Bill_controller billController = new Bill_controller(getContext());
+            billController.GetUserBillDone(id, list, arrayAdapter, "Done",checkactivity);
         } else {
-            Toast.makeText(context, "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
         }
         return viewok;
     }

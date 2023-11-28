@@ -102,6 +102,7 @@ public class Fragment_donhang extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Collection_adapter_bill.class);
+                intent.putExtra("checkactivity","user");
                 startActivity(intent);
             }
         });

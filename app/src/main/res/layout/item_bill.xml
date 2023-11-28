@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginBottom="20dp">
+    android:layout_marginBottom="20dp"
+    android:layout_margin="5dp">
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,58 +47,62 @@
         app:cardCornerRadius="10dp"
         android:layout_margin="2dp"
         android:background="#F4F4F4">
-        <androidx.cardview.widget.CardView
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            app:cardCornerRadius="10dp"
-            android:layout_margin="15dp">
-            <ImageView
-                android:id="@+id/img_product"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/home_24" />
-        </androidx.cardview.widget.CardView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                app:cardCornerRadius="10dp"
+                android:layout_margin="15dp">
+                <ImageView
+                    android:id="@+id/img_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/home_24" />
+            </androidx.cardview.widget.CardView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="150dp"
-            android:layout_marginTop="20dp">
-            <TextView
-                android:id="@+id/tvname_product"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tên sản phẩm"
-                android:textStyle="bold"
-                android:textSize="22dp"
-                android:layout_margin="2dp"/>
+                android:orientation="vertical"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="20dp">
+                <TextView
+                    android:id="@+id/tvname_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên sản phẩm"
+                    android:textStyle="bold"
+                    android:textSize="22dp"
+                    android:layout_margin="2dp"/>
+                <TextView
+                    android:id="@+id/tvsize_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Size: L"
+                    android:textSize="15dp"
+                    android:layout_margin="2dp"/>
+                <TextView
+                    android:id="@+id/tvprice_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="900.000 VND"
+                    android:textSize="15dp"
+                    android:textColor="#BD0909"
+                    android:layout_margin="2dp"/>
+            </LinearLayout>
             <TextView
-                android:id="@+id/tvsize_product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Size: L"
-                android:textSize="15dp"
-                android:layout_margin="2dp"/>
-            <TextView
-                android:id="@+id/tvprice_product"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="900.000 VND"
-                android:textSize="15dp"
-                android:textColor="#BD0909"
-                android:layout_margin="2dp"/>
-        </LinearLayout>
+                android:text="Xem chi tiết"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="17dp"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
     </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Xem chi tiết"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="17dp"
-        android:layout_gravity="center_horizontal"/>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -132,8 +137,26 @@
                 android:textColor="#FD0000"
                 android:textSize="19dp" />
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_upstatus"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@+id/tv_tongbill"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/my_button_bg4"
+                android:gravity="center"
+                android:text=" Xác nhận Status "
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="true"/>
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_mualai"
-                android:layout_width="90dp"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_below="@+id/tv_tongbill"
                 android:layout_marginStart="10dp"

@@ -8,9 +8,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 public class PagerAdapter extends FragmentStateAdapter {
 
     int soluongfragment = 6;
+    String checkactivity;
 
-    public PagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+
+    public PagerAdapter(@NonNull FragmentActivity fragmentActivity, String checkactivity) {
         super(fragmentActivity);
+        this.checkactivity = checkactivity;
     }
 
     @NonNull
@@ -18,19 +21,19 @@ public class PagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position){
             case 0:
-                return new Fragment_xacnhan(); // đặt cho Frag01 hiển thị đầu tiên
+                return new Fragment_xacnhan(checkactivity); // đặt cho Frag01 hiển thị đầu tiên
             case 1:
-                return new Fragment_layhang();
+                return new Fragment_layhang(checkactivity);
             case 2:
-                return new Fragment_danggiao();
+                return new Fragment_danggiao(checkactivity);
             case 3:
-                return new Fragment_dagiao();
+                return new Fragment_dagiao(checkactivity);
             case 4:
-                return new Fragment_dahuy();
+                return new Fragment_dahuy(checkactivity);
             case 5:
-                return new Fragment_trahang();
+                return new Fragment_trahang(checkactivity);
             default:
-                return new Fragment_xacnhan();
+                return new Fragment_xacnhan(checkactivity);
         }
     }
 

@@ -12,17 +12,17 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface Billdentail_Interfece {
-    @GET("getstatuswait/{id}")
-    Call<List<BillDetailDTO>> getstatuswait(@Path("id") String id);
+    @GET("getstatuswait/{type}/{id}")
+    Call<List<BillDetailDTO>> getstatuswait(@Path("type") String type,@Path("id") String id);
 
-    @GET("getstatusDelivery/{id}")
-    Call<List<BillDetailDTO>> getstatusDelivery(@Path("id") String id);
+    @GET("getstatusDelivery/{type}/{id}")
+    Call<List<BillDetailDTO>> getstatusDelivery(@Path("type") String type,@Path("id") String id);
 
-    @GET("getstatusPack/{id}")
-    Call<List<BillDetailDTO>> getstatusPack(@Path("id") String id);
+    @GET("getstatusPack/{type}/{id}")
+    Call<List<BillDetailDTO>> getstatusPack(@Path("type") String type,@Path("id") String id);
 
-    @GET("getstatusDone/{id}")
-    Call<List<BillDetailDTO>> getstatusDone(@Path("id") String id);
+    @GET("getstatusDone/{type}/{id}")
+    Call<List<BillDetailDTO>> getstatusDone(@Path("type") String type,@Path("id") String id);
 
     @POST("addbilldetail")
     Call<DTO_billdetail> addbilldetail(@Body DTO_billdetail dtoBill);
