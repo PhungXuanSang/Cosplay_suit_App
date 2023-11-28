@@ -69,6 +69,7 @@
         android:layout_marginRight="15dp"
         android:background="#A89494" />
     <RelativeLayout
+        android:id="@+id/rll_donhangcuatoi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
