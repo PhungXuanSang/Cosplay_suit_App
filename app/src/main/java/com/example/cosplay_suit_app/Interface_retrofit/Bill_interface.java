@@ -2,9 +2,14 @@ package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.DTO.ProfileDTO;
+import com.example.cosplay_suit_app.DTO.User;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -15,4 +20,6 @@ public interface Bill_interface {
 
     @PUT("upstatusbill/{id}")
     Call<DTO_Bill> upstatusbill(@Path("id")String id, @Body DTO_Bill dtoBill);
+    @GET("getdskhach/{id}")
+    Call<List<ProfileDTO>> getdskhach(@Path("id")String id);
 }

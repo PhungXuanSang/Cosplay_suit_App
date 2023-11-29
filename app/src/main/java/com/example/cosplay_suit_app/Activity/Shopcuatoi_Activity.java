@@ -13,7 +13,7 @@ import com.example.cosplay_suit_app.R;
 
 public class Shopcuatoi_Activity extends AppCompatActivity {
 
-    RelativeLayout rll_qlsp, rll_donhangcuatoi;
+    RelativeLayout rll_qlsp, rll_donhangcuatoi, rll_dskhach;
     ImageView id_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +41,18 @@ public class Shopcuatoi_Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        rll_dskhach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Shopcuatoi_Activity.this, Dskhach_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
     public void Anhxa(){
         rll_donhangcuatoi = findViewById(R.id.rll_donhangcuatoi);
         rll_qlsp = findViewById(R.id.rll_qlsp);
         id_back = findViewById(R.id.id_back);
+        rll_dskhach = findViewById(R.id.rll_dskhach);
     }
 }

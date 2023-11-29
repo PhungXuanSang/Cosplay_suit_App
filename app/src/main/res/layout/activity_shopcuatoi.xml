@@ -109,5 +109,46 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:background="#A89494" />
+    <RelativeLayout
+        android:id="@+id/rll_dskhach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/img_dskhach"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/dskhach" />
+
+        <TextView
+            android:id="@+id/tv_dskhach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/img_dskhach"
+            android:layout_marginLeft="45dp"
+            android:text="Danh sách khách hàng"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_daulonhon" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="#A89494" />
 
 </LinearLayout>

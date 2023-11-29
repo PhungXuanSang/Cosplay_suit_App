@@ -5,15 +5,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.Dskhach_Activity;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
+import com.example.cosplay_suit_app.Adapter.Adapter_dskhach;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.DTO.DTO_idbill;
+import com.example.cosplay_suit_app.DTO.ProfileDTO;
+import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
 import com.example.cosplay_suit_app.Interface_retrofit.Thanhtoan_interface;
-import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
 import com.example.cosplay_suit_app.Package_bill.Adapter.Adapter_Bill;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
 import com.google.gson.Gson;
@@ -30,7 +33,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Path;
 
 public class Bill_controller {
     private static final String TAG = "addbill";
@@ -194,9 +196,9 @@ public class Bill_controller {
                         for (BillDetailDTO billDetail : billDetailList) {
                             if (billDetail.getDtoBill().getStatus().equals(status)){
                                 list.add(billDetail);
-                                arrayAdapter.notifyDataSetChanged();
                             }
                         }
+                        arrayAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
                     }
@@ -248,9 +250,9 @@ public class Bill_controller {
                         for (BillDetailDTO billDetail : billDetailList) {
                             if (billDetail.getDtoBill().getStatus().equals(status)){
                                 list.add(billDetail);
-                                arrayAdapter.notifyDataSetChanged();
                             }
                         }
+                        arrayAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
                     }
@@ -302,9 +304,9 @@ public class Bill_controller {
                         for (BillDetailDTO billDetail : billDetailList) {
                             if (billDetail.getDtoBill().getStatus().equals(status)){
                                 list.add(billDetail);
-                                arrayAdapter.notifyDataSetChanged();
                             }
                         }
+                        arrayAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
                     }
@@ -356,9 +358,9 @@ public class Bill_controller {
                         for (BillDetailDTO billDetail : billDetailList) {
                             if (billDetail.getDtoBill().getStatus().equals(status)){
                                 list.add(billDetail);
-                                arrayAdapter.notifyDataSetChanged();
                             }
                         }
+                        arrayAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
                     }
@@ -409,5 +411,56 @@ public class Bill_controller {
             }
         });
     }
+    public void Getdskhach(String id, ArrayList<ProfileDTO> list, Adapter_dskhach arrayAdapter){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
 
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Bill_interface billDetailDTO = retrofit.create(Bill_interface.class);
+
+        // tạo đối tượng
+        Call<List<ProfileDTO>> objCall = billDetailDTO.getdskhach(id);
+        objCall.enqueue(new Callback<List<ProfileDTO>>() {
+            @Override
+            public void onResponse(Call<List<ProfileDTO>> call, Response<List<ProfileDTO>> response) {
+                if (response.isSuccessful()) {
+                    list.clear();
+                    List<ProfileDTO> profileDTOS = response.body();
+                    if (profileDTOS != null && !profileDTOS.isEmpty()) {
+                        for (ProfileDTO profileDTO : profileDTOS) {
+                            list.add(profileDTO);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(mContext,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProfileDTO>> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+
+    }
 }
