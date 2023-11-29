@@ -16,5 +16,6 @@ public interface ShopInterface {
     @GET("listShop/{id_user}")
     Call<List<Shop>> listShop(@Path("id_user") String iduser);
 
-
+    @GET("getShopById/{id}")
+    Call<Shop> shopById(@Path("id") String id);
 }

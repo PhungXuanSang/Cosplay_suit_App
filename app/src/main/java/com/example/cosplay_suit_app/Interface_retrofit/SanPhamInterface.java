@@ -37,6 +37,8 @@ public interface SanPhamInterface {
 
     @GET("getlistsp/{id_shop}")
     Call<List<DTO_SanPham>> GetProduct (@Path("id_shop") String tb_user );
+    @GET("getlistsplimit/{id_shop}")
+    Call<List<DTO_SanPham>> GetProductLimit (@Path("id_shop") String tb_user );
     @POST("addSP")
     Call<DTO_SanPham> addProduct (@Body DTO_SanPham dtoSanPham );
     @GET("getCategoryApp")

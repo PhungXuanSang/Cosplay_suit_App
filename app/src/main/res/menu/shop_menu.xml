@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/id_item_chiase"
+        android:icon="@drawable/item_share"
+        android:title="Chia sẻ"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/id_item_trangchu"
+        android:icon="@drawable/item_trangchu"
+        android:title="Quay lại trang chủ"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/id_item_tocao"
+        android:icon="@drawable/item_baocao"
+        android:title="Tố cáo người dùng này"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/id_item_giupdo"
+        android:icon="@drawable/item_giupdo"
+        android:title="Bạn cần giúp đỡ?"
+        app:showAsAction="always"/>
+</menu>
