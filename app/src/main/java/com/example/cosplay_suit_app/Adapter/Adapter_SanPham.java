@@ -111,7 +111,6 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("id_shop",sanPham.getId_shop());
                 intent.putExtra("time_product",sanPham.getTime_product());
                 intent.putExtra("id_category",sanPham.getId_category());
-
                 // Chuyển danh sách thành JSON
                 String listImageJson = new Gson().toJson(sanPham.getListImage());
                 // Đặt chuỗi JSON vào Intent

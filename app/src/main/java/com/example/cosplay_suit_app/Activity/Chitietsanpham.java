@@ -38,11 +38,15 @@ import com.example.cosplay_suit_app.Adapter.Adapter_properties;
 import com.example.cosplay_suit_app.Adapter.DanhgiaAdapter;
 import com.example.cosplay_suit_app.DTO.CmtsDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.UserIdResponse;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.CmtsInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Cart_controller;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -83,7 +87,7 @@ public class Chitietsanpham extends AppCompatActivity {
     static final String BASE_URL_SHOP = url +"/shop/";
     static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite, img_chat, img_themgiohang;
-    TextView tv_price, tv_name,tv_slcmts;
+    TextView tv_price, tv_name,tv_slcmts ,tv_nameShop, tv_diachiShop ,tvSlSPShop, tv_noidung;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category,stringsize, listImageJson;
     Dialog fullScreenDialog;
     int priceproduct, slkho;
@@ -102,6 +106,7 @@ public class Chitietsanpham extends AppCompatActivity {
     ArrayList<DTO_properties> listsize = new ArrayList<>();
     Adapter_properties adapterProperties;
     String checkcart;
+    String nameShop,diachiShop,soluongSPShop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +140,8 @@ public class Chitietsanpham extends AppCompatActivity {
                         new TypeToken<List<ItemImageDTO>>() {}.getType());
                 // Lấy chuỗi JSON từ Intent
                 stringsize = intent.getStringExtra("listsize");
-
+                listCmts = new ArrayList<>();
+                danhgiaAdapter = new DanhgiaAdapter(Chitietsanpham.this,listCmts);
 // Khởi tạo và thiết lập RecyclerView
                 rvImageList = findViewById(R.id.rvImageList);
                 adapterImageList = new Adapter_ImageList(listImage);
@@ -146,6 +152,10 @@ public class Chitietsanpham extends AppCompatActivity {
                 PagerSnapHelper snapHelper = new PagerSnapHelper();
                 snapHelper.attachToRecyclerView(rvImageList);
                 loadFavorite();
+                callApiProduct(id_shop);
+                getListCmts(idproduct);
+                getIdUserByShop(id_shop);
+                getShopById(id_shop);
             }
         });
         executorService.execute(new Runnable() {
@@ -156,7 +166,7 @@ public class Chitietsanpham extends AppCompatActivity {
 
                 try {
                     Log.e(TAG, "run12: " + elapsedTime);
-                    Thread.sleep(1111);
+                    Thread.sleep(1999);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -165,15 +175,12 @@ public class Chitietsanpham extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        listCmts = new ArrayList<>();
-                        danhgiaAdapter = new DanhgiaAdapter(Chitietsanpham.this,listCmts);
+
+
                         rcv_bl.setAdapter(danhgiaAdapter);
                         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(Chitietsanpham.this, LinearLayoutManager.VERTICAL);
                         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(Chitietsanpham.this, R.drawable.devider1));
                         rcv_bl.addItemDecoration(dividerItemDecoration);
-                        getListCmts(idproduct);
-                        getIdUserByShop(id_shop);
-
                         fullScreenDialog.dismiss();
                         // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
                         if (!TextUtils.isEmpty(imageproduct)) {
@@ -189,7 +196,10 @@ public class Chitietsanpham extends AppCompatActivity {
                         tv_name.setText(" " + nameproduct + " ");
                         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
                         tv_price.setText("" + decimalFormat.format(priceproduct));
-                        Log.e("BL1", "run: " + isMyFavorite);
+                        tv_nameShop.setText(nameShop);
+                        tv_diachiShop.setText(diachiShop);
+                        tvSlSPShop.setText(soluongSPShop);
+                        tv_noidung.setText(aboutproduct);
                         if (isMyFavorite) {
                             img_favorite.setImageResource(R.drawable.favorite_24);
                         } else {
@@ -261,11 +271,24 @@ public class Chitietsanpham extends AppCompatActivity {
                                 dialogaddcart();
                             }
                         });
+                        findViewById(R.id.your_button_id).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(Chitietsanpham.this, ShowShopActivity.class);
+                                intent.putExtra("id_shop", id_shop);
+                                intent.putExtra("name_shop", nameShop);
+                                intent.putExtra("slsp_shop", soluongSPShop);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
             }
         });
     }
+
+
+
     public void Anhxa() {
         img_pro = findViewById(R.id.img_pro);
         tv_price = findViewById(R.id.tv_price);
@@ -276,6 +299,10 @@ public class Chitietsanpham extends AppCompatActivity {
         rcv_bl = findViewById(R.id.rcv_bl);
         tv_slcmts = findViewById(R.id.tv_slcmts);
         img_themgiohang = findViewById(R.id.img_themgiohang);
+        tv_nameShop = findViewById(R.id.your_first_textview_id);
+        tv_diachiShop = findViewById(R.id.your_second_textview_id);
+        tvSlSPShop = findViewById(R.id.tv_soluongSPShop);
+        tv_noidung = findViewById(R.id.tv_noidung);
     }
     private void getIdUserByShop(String idproduct) {
         Gson gson = new GsonBuilder().setLenient().create();
@@ -319,6 +346,95 @@ public class Chitietsanpham extends AppCompatActivity {
                 Log.d("CDG", "onFailure: " + t.getLocalizedMessage());
             }
         });
+    }
+    private void getShopById(String id) {
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_SHOP)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        ShopInterface shopInterface = retrofit.create(ShopInterface.class);
+
+        // tạo đối tượng
+        Call<Shop> objCall = shopInterface.shopById(id);
+        objCall.enqueue(new Callback<Shop>() {
+            @Override
+            public void onResponse(Call<Shop> call, Response<Shop> response) {
+                if (response.isSuccessful()) {
+                    Shop shop = response.body();
+                    nameShop = shop.getNameshop();
+                    diachiShop = shop.getAddress();
+                    Log.e("manh", "Name: " + shop.getNameshop() );
+                } else {
+                    Toast.makeText(Chitietsanpham.this,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Shop> call, Throwable t) {
+                Log.d("CDG", "onFailure: " + t.getLocalizedMessage());
+            }
+        });
+    }
+    private void callApiProduct(String id) {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_properties)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+
+        // tạo đối tượng
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(id);
+        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
+                if (response.isSuccessful()) {
+                    List<DTO_SanPham> list = response.body();
+                    soluongSPShop = String.valueOf(list.size());
+                    Log.d("TAG", "onResponse: " + list.size() + "-----------");
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
+
     }
     private void getListCmts(String idproduct) {
         Gson gson = new GsonBuilder().setLenient().create();
