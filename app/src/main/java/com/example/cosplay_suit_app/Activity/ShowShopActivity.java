@@ -2,7 +2,10 @@ package com.example.cosplay_suit_app.Activity;
 
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -46,16 +49,19 @@ public class ShowShopActivity extends AppCompatActivity {
 
     TextView tv_name_shop,tv_slSP_Shop;
 
-    String id_shop,name_shop,slsp_shop;
+    String id_shop,name_shop,slsp_shop,id_user,id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_shop);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
+        id = sharedPreferences.getString("id", "");
         Intent intent = getIntent();
         id_shop = intent.getStringExtra("id_shop");
         name_shop = intent.getStringExtra("name_shop");
         slsp_shop = intent.getStringExtra("slsp_shop");
+        id_user = intent.getStringExtra("id_user");
         anhxa();
         registerForContextMenu(imgMenu);
 
@@ -87,7 +93,37 @@ public class ShowShopActivity extends AppCompatActivity {
                 popupMenu.show();
             }
         });
-
+        findViewById(R.id.id_img_back_shop).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        findViewById(R.id.id_linear_chat).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!id.equalsIgnoreCase("")) {
+                    Intent intent = new Intent(ShowShopActivity.this, ChatActivity.class);
+                    intent.putExtra("idShop", id_user);
+                    startActivity(intent);
+                }else{
+                    new AlertDialog.Builder(ShowShopActivity.this).setTitle("Thông Báo!!")
+                            .setMessage("Bạn cần đăng nhập để liên hệ với shop")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    startActivity(new Intent(ShowShopActivity.this, LoginActivity.class));
+                                    dialogInterface.dismiss();
+                                }
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).show();
+                }
+            }
+        });
         tv_name_shop.setText(name_shop);
         tv_slSP_Shop.setText(slsp_shop);
 

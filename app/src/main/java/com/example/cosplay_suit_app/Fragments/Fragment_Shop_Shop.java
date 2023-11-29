@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -49,6 +50,9 @@ public class Fragment_Shop_Shop extends Fragment {
     List<DTO_SanPham> mlist3;
     Adapter_Shop_SanPham adapterShopSanPham3 ,adapterShopSanPham1;
     String id_shop;
+    boolean isLoading = false;
+    boolean isLastPage = false;
+    int VISIBLE_THRESHOLD;
     public Fragment_Shop_Shop() {
 
     }
@@ -83,9 +87,29 @@ public class Fragment_Shop_Shop extends Fragment {
         mlist1 = new ArrayList<DTO_SanPham>();
         mlist3 = new ArrayList<>();
         adapterShopSanPham3 = new Adapter_Shop_SanPham(getContext());
-        adapterShopSanPham3.updateData(mlist3);
-        id_recyclerShop3.setAdapter(adapterShopSanPham3);
-        GetListSanPham(id_shop);
+
+        id_recyclerShop3.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                VISIBLE_THRESHOLD = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (!isLoading && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
+                    // Đây là nơi bạn gọi hàm để tải thêm dữ liệu
+                    // Ví dụ: loadMoreData();
+                    if (isLoading || isLoading){
+                        return;
+                    }
+                    loadMoreData();
+                }
+            }
+        });
+
+
 
 
         adapterShopSanPham1 = new Adapter_Shop_SanPham(getContext());
@@ -93,6 +117,16 @@ public class Fragment_Shop_Shop extends Fragment {
         id_recyclerShop1.setAdapter(adapterShopSanPham1);
         GetListSanPhamLimit(id_shop);
 
+
+
+
+    }
+
+
+    private void loadMoreData() {
+        adapterShopSanPham3.updateData(mlist3);
+        id_recyclerShop3.setAdapter(adapterShopSanPham3);
+        GetListSanPham(id_shop);
     }
     void GetListSanPham(String id_shop) {
         // tạo gson
