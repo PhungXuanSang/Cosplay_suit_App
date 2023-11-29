@@ -278,15 +278,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/img_phone"
                 android:src="@drawable/icon_email"
-                android:layout_width="20dp"
+                android:layout_width="22dp"
                 android:layout_height="20dp"/>
             <ImageView
                 android:layout_marginLeft="4dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/img_email"
-                android:src="@drawable/icon_facebook"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
+                android:src="@drawable/icon_facebook1"
+                android:layout_width="18dp"
+                android:layout_height="19dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

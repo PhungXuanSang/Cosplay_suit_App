@@ -278,6 +278,7 @@ public class Chitietsanpham extends AppCompatActivity {
                                 intent.putExtra("id_shop", id_shop);
                                 intent.putExtra("name_shop", nameShop);
                                 intent.putExtra("slsp_shop", soluongSPShop);
+                                intent.putExtra("id_user", iduser);
                                 startActivity(intent);
                             }
                         });
