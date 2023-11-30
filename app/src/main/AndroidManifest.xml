@@ -24,9 +24,12 @@
             android:exported="false" />
         <activity
             android:name=".Package_bill.Activity.AddDanhGiaActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".Activity.Dskhach_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.DetailProductActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.Shopcuatoi_Activity"

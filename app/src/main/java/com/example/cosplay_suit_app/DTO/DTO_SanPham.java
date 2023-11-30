@@ -8,26 +8,45 @@ public class DTO_SanPham {
     @SerializedName("_id")
     String id;
     String id_shop,id_category,nameproduct,image,description,time_product;
-    int price,amount;
+    int price,amount,sold;
 
     String size;
+    boolean status;
     List<ItemImageDTO> listImage;
 
     List<DTO_properties> listProp;
 
-    public DTO_SanPham(String id, String id_shop, String id_category, String nameproduct, int amount, String image, String description, String time_product, int price, String size, List<ItemImageDTO> listImage, List<DTO_properties> listProp) {
+    public DTO_SanPham(String id, String id_shop, String id_category, String nameproduct, String image, String description, String time_product, int price, int amount, int sold, String size, boolean status, List<ItemImageDTO> listImage, List<DTO_properties> listProp) {
         this.id = id;
         this.id_shop = id_shop;
         this.id_category = id_category;
         this.nameproduct = nameproduct;
-        this.amount = amount;
         this.image = image;
         this.description = description;
         this.time_product = time_product;
         this.price = price;
+        this.amount = amount;
+        this.sold = sold;
         this.size = size;
+        this.status = status;
         this.listImage = listImage;
         this.listProp = listProp;
+    }
+
+    public int getSold() {
+        return sold;
+    }
+
+    public void setSold(int sold) {
+        this.sold = sold;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public List<DTO_properties> getListProp() {
