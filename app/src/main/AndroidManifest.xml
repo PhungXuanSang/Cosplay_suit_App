@@ -20,6 +20,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.AddVoucher_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Voucher_activity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.ShowShopActivity"
             android:exported="false" />
         <activity
