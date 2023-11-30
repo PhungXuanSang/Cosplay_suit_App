@@ -5,6 +5,7 @@ import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.Favorite;
+import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.DTO.User;
 
 import java.util.List;
@@ -48,5 +49,8 @@ public interface SanPhamInterface {
 
     @PUT("updateSP/{id}")
     Call<DTO_SanPham> updateProduct(@Path("id") String id, @Body DTO_SanPham dtoSanPham);
+
+    @GET("getlistsp/{id_shop}/{page}")
+    Call<Product_Page> GetProductPage (@Path("id_shop") String tb_user , @Path("page") Integer page);
 
 }
