@@ -26,7 +26,9 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
+import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
+import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
@@ -60,13 +62,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BuynowActivity extends AppCompatActivity {
+public class BuynowActivity extends AppCompatActivity{
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     static final String BASE_URL_VNPAY = url +"/payment/";
     String TAG = "buynowactivity";
     ImageView img_back;
-    TextView tv_tongtien, idchonphuongthuc;
+    TextView tv_tongtien, idchonphuongthuc, tv_hoten,tv_sdt,tv_diachi;
     Button btnbuynow;
     List<DTO_buynow> list;
     Adapter_buynow arrayAdapter;
@@ -74,11 +76,18 @@ public class BuynowActivity extends AppCompatActivity {
     private TotalPriceManager totalPriceManager;
     Set<String> listidshop;
     String checkphuongthuc;
+    Bill_controller billController = new Bill_controller(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buynow);
         Anhxa();
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         list = new ArrayList<>();
         arrayAdapter = new Adapter_buynow(list, (Context) BuynowActivity.this);
@@ -87,12 +96,6 @@ public class BuynowActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         String id = sharedPreferences.getString("id","");
-        img_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +137,15 @@ public class BuynowActivity extends AppCompatActivity {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         tv_tongtien.setText(decimalFormat.format(totalPriceManager.getTotalOrderPrice()) + " VND");
 
+        billController.Getidaddress(id, new Bill_controller.ApiResponseCallback() {
+            @Override
+            public void onApiGetidaddress(ProfileDTO profileDTO) {
+                tv_hoten.setText(profileDTO.getFullname());
+                tv_sdt.setText(profileDTO.getPhone());
+                tv_diachi.setText(profileDTO.getDiachi());
+            }
+        });
+
         getShopBuynow(id);
         idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +160,9 @@ public class BuynowActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcv_cart);
         tv_tongtien = findViewById(R.id.tv_tongtien);
         idchonphuongthuc = findViewById(R.id.idchonphuongthuc);
+        tv_hoten = findViewById(R.id.tv_hoten);
+        tv_sdt = findViewById(R.id.tv_sdt);
+        tv_diachi = findViewById(R.id.tv_diachi);
     }
 
     public void getShopBuynow(String id){
@@ -358,5 +373,4 @@ public class BuynowActivity extends AppCompatActivity {
         // Chuyển đổi Date thành chuỗi định dạng
         return sdf.format(date);
     }
-
 }

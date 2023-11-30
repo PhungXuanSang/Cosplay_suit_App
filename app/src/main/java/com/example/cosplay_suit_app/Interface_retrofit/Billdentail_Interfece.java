@@ -10,6 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface Billdentail_Interfece {
     @GET("getstatuswait/{type}/{id}")
@@ -26,4 +27,9 @@ public interface Billdentail_Interfece {
 
     @POST("addbilldetail")
     Call<DTO_billdetail> addbilldetail(@Body DTO_billdetail dtoBill);
+
+    @GET("getdsmualaisp/{id}")
+    Call<List<BillDetailDTO>> getdsmualaisp(@Path("id") String id, @Query("limit") int limit);
+    @GET("getallmualaisp/{id}")
+    Call<List<BillDetailDTO>> getallmualaisp(@Path("id") String id);
 }

@@ -27,7 +27,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     String TAG = "adapterbill";
     List<BillDetailDTO> list;
     Context context;
-    String checkactivity, checkstatus;
+    String checkactivity="", checkstatus ="";
 
     public Adapter_Bill(List<BillDetailDTO> list, Context context, String checkactivity, String checkstatus) {
         this.list = list;
@@ -70,12 +70,12 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         Date currentDate = new Date();
         // Định dạng ngày giờ theo yyyyMMddHHmmss
         String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
-        if (checkstatus.equals("Wait")){
+        if ("Wait".equals(checkstatus)){
             billDetailDTO.getDtoBill().setStatus("Pack");
             dtoBill.setStatus("Pack");
-        } else if (checkstatus.equals("Pack")) {
+        } else if ("Pack".equals(checkstatus)) {
             dtoBill.setStatus("Delivery");
-        }else if (checkstatus.equals("Delivery")) {
+        }else if ("Delivery".equals(checkstatus)) {
             dtoBill.setStatus("Done");
             dtoBill.setTimeend(formattedDateTime);
         }

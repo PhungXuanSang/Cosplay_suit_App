@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="115dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/my_background_sanpham"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/img_sp"
+        android:layout_width="115dp"
+        android:layout_height="140dp"
+        android:src="@drawable/mualaisp"/>
+    <TextView
+        android:id="@+id/tv_lanmua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lần mua"
+        android:textSize="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="2dp"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp">
+        <TextView
+            android:id="@+id/tv_gia"
+            android:textSize="12dp"
+            android:layout_marginLeft="4dp"
+            android:textColor="#ff0000"
+            android:text="99.999đ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/themvaogio"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"/>
+    </RelativeLayout>
+
+</LinearLayout>

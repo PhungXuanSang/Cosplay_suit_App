@@ -6,8 +6,10 @@ import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.Dskhach_Activity;
+import com.example.cosplay_suit_app.Adapter.Adapter_XemAllspdamua;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.Adapter.Adapter_dskhach;
+import com.example.cosplay_suit_app.Adapter.Adapter_mualai;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
@@ -462,5 +464,153 @@ public class Bill_controller {
             }
         });
 
+    }
+    public void Getidaddress(String id, ApiResponseCallback callback){
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_Thanhtoan)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Thanhtoan_interface billDetailDTO = retrofit.create(Thanhtoan_interface.class);
+
+        // tạo đối tượng
+        Call<ProfileDTO> objCall = billDetailDTO.getidaddress(id);
+        objCall.enqueue(new Callback<ProfileDTO>() {
+            @Override
+            public void onResponse(Call<ProfileDTO> call, Response<ProfileDTO> response) {
+                if (callback != null) {
+                    if (response.isSuccessful()) {
+                        callback.onApiGetidaddress(response.body());
+                    } else {
+                        Toast.makeText(mContext,
+                                "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfileDTO> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+    }
+    public void Getdsmualaisp(String id, List<BillDetailDTO> list, Adapter_mualai adapterMualai){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
+
+        // tạo đối tượng
+        Call<List<BillDetailDTO>> objCall = billDetailDTO.getdsmualaisp(id, 3);
+        objCall.enqueue(new Callback<List<BillDetailDTO>>() {
+            @Override
+            public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
+                if (response.isSuccessful()) {
+                    list.clear();
+                    List<BillDetailDTO> profileDTOS = response.body();
+                    if (profileDTOS != null && !profileDTOS.isEmpty()) {
+                        for (BillDetailDTO profileDTO : profileDTOS) {
+                            list.add(profileDTO);
+                        }
+                        adapterMualai.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(mContext,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
+                Log.d(TAG, "onFailure Getdsmualaisp: " + t);
+            }
+        });
+    }
+    public void GetAllmualaisp(String id, List<BillDetailDTO> list, Adapter_XemAllspdamua adapterMualai){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
+
+        // tạo đối tượng
+        Call<List<BillDetailDTO>> objCall = billDetailDTO.getallmualaisp(id);
+        objCall.enqueue(new Callback<List<BillDetailDTO>>() {
+            @Override
+            public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
+                if (response.isSuccessful()) {
+                    list.clear();
+                    List<BillDetailDTO> profileDTOS = response.body();
+                    if (profileDTOS != null && !profileDTOS.isEmpty()) {
+                        for (BillDetailDTO profileDTO : profileDTOS) {
+                            list.add(profileDTO);
+                        }
+                        adapterMualai.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(mContext,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
+                Log.d(TAG, "onFailure Getdsmualaisp: " + t);
+            }
+        });
+    }
+    public interface ApiResponseCallback {
+        void onApiGetidaddress(ProfileDTO profileDTO);
     }
 }
