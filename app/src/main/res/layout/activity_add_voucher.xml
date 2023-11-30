@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    >
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nội dung:"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/ed_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_content"
+        android:layout_marginTop="8dp"
+       />
+
+    <TextView
+        android:id="@+id/tv_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Số lượng:"
+        android:layout_below="@id/ed_content"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/ed_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_amount"
+        android:layout_marginTop="8dp"
+        android:inputType="numberDecimal"
+        />
+
+    <TextView
+        android:id="@+id/tv_Discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="% giảm giá:"
+        android:layout_below="@id/ed_amount"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/ed_Discount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_Discount"
+        android:layout_marginTop="8dp"
+        android:inputType="numberDecimal"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_gravity="right"
+        android:id="@+id/buttonAddProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/ed_Discount"
+        android:text="Add Product"
+        android:textColor="#F8F5F5"
+        android:background="@drawable/bgr_voucher"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/buttonAddProduct"
+        android:layout_marginStart="8dp"
+        android:layout_below="@id/ed_Discount"
+        android:layout_marginTop="16dp"
+        android:text="Cancel"
+        android:textColor="#F8F5F5"
+        android:background="@drawable/bgr_voucher"/>
+
+
+</RelativeLayout>

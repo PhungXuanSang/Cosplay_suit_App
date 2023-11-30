@@ -53,7 +53,7 @@ public class QlspActivity extends AppCompatActivity implements QlspAdapter.Oncli
     List<DTO_SanPham> mlist;
     QlspAdapter adapter;
 
-    TextView tvQuantity;
+    TextView tvQuantity,tv_voucher;
 
     EditText search;
 
@@ -71,6 +71,7 @@ public class QlspActivity extends AppCompatActivity implements QlspAdapter.Oncli
         tvQuantity = findViewById(R.id.tvQlspQuantity);
         srlQlsp = findViewById(R.id.srlQlsp);
         search = findViewById(R.id.edtQlspSearch);
+        tv_voucher = findViewById(R.id.tv_voucher);
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
         SharedPreferences sharedPreferences2 = this.getSharedPreferences("shops", MODE_PRIVATE);
@@ -80,6 +81,12 @@ public class QlspActivity extends AppCompatActivity implements QlspAdapter.Oncli
         mlist = new ArrayList<DTO_SanPham>();
         adapter = new QlspAdapter(mlist, this,this);
         rclvList.setAdapter(adapter);
+        tv_voucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(QlspActivity.this,Voucher_activity.class));
+            }
+        });
 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
