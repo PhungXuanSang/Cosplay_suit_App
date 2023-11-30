@@ -5,6 +5,7 @@ import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.Favorite;
+import com.example.cosplay_suit_app.DTO.User;
 
 import java.util.List;
 
@@ -13,9 +14,11 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface SanPhamInterface {
+
     @GET("getlistsp")
     Call<List<DTO_SanPham>> lay_danh_sach ();
 
@@ -31,7 +34,6 @@ public interface SanPhamInterface {
     @GET("getproperties/{idproduct}")
     Call<List<DTO_properties>> getproperties(@Path("idproduct") String idproduct);
 
-
     @GET("products/{id}")
     Call<DTO_SanPham> getbyid(@Path("id") String id);
 
@@ -43,4 +45,8 @@ public interface SanPhamInterface {
     Call<DTO_SanPham> addProduct (@Body DTO_SanPham dtoSanPham );
     @GET("getCategoryApp")
     Call<List<CategoryDTO>> ListCategory();
+
+    @PUT("updateSP/{id}")
+    Call<DTO_SanPham> updateProduct(@Path("id") String id, @Body DTO_SanPham dtoSanPham);
+
 }

@@ -91,7 +91,7 @@ public class AddProductActivity extends AppCompatActivity {
      List<DTO_properties> selectedProp;
 
     PropAdapter propAdapter;
-    int total = 0;
+   int sold = 0;
 
     ItemImageDTO imageDTO = new ItemImageDTO();
 
@@ -283,6 +283,7 @@ public class AddProductActivity extends AppCompatActivity {
         dtoSanPham.setId_category(categoryDTO.getId());
         dtoSanPham.setListImage(selectedImageList);
         dtoSanPham.setListProp(selectedProp);
+
         int i =0;
         int inputText;
         for (DTO_properties item : selectedProp) {
@@ -299,7 +300,8 @@ public class AddProductActivity extends AppCompatActivity {
             dtoSanPham.setAmount(Integer.parseInt(Objects.requireNonNull(binding.edtRudProductAmount.getText()).toString()));
         }
 //        dtoSanPham.setAmount(total);
-
+        dtoSanPham.setStatus(true);
+        dtoSanPham.setSold(sold);
         dtoSanPham.setPrice(Integer.parseInt(Objects.requireNonNull(binding.edtRudProductPrice.getText()).toString()));
         dtoSanPham.setDescription(Objects.requireNonNull(binding.edtRudProductDescription.getText()).toString());
         Calendar calendar = Calendar.getInstance();
@@ -556,15 +558,8 @@ public class AddProductActivity extends AppCompatActivity {
             Uri imageUri = data.getData();
 
             uri = imageUri;
-            //                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-//                byte[] imageBytes = getBytesFromInputStream(inputStream);
-//                String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
             uploadImage();
-            // Thêm ảnh đã mã hóa vào danh sách ảnh đã chọn
-//                ItemImageDTO itemImage = new ItemImageDTO(base64Image);
-//                selectedImageList.add(itemImage);
 
-            // Cập nhật adapter để hiển thị danh sách ảnh đã chọn
             imageAdapter.notifyDataSetChanged();
         }
     }
