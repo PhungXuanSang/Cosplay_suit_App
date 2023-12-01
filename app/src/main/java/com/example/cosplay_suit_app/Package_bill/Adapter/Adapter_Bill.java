@@ -65,48 +65,61 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder1.tvtongbill.setText(""+billDetailDTO.getDtoBill().getTotalPayment());
         holder1.tv_nameshop.setText(billDetailDTO.getDtoBill().getShop().getNameshop());
         Bill_controller billController = new Bill_controller(context);
-        DTO_Bill dtoBill = new DTO_Bill();
-        // Lấy đối tượng Date hiện tại
-        Date currentDate = new Date();
-        // Định dạng ngày giờ theo yyyyMMddHHmmss
-        String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
-        if ("Wait".equals(checkstatus)){
-            billDetailDTO.getDtoBill().setStatus("Pack");
-            dtoBill.setStatus("Pack");
-        } else if ("Pack".equals(checkstatus)) {
-            dtoBill.setStatus("Delivery");
-        }else if ("Delivery".equals(checkstatus)) {
-            dtoBill.setStatus("Done");
-            dtoBill.setTimeend(formattedDateTime);
-        }
-        holder1.btn_upstatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                billController.UpdateStatusBill(billDetailDTO.getDtoBill().get_id(),dtoBill);
-            }
-        });
+        //Check xem là bên nào sử dụng adapter shop hay khách hàng
         if (checkactivity.equals("shop")){
             holder1.btn_upstatus.setVisibility(View.VISIBLE);
-        }else {
-            holder1.btn_upstatus.setVisibility(View.GONE);
-        }
-        if (billDetailDTO.getDtoBill().getStatus().equals("Wait")){
-            holder1.btn_upstatus.setText(" Xác nhận có hàng ");
-            holder1.tv_trangthai.setText("Đang xử lý");
-        } else if (billDetailDTO.getDtoBill().getStatus().equals("Pack")) {
-            holder1.btn_upstatus.setText(" Xác nhận Vận chuyển ");
-            holder1.tv_trangthai.setText("Đang đóng gói");
-        } else if (billDetailDTO.getDtoBill().getStatus().equals("Delivery")) {
-            holder1.btn_upstatus.setText(" Giao hoàn tất ");
-            holder1.tv_trangthai.setText("Đang giao");
-        }else {
-            holder1.btn_upstatus.setVisibility(View.GONE);
-        }
-        if (billDetailDTO.getDtoBill().getStatus().equals("Done")){
             holder1.btnmualai.setVisibility(View.VISIBLE);
+            holder1.btnmualai.setText("Hủy đơn hàng");
+            DTO_Bill dtoBill = new DTO_Bill();
+            // Lấy đối tượng Date hiện tại
+            Date currentDate = new Date();
+            // Định dạng ngày giờ theo yyyyMMddHHmmss
+            String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
+            if ("Wait".equals(checkstatus)){
+                billDetailDTO.getDtoBill().setStatus("Pack");
+                dtoBill.setStatus("Pack");
+            } else if ("Pack".equals(checkstatus)) {
+                dtoBill.setStatus("Delivery");
+            }else if ("Delivery".equals(checkstatus)) {
+                dtoBill.setStatus("Done");
+                dtoBill.setTimeend(formattedDateTime);
+            }
+            holder1.btn_upstatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    billController.UpdateStatusBill(billDetailDTO.getDtoBill().get_id(),dtoBill);
+                }
+            });
+            holder1.btnmualai.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dtoBill.setStatus("Cancelled");
+                    dtoBill.setTimeend(formattedDateTime);
+                    billController.UpdateStatusBill(billDetailDTO.getDtoBill().get_id(),dtoBill);
+                }
+            });
+            if (billDetailDTO.getDtoBill().getStatus().equals("Wait")){
+                holder1.btn_upstatus.setText(" Xác nhận có hàng ");
+                holder1.tv_trangthai.setText("Đang xử lý");
+            } else if (billDetailDTO.getDtoBill().getStatus().equals("Pack")) {
+                holder1.btn_upstatus.setText(" Xác nhận Vận chuyển ");
+                holder1.tv_trangthai.setText("Đang đóng gói");
+            } else if (billDetailDTO.getDtoBill().getStatus().equals("Delivery")) {
+                holder1.btn_upstatus.setText(" Giao hoàn tất ");
+                holder1.tv_trangthai.setText("Đang giao");
+            }else {
+                holder1.btn_upstatus.setVisibility(View.GONE);
+            }
         }else {
-            holder1.btnmualai.setVisibility(View.GONE);
+            if (billDetailDTO.getDtoBill().getStatus().equals("Done")){
+                holder1.btnmualai.setVisibility(View.VISIBLE);
+            }else {
+                holder1.btnmualai.setVisibility(View.GONE);
+            }
+            holder1.btn_upstatus.setVisibility(View.GONE);
         }
+
+
     }
 
     @Override

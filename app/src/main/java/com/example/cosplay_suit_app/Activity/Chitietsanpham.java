@@ -51,6 +51,7 @@ import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Cart_controller;
+import com.example.cosplay_suit_app.bill.controller.Dialog_mualai;
 import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -90,7 +91,7 @@ public class Chitietsanpham extends AppCompatActivity {
     static final String BASE_URL_SHOP = url +"/shop/";
     static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite, img_chat, img_themgiohang;
-    TextView tv_price, tv_name,tv_slcmts ,tv_nameShop, tv_diachiShop ,tvSlSPShop, tv_noidung;
+    TextView tv_price, tv_name,tv_slcmts ,tv_nameShop, tv_diachiShop ,tvSlSPShop, tv_noidung, tv_muahang;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category,stringsize, listImageJson;
     Dialog fullScreenDialog;
     int priceproduct, slkho;
@@ -276,6 +277,14 @@ public class Chitietsanpham extends AppCompatActivity {
                                 dialogaddcart(dialog,priceproduct,  slkho,stringsize, listImage);
                             }
                         });
+                        tv_muahang.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog =  new Dialog(Chitietsanpham.this);
+                                Dialog_mualai.dialogmualai(Chitietsanpham.this,id,idproduct, dialog, priceproduct,slkho, stringsize
+                                        , listImage, listsize, adapterProperties);
+                            }
+                        });
                         findViewById(R.id.your_button_id).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -309,6 +318,7 @@ public class Chitietsanpham extends AppCompatActivity {
         tv_diachiShop = findViewById(R.id.your_second_textview_id);
         tvSlSPShop = findViewById(R.id.tv_soluongSPShop);
         tv_noidung = findViewById(R.id.tv_noidung);
+        tv_muahang = findViewById(R.id.tv_muahang);
     }
     private void getIdUserByShop(String idproduct) {
         Gson gson = new GsonBuilder().setLenient().create();
