@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
+import com.example.cosplay_suit_app.DTO.CartShopManager;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
@@ -129,15 +130,15 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                         tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                         TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
                         TotalPriceManager.getInstance().updateIdcartTrue(idcart);
-                        TotalPriceManager.getInstance().updateidshopTrue(idshop);
                         onclickCheck.onCheckboxTrue();
+                        CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(),order.get_id());
                     } else {
                         idcart = order.get_id();
                         idshop = order.getDtoSanPham().getId_shop();
                         tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                         TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
                         TotalPriceManager.getInstance().updateIdcartFalse(idcart);
-                        TotalPriceManager.getInstance().updateidshopFalse(idshop);
+                        CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(),order.get_id());
                         onclickCheck.onCheckboxFalse();
                     }
 

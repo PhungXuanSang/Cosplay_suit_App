@@ -149,9 +149,13 @@ public class Bill_controller {
             @Override
             public void onResponse(Call<DTO_thanhtoan> call, Response<DTO_thanhtoan> response) {
                 if (response.isSuccessful()) {
-                    // Sử dụng mContext để hiển thị Toast
+                    String title = "Thông báo mua hàng";
+                    String msg = "Đặt hàng thành công. Vui lòng kiểm tra đơn hàng";
+                    Dialogthongbao.showSuccessDialog(mContext, title, msg);
                 } else {
-                    Log.d(TAG, "nguyen1: " + response.message());
+                    String title = "Thông báo mua hàng";
+                    String msg = "Gặp vấn đề về thanh toán";
+                    Dialogthongbao.showSuccessDialog(mContext, title, msg);
                 }
             }
 
@@ -202,7 +206,7 @@ public class Bill_controller {
                         }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+
                     }
                 } else {
                     Toast.makeText(mContext,
@@ -256,7 +260,7 @@ public class Bill_controller {
                         }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+
                     }
                 } else {
                     Toast.makeText(mContext,
@@ -310,7 +314,7 @@ public class Bill_controller {
                         }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+
                     }
                 } else {
                     Toast.makeText(mContext,
@@ -364,7 +368,7 @@ public class Bill_controller {
                         }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+
                     }
                 } else {
                     Toast.makeText(mContext,
@@ -450,7 +454,7 @@ public class Bill_controller {
                         }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+
                     }
                 } else {
                     Toast.makeText(mContext,
@@ -496,8 +500,7 @@ public class Bill_controller {
                     if (response.isSuccessful()) {
                         callback.onApiGetidaddress(response.body());
                     } else {
-                        Toast.makeText(mContext,
-                                "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }
@@ -545,7 +548,7 @@ public class Bill_controller {
                         }
                         adapterMualai.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+
                     }
                 } else {
                     Toast.makeText(mContext,
@@ -596,7 +599,7 @@ public class Bill_controller {
                         }
                         adapterMualai.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(mContext, "Danh sách đối tượng trống.", Toast.LENGTH_SHORT).show();
+
                     }
                 } else {
                     Toast.makeText(mContext,

@@ -8,7 +8,6 @@ public class TotalPriceManager {
     private static TotalPriceManager instance;
     private int totalOrderPrice;
     private ArrayList<String> listcart = new ArrayList<>();
-    Set<String> listidshop = new HashSet<>();
     private TotalPriceManager() {
         // Private constructor to prevent instantiation
     }
@@ -47,20 +46,5 @@ public class TotalPriceManager {
     }
     public void updateIdcartFalse(String idcart) {
         listcart.remove(idcart);
-    }
-
-    public Set<String> getListidshop() {
-        return listidshop;
-    }
-
-    public void setListidshop(Set<String> listidshop) {
-        this.listidshop = listidshop;
-    }
-
-    public void updateidshopTrue(String idshop) {
-        listidshop.add(idshop);
-    }
-    public void updateidshopFalse(String idshop) {
-        listidshop.remove(idshop);
     }
 }

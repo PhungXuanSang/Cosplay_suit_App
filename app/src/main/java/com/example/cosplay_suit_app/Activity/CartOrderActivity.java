@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.AdapterCartorder;
 import com.example.cosplay_suit_app.Adapter.Adapter_ShopCartOrder;
+import com.example.cosplay_suit_app.DTO.CartShopManager;
 import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
@@ -64,9 +65,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
         totalPriceManager = TotalPriceManager.getInstance();
 
         //Đặt lại listidshop thành rỗng
-        Set<String> emptySet = new HashSet<>();
-        totalPriceManager.setListidshop(emptySet);
-        TotalPriceManager.getInstance().setListidshop(emptySet);
+        CartShopManager.getInstance().clearData();
         //Đặt lại listcart thành rỗng
         ArrayList<String> listcart = new ArrayList<>();
         TotalPriceManager.getInstance().setListcart(listcart);

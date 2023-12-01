@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -25,11 +26,13 @@ import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
+import com.example.cosplay_suit_app.DTO.CartShopManager;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
+import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_vnpay;
@@ -74,9 +77,10 @@ public class BuynowActivity extends AppCompatActivity{
     Adapter_buynow arrayAdapter;
     RecyclerView recyclerView;
     private TotalPriceManager totalPriceManager;
-    Set<String> listidshop;
     String checkphuongthuc;
     Bill_controller billController = new Bill_controller(this);
+    Set<String> idShopSet = CartShopManager.getInstance().getListidshop();
+    List<String> idShopList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +122,14 @@ public class BuynowActivity extends AppCompatActivity{
                         billController.AddThanhtoan(dtovnpay);
 
                         arrayAdapter.performActionOnAllItems(vnp_TxnRef);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(BuynowActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        },3000);
                     }
                     if (checkphuongthuc.equals("thanhtoanvnpay")) {
                         DTO_vnpay dtovnpay = new DTO_vnpay();
@@ -133,7 +145,6 @@ public class BuynowActivity extends AppCompatActivity{
             }
         });
         totalPriceManager = TotalPriceManager.getInstance();
-        listidshop = totalPriceManager.getListidshop();
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         tv_tongtien.setText(decimalFormat.format(totalPriceManager.getTotalOrderPrice()) + " VND");
 
@@ -153,6 +164,18 @@ public class BuynowActivity extends AppCompatActivity{
                 dialogchonthanhtoan();
             }
         });
+        idShopList = new ArrayList<>(idShopSet);
+
+        for (int i = 0; i < idShopList.size(); i++) {
+            Log.d(TAG, "idShop: " + idShopList.get(i));
+            Set<String> idCartSet = CartShopManager.getInstance().getCartListForShop(idShopList.get(i));
+            List<String> idCartList = new ArrayList<>(idCartSet);
+
+            for (int j = 0; j < idCartList.size(); j++) {
+                Log.d(TAG, "idCart: " + idCartList.get(j));
+            }
+        }
+
     }
     public void Anhxa(){
         img_back = findViewById(R.id.id_back);
@@ -199,7 +222,7 @@ public class BuynowActivity extends AppCompatActivity{
                     // Kiểm tra nếu danh sách chưa được thêm
                     for (DTO_buynow dtoBuyNow : dtoBuynows) {
                         String idshop = dtoBuyNow.get_id();
-                        if (listidshop.contains(idshop)){
+                        if (idShopList.contains(idshop)){
                             list.add(dtoBuyNow);
                             arrayAdapter.notifyDataSetChanged();
                         }
