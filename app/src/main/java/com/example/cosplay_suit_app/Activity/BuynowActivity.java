@@ -1,7 +1,5 @@
 package com.example.cosplay_suit_app.Activity;
 
-import static android.text.format.DateUtils.formatDateTime;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,16 +43,10 @@ import com.google.gson.GsonBuilder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -385,6 +377,16 @@ public class BuynowActivity extends AppCompatActivity{
                     billController.AddThanhtoan(dtovnpay);
 
                     arrayAdapter.performActionOnAllItems(vnp_TxnRef);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();// Kết thúc WebViewThanhtoan
+                            // Chuyển đến hoạt động chính (Trang chủ)
+                            Intent intent = new Intent(BuynowActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    }, 5000);
                 }
             }
     );

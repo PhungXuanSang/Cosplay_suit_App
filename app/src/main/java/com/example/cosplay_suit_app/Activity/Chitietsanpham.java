@@ -36,6 +36,8 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_ImageList;
 import com.example.cosplay_suit_app.Adapter.Adapter_properties;
 import com.example.cosplay_suit_app.Adapter.DanhgiaAdapter;
+import com.example.cosplay_suit_app.DTO.BillDetailDTO;
+import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.CmtsDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
@@ -49,6 +51,7 @@ import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Cart_controller;
+import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -108,6 +111,7 @@ public class Chitietsanpham extends AppCompatActivity {
     String checkcart;
     String nameShop,diachiShop,soluongSPShop;
 
+    Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -268,7 +272,8 @@ public class Chitietsanpham extends AppCompatActivity {
                         img_themgiohang.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                dialogaddcart();
+                                dialog =  new Dialog(Chitietsanpham.this);
+                                dialogaddcart(dialog,priceproduct,  slkho,stringsize, listImage);
                             }
                         });
                         findViewById(R.id.your_button_id).setOnClickListener(new View.OnClickListener() {
@@ -616,13 +621,13 @@ public class Chitietsanpham extends AppCompatActivity {
         CartOrderInterface cartOrderInterface = retrofit.create(CartOrderInterface.class);
 
         // tạo đối tượng
-        Call<String> objCall = cartOrderInterface.checkaddcart(this.idproduct);
-        objCall.enqueue(new Callback<String>() {
+        Call<CartOrderDTO> objCall = cartOrderInterface.checkaddcart(this.idproduct);
+        objCall.enqueue(new Callback<CartOrderDTO>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<CartOrderDTO> call, Response<CartOrderDTO> response) {
                 if (response.isSuccessful()) {
-                    String result = response.body();
-                    if (result.equals("No")){
+                    CartOrderDTO cartOrderDTO = response.body();
+                    if (cartOrderDTO == null){
                         Cart_controller cartController = new Cart_controller(Chitietsanpham.this);
                         if (selectedNameProperties != null) {
 
@@ -634,9 +639,35 @@ public class Chitietsanpham extends AppCompatActivity {
                             cartOrder.setId_properties(selectedNameProperties);
 
                             cartController.AddCart(cartOrder);
+                        }else {
+                            String title = "Thông báo giỏ hàng";
+                            String msg = "Bạn phải chọn kích thước";
+                            Dialogthongbao.showSuccessDialog(Chitietsanpham.this, title, msg);
                         }
-                    }else {
-                        Toast.makeText(Chitietsanpham.this, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (cartOrderDTO.getId_user().equals(id)){
+                            String title = "Thông báo giỏ hàng";
+                            String msg = "Sản phầm đã có trong của hàng";
+                            Dialogthongbao.showSuccessDialog(Chitietsanpham.this, title, msg);
+                        }else {
+                            Cart_controller cartController = new Cart_controller(Chitietsanpham.this);
+                            if (selectedNameProperties != null) {
+
+                                DTO_CartOrder cartOrder = new DTO_CartOrder();
+                                cartOrder.setId_user(id);
+                                cartOrder.setId_product(idproduct);
+                                cartOrder.setTotalPayment(priceproduct);
+                                cartOrder.setAmount(1);
+                                cartOrder.setId_properties(selectedNameProperties);
+
+                                cartController.AddCart(cartOrder);
+                            }else {
+                                String title = "Thông báo giỏ hàng";
+                                String msg = "Bạn phải chọn kích thước";
+                                Dialogthongbao.showSuccessDialog(Chitietsanpham.this, title, msg);
+                            }
+                        }
+
                     }
                 } else {
                     Toast.makeText(Chitietsanpham.this,
@@ -645,14 +676,13 @@ public class Chitietsanpham extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<CartOrderDTO> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t);
             }
         });
 
     }
-    public void dialogaddcart(){
-        Dialog dialog = new Dialog(Chitietsanpham.this);
+    public void dialogaddcart(Dialog dialog,int priceproduct, int slkho,String stringsize ,List<ItemImageDTO> listImage){
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_addcart);
 

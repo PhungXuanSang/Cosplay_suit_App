@@ -67,12 +67,12 @@ public class WebViewThanhtoan extends AppCompatActivity {
 
                 // Lấy URL hiện tại của WebView
                 String currentUrl = view.getUrl();
-
+                Log.d("Checkurl trả về từ VNpay", "onPageFinished: " + currentUrl);
                 // Kiểm tra xem URL có phải là URL cần xử lý không
                 if (currentUrl.startsWith(BASE_URL)) {
                     // Phân tích URL để lấy các tham số
                     Uri uri = Uri.parse(currentUrl);
-
+                    Log.d("uri", "onPageFinished: " + uri);
                     // Lấy giá trị của tham số vnp_Amount
                     String vnp_Amount = uri.getQueryParameter("vnp_Amount");
                     String vnp_BankCode = uri.getQueryParameter("vnp_BankCode");
@@ -102,20 +102,7 @@ public class WebViewThanhtoan extends AppCompatActivity {
                     resultIntent.putExtra("vnp_SecureHash", vnp_SecureHash);
 
                     setResult(RESULT_OK, resultIntent);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();// Kết thúc WebViewThanhtoan
-                            // Chuyển đến hoạt động chính (Trang chủ)
-                            Intent intent = new Intent(WebViewThanhtoan.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            String title = "Thông báo mua hàng";
-                            String message = "Đặt hàng thành công";
-                            Dialogthongbao.showSuccessDialog(WebViewThanhtoan.this, title, message);
-                        }
-                    }, 4000);
+                    finish();// Kết thúc WebViewThanhtoan
                 }
             }
         });
