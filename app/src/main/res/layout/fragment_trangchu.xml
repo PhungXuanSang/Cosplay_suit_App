@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/id_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/imageView5"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
-                android:background="@drawable/bg4"
-                />
+                android:background="@drawable/bg4" />
 
             <ImageView
                 android:id="@+id/ic_giohang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/giohang"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                />
+                android:src="@drawable/giohang" />
 
             <ImageView
                 android:id="@+id/ic_taikhoan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_account_circle_24"
-                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
-                android:layout_alignParentRight="true"/>
+                android:layout_marginRight="10dp"
+                android:src="@drawable/baseline_account_circle_24" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cartsearch"
                 android:layout_width="280dp"
                 android:layout_height="40dp"
-                app:cardCornerRadius="10dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="110dp"
-                android:layout_centerHorizontal="true">
+                app:cardCornerRadius="10dp">
 
                 <SearchView
                     android:id="@+id/sv_pro"
@@ -54,193 +56,46 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
+                android:id="@+id/tv_titleCat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Các loại"
-                android:textStyle="bold"
-                android:textSize="22dp"
                 android:layout_below="@+id/cartsearch"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"/>
+                android:text="Các loại"
+                android:textSize="22dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="See all"
-                android:textStyle="bold"
-                android:textSize="18dp"
                 android:layout_below="@+id/cartsearch"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_alignParentRight="true"/>
-            <TableLayout
-                android:id="@+id/tableid"
+                android:text="See all"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_cat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/cartsearch"
-                android:layout_marginTop="40dp">
-                <TableRow
-                    android:padding="5dp">
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="10dp"
-                            app:cardElevation="4dp"
-                            android:layout_margin="2dp">
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="1">
-                                <ImageView
-                                    android:id="@+id/img_manga"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:src="@drawable/manga"
-                                    android:layout_centerHorizontal="true"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Manga"
-                                    android:textStyle="bold"
-                                    android:textSize="10dp"
-                                    android:layout_below="@+id/img_manga"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_centerHorizontal="true"/>
-                            </RelativeLayout>
+                android:layout_below="@id/tv_titleCat"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_spinner_category" />
 
-                        </androidx.cardview.widget.CardView>
-                    </FrameLayout>
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="10dp"
-                            app:cardElevation="4dp"
-                            android:layout_margin="2dp">
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="1">
-                                <ImageView
-                                    android:id="@+id/img_game"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:src="@drawable/game"
-                                    android:layout_centerHorizontal="true"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Game"
-                                    android:textStyle="bold"
-                                    android:textSize="10dp"
-                                    android:layout_below="@+id/img_game"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_centerHorizontal="true"/>
-                            </RelativeLayout>
-
-                        </androidx.cardview.widget.CardView>
-                    </FrameLayout>
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="10dp"
-                            app:cardElevation="4dp"
-                            android:layout_margin="2dp">
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="1">
-                                <ImageView
-                                    android:id="@+id/img_movie"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:src="@drawable/movie"
-                                    android:layout_centerHorizontal="true"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Movie"
-                                    android:textStyle="bold"
-                                    android:textSize="10dp"
-                                    android:layout_below="@+id/img_movie"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_centerHorizontal="true"/>
-                            </RelativeLayout>
-
-                        </androidx.cardview.widget.CardView>
-                    </FrameLayout>
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="10dp"
-                            app:cardElevation="4dp"
-                            android:layout_margin="2dp">
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="1">
-                                <ImageView
-                                    android:id="@+id/img_festival"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:src="@drawable/festival"
-                                    android:layout_centerHorizontal="true"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Festival"
-                                    android:textStyle="bold"
-                                    android:textSize="10dp"
-                                    android:layout_below="@+id/img_festival"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_centerHorizontal="true"/>
-                            </RelativeLayout>
-
-                        </androidx.cardview.widget.CardView>
-                    </FrameLayout>
-                </TableRow>
-            </TableLayout>
             <TextView
                 android:id="@+id/tv_trending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending"
-                android:textStyle="bold"
-                android:textSize="22dp"
-                android:layout_below="@+id/tableid"
+                android:layout_below="@+id/rcv_cat"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginLeft="10dp"/>
+                android:text="Trending"
+                android:textSize="22dp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_trending"
@@ -254,25 +109,27 @@
                 android:layout_weight="1"
                 android:background="#FDF3F3"
                 app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager" />
+
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
+                android:layout_below="@+id/rcv_trending"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/black"
-                android:layout_below="@+id/rcv_trending"/>
+                android:background="@color/black" />
+
             <TextView
                 android:id="@+id/tv_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gợi ý"
-                android:textStyle="bold"
-                android:textSize="22dp"
                 android:layout_below="@+id/rcv_trending"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginLeft="10dp"/>
+                android:text="Gợi ý"
+                android:textSize="22dp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv3"

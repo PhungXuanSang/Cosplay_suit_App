@@ -18,7 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.CartOrderActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
+import com.example.cosplay_suit_app.Adapter.CategoryAdapter;
+import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.Interface_retrofit.CategoryInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
@@ -39,12 +42,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Fragment_trangchu extends Fragment {
     static String url = API.URL;
     static final String BASE_URL = url +"/product/";
+    static final String BASE_URL_CAT = url +"/category/api/";
     RecyclerView rcv1,rcv_2,rcv_3;
     List<DTO_SanPham> mlist;
     Adapter_SanPham arrayAdapter;
     View viewok;
     SearchView sv_pro;
     ImageView img_giohang;
+    ArrayList<CategoryDTO> listCat;
+    RecyclerView rcv_cat;
+    CategoryAdapter categoryAdapter;
     public Fragment_trangchu() {
 
     }
@@ -60,6 +67,7 @@ public class Fragment_trangchu extends Fragment {
         View viewok = inflater.inflate(R.layout.fragment_trangchu, container, false);
         rcv_3 = viewok.findViewById(R.id.rcv3);
         img_giohang = viewok.findViewById(R.id.ic_giohang);
+        rcv_cat = viewok.findViewById(R.id.rcv_cat);
         img_giohang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,12 +82,65 @@ public class Fragment_trangchu extends Fragment {
         arrayAdapter.updateData(mlist);
         rcv_3.setAdapter(arrayAdapter);
         GetListSanPham();
+
+        listCat = new ArrayList<>();
+        categoryAdapter = new CategoryAdapter(getContext(),listCat);
+        rcv_cat.setAdapter(categoryAdapter);
+        getListCat();
         return viewok;
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+    }
+
+    private void getListCat() {
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CAT)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+
+
+        CategoryInterface categoryInterface = retrofit.create(CategoryInterface.class);
+
+
+        Call<List<CategoryDTO>> objCall = categoryInterface.getListCat();
+        objCall.enqueue(new Callback<List<CategoryDTO>>() {
+            @Override
+            public void onResponse(Call<List<CategoryDTO>> call, Response<List<CategoryDTO>> response) {
+                if (response.isSuccessful()) {
+
+                    listCat.clear();
+                    listCat.addAll(response.body());
+                    categoryAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(),
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<CategoryDTO>> call, Throwable t) {
+
+            }
+        });
+
 
     }
     void GetListSanPham() {
