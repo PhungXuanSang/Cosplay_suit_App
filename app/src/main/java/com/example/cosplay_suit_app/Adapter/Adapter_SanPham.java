@@ -76,12 +76,12 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Adapter_SanPham.ItemViewHolder viewHolder = (Adapter_SanPham.ItemViewHolder) holder;
         viewHolder.tv_nameSanPham.setText(sanPham.getNameproduct());
         viewHolder.tv_gia.setText(String.valueOf(sanPham.getPrice()+"đ"));
-//        int soLuong = Integer.parseInt(sanPham.getAmount());
-//        if (soLuong == 0) {
-//            viewHolder.tv_soluong.setText("Đã bán 0");
-//        } else {
-//            viewHolder.tv_soluong.setText("Đã bán " + soLuong);
-//        }
+        int soLuong = sanPham.getSold();
+        if (soLuong == 0) {
+            viewHolder.tv_soluong.setText("Đã bán 0");
+        } else {
+            viewHolder.tv_soluong.setText("Đã bán " + soLuong);
+        }
 //        Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
 
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
