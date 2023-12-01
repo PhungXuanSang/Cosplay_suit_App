@@ -73,7 +73,7 @@ public class Fragment_Shop_Shop extends Fragment {
 
     private int totalPage;
 
-    long duration;
+    long duration ,duration1;
 
     ConstraintLayout id_bg_load;
     public Fragment_Shop_Shop() {
@@ -125,8 +125,8 @@ public class Fragment_Shop_Shop extends Fragment {
                 adapterShopSanPham3.updateData(mlist3);
                 GetListSanPham(id_shop);
                 try {
-                    Log.e("manh1", "time: " + duration );
-                    Thread.sleep(duration + 1000);
+                    Log.e("manh1", "time shop shop: " + (duration + duration1) );
+                    Thread.sleep(duration + duration1 + 500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -170,6 +170,7 @@ public class Fragment_Shop_Shop extends Fragment {
     }
 
     void GetListSanPhamLimit(String id_shop) {
+        try {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -217,6 +218,13 @@ public class Fragment_Shop_Shop extends Fragment {
 
             }
         });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            long endTime = System.currentTimeMillis();
+            duration1 = endTime - startTime;
+            Log.e("manh", "Thời gian thực hiện API Shop San Pham: " + duration1 + "ms");
+        }
 
     }
     private void GetListSanPhamNext(String id_shop) {

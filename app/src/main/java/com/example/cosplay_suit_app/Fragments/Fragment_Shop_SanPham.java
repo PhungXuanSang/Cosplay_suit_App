@@ -113,8 +113,8 @@ public class Fragment_Shop_SanPham extends Fragment {
                 shopSanPham1.updateData(mlist);
                 GetListSanPham(id_shop);
                 try {
-                    Log.e("manh1", "time: " + duration );
-                    Thread.sleep(duration + 1000);
+                    Log.e("manh1", "time shop san pham: " + duration );
+                    Thread.sleep(duration + 500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
