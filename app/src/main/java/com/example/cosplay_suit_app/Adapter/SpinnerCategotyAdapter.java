@@ -14,10 +14,10 @@ import com.example.cosplay_suit_app.R;
 
 import java.util.List;
 
-public class CategotyAdapter extends ArrayAdapter<CategoryDTO> {
+public class SpinnerCategotyAdapter extends ArrayAdapter<CategoryDTO> {
     private Context context;
     private List<CategoryDTO> items;
-    public CategotyAdapter(Context context, int resource, List<CategoryDTO> items) {
+    public SpinnerCategotyAdapter(Context context, int resource, List<CategoryDTO> items) {
         super(context, resource, items);
         this.context = context;
         this.items = items;
@@ -36,7 +36,7 @@ public class CategotyAdapter extends ArrayAdapter<CategoryDTO> {
 
     private View initView(int position, View convertView) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_category, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_spinner_category, null);
         }
 
 

@@ -4,13 +4,17 @@ public class CategoryDTO {
     String _id,name;
     String time_category;
 
+    String imageCategory;
+
     public CategoryDTO() {
     }
 
-    public CategoryDTO(String id, String name, String time_category) {
-        this._id = id;
+
+    public CategoryDTO(String _id, String name, String time_category, String imageCategory) {
+        this._id = _id;
         this.name = name;
         this.time_category = time_category;
+        this.imageCategory = imageCategory;
     }
 
     public String getId() {
@@ -37,4 +41,12 @@ public class CategoryDTO {
         this.time_category = time_category;
     }
 
+
+    public String getImageCategory() {
+        return imageCategory;
+    }
+
+    public void setImageCategory(String imageCategory) {
+        this.imageCategory = imageCategory;
+    }
 }

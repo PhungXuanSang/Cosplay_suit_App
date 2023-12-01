@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<TextView
-    android:id="@+id/tvCategoryName"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="ssss"
-    android:textSize="20sp"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="70dp"
+    android:layout_height="70dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp"
+    android:layout_margin="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/img_Cat"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/festival"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Festival"
+            android:textStyle="bold"
+            android:textSize="10dp"
+            android:textColor="@color/black"
+            android:layout_below="@+id/img_Cat"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tv_nameCat"/>
+    </RelativeLayout>
 
-    />
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -26,7 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cosplay_suit_app.API;
-import com.example.cosplay_suit_app.Adapter.CategotyAdapter;
+import com.example.cosplay_suit_app.Adapter.SpinnerCategotyAdapter;
 import com.example.cosplay_suit_app.Adapter.ImageAdapter;
 import com.example.cosplay_suit_app.Adapter.PropAdapter;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
@@ -34,7 +34,6 @@ import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
-import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.databinding.ActivityAddProductBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,10 +55,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,7 +70,7 @@ public class AddProductActivity extends AppCompatActivity {
     ArrayList<CategoryDTO> listLoai = new ArrayList<>();
     String nameCategoty;
 
-    CategotyAdapter categotyAdapter;
+    SpinnerCategotyAdapter categotyAdapter;
 
     CategoryDTO categoryDTO;
     private static final int REQUEST_IMAGE_PICK = 1;
@@ -112,7 +108,7 @@ public class AddProductActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance("gs://duantotnghiepcosplaysuit.appspot.com");
         storageReference = storage.getReference();
         categoryDTO = new CategoryDTO();
-        categotyAdapter = new CategotyAdapter(this, R.layout.item_category, listLoai);
+        categotyAdapter = new SpinnerCategotyAdapter(this, R.layout.item_spinner_category, listLoai);
         categotyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spnAddProductLoai.setAdapter(categotyAdapter);
         //
