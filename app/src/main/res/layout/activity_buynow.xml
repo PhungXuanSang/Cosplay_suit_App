@@ -144,7 +144,6 @@
         android:layout_weight="1"
         android:layout_marginTop="5dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

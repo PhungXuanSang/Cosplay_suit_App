@@ -112,7 +112,8 @@ public class BuynowActivity extends AppCompatActivity{
                         dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                         Bill_controller billController = new Bill_controller(BuynowActivity.this);
                         billController.AddThanhtoan(dtovnpay);
-
+                        List<String> list1 = totalPriceManager.getListcart();
+                        billController.Upsoluongproduct(list1);
                         arrayAdapter.performActionOnAllItems(vnp_TxnRef);
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -121,7 +122,7 @@ public class BuynowActivity extends AppCompatActivity{
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             }
-                        },3000);
+                        },4000);
                     }
                     if (checkphuongthuc.equals("thanhtoanvnpay")) {
                         DTO_vnpay dtovnpay = new DTO_vnpay();
@@ -375,7 +376,8 @@ public class BuynowActivity extends AppCompatActivity{
                     dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                     Bill_controller billController = new Bill_controller(this);
                     billController.AddThanhtoan(dtovnpay);
-
+                    List<String> list1 = totalPriceManager.getListcart();
+                    billController.Upsoluongproduct(list1);
                     arrayAdapter.performActionOnAllItems(vnp_TxnRef);
                     new Handler().postDelayed(new Runnable() {
                         @Override

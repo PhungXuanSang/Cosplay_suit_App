@@ -131,7 +131,6 @@ public class Dialog_cartorder {
                 Log.d(TAG, "onFailure: " + t);
             }
         });
-
     }
     public static void dialogaddcart(Context context, String id , String idproduct, Dialog dialog, int priceproduct, int slkho, String stringsize
             , List<ItemImageDTO> listImage, ArrayList<DTO_properties> listsize, Adapter_properties adapterProperties){

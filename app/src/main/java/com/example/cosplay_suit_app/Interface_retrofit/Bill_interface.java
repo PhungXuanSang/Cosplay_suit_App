@@ -22,4 +22,6 @@ public interface Bill_interface {
     Call<DTO_Bill> upstatusbill(@Path("id")String id, @Body DTO_Bill dtoBill);
     @GET("getdskhach/{id}")
     Call<List<ProfileDTO>> getdskhach(@Path("id")String id);
+    @POST("upsoluongproduct")
+    Call<Void> Upsoluongproduct(@Body List<String> idList);
 }

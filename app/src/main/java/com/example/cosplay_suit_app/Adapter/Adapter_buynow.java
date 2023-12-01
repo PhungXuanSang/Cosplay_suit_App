@@ -242,6 +242,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     // Gọi databilldetail khi Addbill đã hoàn thành
                     billController.databilldetail(listidproductForItem,listidcartForItem ,listamoutForItem,
                             listsizeForItem, listtotalpaymentForItem,  item.get_id());
+
                 }
             });
         }

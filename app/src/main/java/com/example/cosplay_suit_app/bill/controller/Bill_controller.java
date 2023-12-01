@@ -15,6 +15,7 @@ import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.DTO.DTO_idbill;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
+import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
@@ -610,6 +611,37 @@ public class Bill_controller {
             @Override
             public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
                 Log.d(TAG, "onFailure Getdsmualaisp: " + t);
+            }
+        });
+    }
+    public void Upsoluongproduct(List<String> idList){
+        //Tạo đối tượng chuyển đổi kiểu dữ liệu
+        Gson gson = new GsonBuilder().setLenient().create();
+        //Tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        // Khởi  tạo interface
+        Bill_interface userInterface = retrofit.create(Bill_interface.class);
+        // Tạo Call
+        Call<Void> objCall = userInterface.Upsoluongproduct(idList);
+        // Thực hiện gửi dữ liệu lên server
+        objCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                // kết quả server trả về ở đây
+                if (response.isSuccessful()) {
+
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // nếu xảy ra lỗi sẽ thông báo ở đây
+
+                Log.e(TAG, t.getLocalizedMessage());
             }
         });
     }
