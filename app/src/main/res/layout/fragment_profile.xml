@@ -62,7 +62,7 @@
             <TextView
                 android:id="@+id/tv_fullname_profile"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="2dp"
                 android:text="Nguyễn Văn A "
                 android:textColor="@color/black"
