@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:paddingLeft="10dp"
+    android:paddingTop="5dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="5dp">
+
+
+
+
+        <ImageView
+            android:id="@+id/img_probycat"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/bgchat3" />
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tv_nameProByCat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Áo đẹp vcl mua đi, mua đi, mua điiidf Áo đẹp vcl mua đi, mua đi, mua điiidf"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_priceBycat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="99.029đ"
+                android:textColor="#ED4510"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RatingBar
+                    android:id="@+id/ratingBarProByCat"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:layout_margin="4dp"
+                    android:progressTint="@android:color/holo_orange_dark"
+                    android:rating="4.5"
+                    android:stepSize="0.5"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="4.9/5"
+                    android:textColor="#ED4510"
+                    android:id="@+id/tv_avgStar"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="(3 đã đánh giá)"
+                    android:layout_marginLeft="4dp"
+                    android:id="@+id/tv_countStar"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+</LinearLayout>

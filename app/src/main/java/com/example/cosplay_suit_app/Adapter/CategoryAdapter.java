@@ -1,6 +1,7 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cosplay_suit_app.Activity.ProductsByCatActivity;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.CmtsDTO;
 import com.example.cosplay_suit_app.R;
@@ -53,6 +55,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 .load(categoryDTO.getImageCategory())
                 .into(viewHolder.img_cat);
 
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ProductsByCatActivity.class);
+                intent.putExtra("idCat",categoryDTO.getId());
+                intent.putExtra("nameCat",categoryDTO.getName());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
