@@ -104,6 +104,7 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView tv_time = holder.tvTimestampSender;
 
         holder.tvTimestampSender.setVisibility(View.GONE);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +132,19 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.tvTextMessageReceiver.setVisibility(View.VISIBLE);
             holder.imageViewReceiver.setVisibility(View.GONE);
         }
+        holder.tvTimestampReceiver.setVisibility(View.GONE);
+        TextView tv_time = holder.tvTimestampReceiver;
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tv_time.getVisibility() == View.VISIBLE) {
+                    tv_time.setVisibility(View.GONE);
+                } else {
+                    tv_time.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void loadImageIntoImageView(String imageUrl, ImageView imageView) {

@@ -2,12 +2,19 @@ package com.example.cosplay_suit_app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.cosplay_suit_app.Fragments.Fragment_chat;
 import com.example.cosplay_suit_app.Fragments.Fragment_donhang;
@@ -21,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkAndRequestNotificationPermission();
         setContentView(R.layout.activity_main);
 
-        //code giao diện menu bottom navigation
         fragmentManager = getSupportFragmentManager();
         Fragment_trangchu fragmentTrangchu = new Fragment_trangchu();
         fragmentManager.beginTransaction().add(R.id.id_frame, fragmentTrangchu).commit();
@@ -53,4 +60,51 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.id_frame, fragment);
         fragmentTransaction.commit();
     }
+
+    private void checkAndRequestNotificationPermission() {
+        if (!areNotificationsEnabled()) {
+
+            requestNotificationPermission();
+        }
+    }
+
+    private boolean areNotificationsEnabled() {
+        return NotificationManagerCompat.from(this).areNotificationsEnabled();
+    }
+
+    private void requestNotificationPermission() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Yêu cầu quyền thông báo");
+        builder.setMessage("Ứng dụng cần quyền thông báo để hiển thị thông báo. Hãy cấp quyền trong cài đặt để tiếp tục sử dụng ứng dụng.");
+
+        builder.setPositiveButton("Cài đặt", (dialog, which) -> {
+            openAppNotificationSettings();
+        });
+
+        builder.setNegativeButton("Hủy", (dialog, which) -> {
+            Toast.makeText(this, "Bạn sẽ không nhận được thông báo!!!", Toast.LENGTH_SHORT).show();
+        });
+
+        builder.show();
+    }
+
+    private void openAppNotificationSettings() {
+        Intent intent = new Intent();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("app_package", getPackageName());
+            intent.putExtra("app_uid", getApplicationInfo().uid);
+        } else {
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+        }
+
+        startActivity(intent);
+    }
+
 }

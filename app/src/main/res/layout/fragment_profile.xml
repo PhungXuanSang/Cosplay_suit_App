@@ -64,10 +64,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="2dp"
-                android:text="Nguyễn Văn A "
+                android:layout_weight="1"
+                android:singleLine="false"
+                android:maxLines="2"
+                android:text="Nguyễn Văn A."
                 android:textColor="@color/black"
                 android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_gravity="start"
+                android:maxWidth="230dp"
+                android:ellipsize="end"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
