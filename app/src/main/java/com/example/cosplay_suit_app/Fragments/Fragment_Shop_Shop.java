@@ -24,6 +24,7 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_Shop_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_Shop_SanPham1;
+import com.example.cosplay_suit_app.Adapter.Adapter_TopProduct;
 import com.example.cosplay_suit_app.Class.PaginationSrollListener;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Product_Page;
@@ -59,9 +60,12 @@ public class Fragment_Shop_Shop extends Fragment {
     ProgressBar progressBar;
     List<DTO_SanPham> mlist1;
     List<DTO_SanPham> mlist3;
+    List<DTO_SanPham> mlist2;
     Adapter_Shop_SanPham adapterShopSanPham1;
 
     Adapter_Shop_SanPham1 adapterShopSanPham3;
+
+    Adapter_TopProduct adapterShopSanPham2;
     String id_shop;
     long startTime = System.currentTimeMillis();
 
@@ -73,7 +77,7 @@ public class Fragment_Shop_Shop extends Fragment {
 
     private int totalPage;
 
-    long duration ,duration1;
+    long duration ,duration1, duration2;
 
     ConstraintLayout id_bg_load;
     public Fragment_Shop_Shop() {
@@ -117,16 +121,23 @@ public class Fragment_Shop_Shop extends Fragment {
                 id_recyclerShop3 = view.findViewById(R.id.id_recyclerShop3);
                 mlist1 = new ArrayList<DTO_SanPham>();
                 mlist3 = new ArrayList<>();
+                mlist2 = new ArrayList<>();
                 adapterShopSanPham1 = new Adapter_Shop_SanPham(getContext());
                 adapterShopSanPham1.updateData(mlist1);
                 GetListSanPhamLimit(id_shop);
+
+
+                adapterShopSanPham2 = new Adapter_TopProduct(getContext());
+                adapterShopSanPham2.updateData(mlist2);
+                GetListSanPhamTop(id_shop);
+
 
                 adapterShopSanPham3 = new Adapter_Shop_SanPham1(getContext());
                 adapterShopSanPham3.updateData(mlist3);
                 GetListSanPham(id_shop);
                 try {
-                    Log.e("manh1", "time shop shop: " + (duration + duration1) );
-                    Thread.sleep(duration + duration1 + 500);
+                    Log.e("manh1", "time shop shop: " + (duration + duration1 + duration2) );
+                    Thread.sleep(duration + duration1 + duration2 + 500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -137,7 +148,7 @@ public class Fragment_Shop_Shop extends Fragment {
                         id_bg_load.setVisibility(View.GONE);
                         id_recyclerShop1.setAdapter(adapterShopSanPham1);
                         id_recyclerShop3.setAdapter(adapterShopSanPham3);
-
+                        id_recyclerShop2.setAdapter(adapterShopSanPham2);
                         id_recyclerShop3.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                             @Override
                             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
@@ -167,6 +178,64 @@ public class Fragment_Shop_Shop extends Fragment {
 
 
 
+    }
+
+    private void GetListSanPhamTop(String id_shop) {
+        try {
+            // tạo gson
+            Gson gson = new GsonBuilder().setLenient().create();
+
+            // Create a new object from HttpLoggingInterceptor
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            // Add Interceptor to HttpClient
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .addInterceptor(interceptor).build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(client) // Set HttpClient to be used by Retrofit
+                    .build();
+
+            // sử dụng interface
+            SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+
+            // tạo đối tượng
+            Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProductTop(id_shop);
+            objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+                @Override
+                public void onResponse(Call<List<DTO_SanPham>> call, Response<List<DTO_SanPham>> response) {
+                    if (response.isSuccessful()) {
+
+                        mlist2.clear();
+                        mlist2.addAll(response.body());
+                        adapterShopSanPham2.notifyDataSetChanged();
+                        Log.d("list2", "onResponse2: "+mlist2.size());
+
+                    } else {
+                        Toast.makeText(getContext(),
+                                "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+
+//                GetListSanPham();
+                }
+
+                @Override
+                public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+                    Log.e("list", "onFailure 2: " + t.getLocalizedMessage() );
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            long endTime = System.currentTimeMillis();
+            duration2 = endTime - startTime;
+            Log.e("manh", "Thời gian thực hiện API Shop San Pham: " + duration2 + "ms");
+        }
     }
 
     void GetListSanPhamLimit(String id_shop) {

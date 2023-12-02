@@ -84,7 +84,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_banchay"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="match_parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <View
                 android:layout_marginTop="5dp"
