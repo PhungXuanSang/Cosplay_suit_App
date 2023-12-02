@@ -91,7 +91,25 @@ public class ProByCatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .into(viewHolder.img_proByCat);
         }
 
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, Chitietsanpham.class);
+                intent.putExtra("id_product", sanPham.getId());
+                intent.putExtra("name", sanPham.getNameproduct());
+                intent.putExtra("price", sanPham.getPrice());
+                intent.putExtra("about", sanPham.getDescription());
+                intent.putExtra("slkho", sanPham.getAmount());
+                intent.putExtra("id_shop",sanPham.getId_shop());
+                intent.putExtra("time_product",sanPham.getTime_product());
+                intent.putExtra("id_category",sanPham.getId_category());
+                String listImageJson = new Gson().toJson(sanPham.getListImage());
+                intent.putExtra("listImage", listImageJson);
+                String listsizeJson = new Gson().toJson(sanPham.getListProp());
 
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
