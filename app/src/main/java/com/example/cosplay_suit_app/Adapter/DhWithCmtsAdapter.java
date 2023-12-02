@@ -21,6 +21,7 @@ import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.DTO.GetCmtsDTO;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
+import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -91,7 +92,20 @@ public class DhWithCmtsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         viewHolder.layout_dacmt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                        Intent intent = new Intent(context, Chitietsanpham.class);
+                        intent.putExtra("id_product", cmtsDTO.getIdPro().getId());
+                        intent.putExtra("name", cmtsDTO.getIdPro().getNameproduct());
+                        intent.putExtra("price", cmtsDTO.getIdPro().getPrice());
+                        intent.putExtra("about", cmtsDTO.getIdPro().getDescription());
+                        intent.putExtra("slkho", cmtsDTO.getIdPro().getAmount());
+                        intent.putExtra("id_shop",cmtsDTO.getIdPro().getId_shop());
+                        intent.putExtra("time_product",cmtsDTO.getIdPro().getTime_product());
+                        intent.putExtra("id_category",cmtsDTO.getIdPro().getId_category());
+                        String listImageJson = new Gson().toJson(cmtsDTO.getIdPro().getListImage());
+                        intent.putExtra("listImage", listImageJson);
+                        String listsizeJson = new Gson().toJson(cmtsDTO.getIdPro().getListProp());
 
+                        context.startActivity(intent);
             }
         });
     }
