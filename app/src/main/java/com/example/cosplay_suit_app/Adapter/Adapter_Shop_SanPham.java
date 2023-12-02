@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -81,7 +82,8 @@ public class Adapter_Shop_SanPham extends RecyclerView.Adapter<RecyclerView.View
             DTO_SanPham sanPham = mlist.get(position);
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
             viewHolder.tv_nameSp.setText(sanPham.getNameproduct());
-            viewHolder.tv_gia.setText(String.valueOf(sanPham.getPrice()+"đ"));
+            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+            viewHolder.tv_gia.setText(decimalFormat.format(sanPham.getPrice())+"đ");
             viewHolder.tv_gia_gachchan.setText(sanPham.getPrice()*2 +"đ");
             viewHolder.tv_gia_gachchan.setPaintFlags(viewHolder.tv_gia_gachchan.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {

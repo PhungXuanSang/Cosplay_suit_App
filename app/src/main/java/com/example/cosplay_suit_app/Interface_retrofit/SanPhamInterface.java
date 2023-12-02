@@ -56,4 +56,7 @@ public interface SanPhamInterface {
     @GET("getlistsptrending/{id_shop}")
     Call<List<DTO_SanPham>> GetProductTop (@Path("id_shop") String tb_user );
 
+    @GET("getlistsptrending")
+    Call<List<DTO_SanPham>> GetProductLimit();
+
 }

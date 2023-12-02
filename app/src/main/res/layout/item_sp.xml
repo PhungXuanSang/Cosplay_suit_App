@@ -5,77 +5,95 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
-    android:id="@+id/id_chitietsp">
-
-    <androidx.cardview.widget.CardView
-        android:outlineSpotShadowColor="@color/black"
-        android:outlineAmbientShadowColor="@color/black"
+    android:background="@drawable/my_background_sanpham"
+    android:id="@+id/id_chitietsp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    >
+    <LinearLayout
+        android:background="#ffffff"
+        android:layout_margin="1dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="5dp"
-        android:background="#ffffff"
-        android:layout_margin="5dp">
+        android:orientation="vertical">
+        <ImageView
+            android:src="@drawable/imgshop"
+            android:layout_gravity="center"
+            android:id="@+id/anh_sp"
+            android:layout_width="190dp"
+            android:layout_height="220dp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="#FFFFFF"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_gravity="center"
-                android:id="@+id/anh_sp"
-                android:layout_width="190dp"
-                android:layout_height="250dp" />
-
+            android:layout_gravity="center_horizontal|bottom"
+            android:orientation="vertical"
+            android:paddingTop="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="6dp">
+            <TextView
+                app:layout_constraintWidth_default="wrap"
+                app:layout_constraintWidth_max="wrap"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="mạnh"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="12dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:id="@+id/tv_nameSp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
             <LinearLayout
-                android:background="#FAFBFB"
-                android:layout_width="190dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:orientation="vertical"
-                android:padding="3dp">
+                android:id="@+id/id_ll"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_nameSp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
                 <TextView
-                    android:text="Quần Jeans Nữ ống Loe, Quần bò Ống Loe màu hường,có nhiều họa tiết trong đó"
-                    style="@style/TextAppearance.AppCompat.Caption"
-                    app:layout_constraintWidth_default="wrap"
-                    app:layout_constraintWidth_max="wrap"
-                    android:ellipsize="end"
-                    android:textSize="16dp"
-                    android:maxLines="1"
-                    android:gravity="start"
-                    android:textColor="@color/black"
-                    android:id="@+id/tv_nameSp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:paddingStart="15dp"
-                        android:id="@+id/tv_gia"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="99.999đ"
-                        android:textColor="#DF1717"
-                        android:gravity="left" />
-
-                    <TextView
-                        android:id="@+id/tv_soluong"
-                        android:gravity="right"
-                        android:paddingEnd="15dp"
-                        android:textSize="12dp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Đã bán 99"
-                        android:textColor="#7E7676" />
-                </LinearLayout>
+                    android:textSize="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:textColor="#ff0000"
+                    android:text="99.999"
+                    android:id="@+id/tv_gia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textSize="10dp"
+                    android:textColor="#ff0000"
+                    android:text="đ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
-        </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_nameSp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textSize="10dp"
+                    android:layout_marginLeft="3dp"
+                    android:text="Đã bán"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textSize="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:id="@+id/tv_soluong"
+                    android:text="2000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-
-    </androidx.cardview.widget.CardView>
 
 </FrameLayout>
