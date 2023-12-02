@@ -81,7 +81,7 @@
                 android:layout_below="@+id/rcv_cat"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:text="Thịnh hành"
+                android:text="Top 10 Thịnh hành"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 

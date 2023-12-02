@@ -22,7 +22,7 @@
         <LinearLayout
             android:id="@+id/layout_img_pro"
             android:layout_width="match_parent"
-            android:layout_height="299dp"
+            android:layout_height="280dp"
             android:background="#F3EDED"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
