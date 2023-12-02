@@ -85,7 +85,7 @@ public class Adapter_TopProduct extends RecyclerView.Adapter<RecyclerView.ViewHo
             viewHolder.tv_stt_sanpham.setBackgroundColor(colorValue);
             viewHolder.img_tamgiac.setImageResource(R.drawable.tamgiac3);
         }
-        viewHolder.tv_name_sanpham.setText(sanPham.getNameproduct()+"                                        ");
+        viewHolder.tv_name_sanpham.setText(sanPham.getNameproduct()+"                                                                ");
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         viewHolder.tv_gia_sanpham.setText(""+decimalFormat.format(sanPham.getPrice()));
         viewHolder.tv_sl_ban.setText(""+sanPham.getSold());
