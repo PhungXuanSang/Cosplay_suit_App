@@ -23,6 +23,7 @@ import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,8 @@ public class Adapter_Shop_SanPham1 extends RecyclerView.Adapter<RecyclerView.Vie
 
         Adapter_Shop_SanPham1.ItemViewHolder viewHolder = (Adapter_Shop_SanPham1.ItemViewHolder) holder;
         viewHolder.tv_nameSp.setText(sanPham.getNameproduct());
-        viewHolder.tv_gia.setText(String.valueOf(sanPham.getPrice()+"đ"));
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        viewHolder.tv_gia.setText(decimalFormat.format(sanPham.getPrice())+"đ");
         viewHolder.tv_gia_gachchan.setText(sanPham.getPrice()*2 +"đ");
         viewHolder.tv_gia_gachchan.setPaintFlags(viewHolder.tv_gia_gachchan.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {

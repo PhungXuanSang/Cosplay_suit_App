@@ -27,6 +27,7 @@ import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,8 +85,9 @@ public class Adapter_TopProduct extends RecyclerView.Adapter<RecyclerView.ViewHo
             viewHolder.tv_stt_sanpham.setBackgroundColor(colorValue);
             viewHolder.img_tamgiac.setImageResource(R.drawable.tamgiac3);
         }
-        viewHolder.tv_name_sanpham.setText(sanPham.getNameproduct());
-        viewHolder.tv_gia_sanpham.setText(String.valueOf(sanPham.getPrice()));
+        viewHolder.tv_name_sanpham.setText(sanPham.getNameproduct()+"                                        ");
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        viewHolder.tv_gia_sanpham.setText(""+decimalFormat.format(sanPham.getPrice()));
         viewHolder.tv_sl_ban.setText(""+sanPham.getSold());
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
             ItemImageDTO firstImage = sanPham.getListImage().get(0);

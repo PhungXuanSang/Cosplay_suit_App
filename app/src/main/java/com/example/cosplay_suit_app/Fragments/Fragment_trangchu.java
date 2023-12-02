@@ -18,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.CartOrderActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
+import com.example.cosplay_suit_app.Adapter.Adapter_TrenddingProduct;
 import com.example.cosplay_suit_app.Adapter.CategoryAdapter;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.Interface_retrofit.CategoryInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
@@ -50,8 +52,15 @@ public class Fragment_trangchu extends Fragment {
     SearchView sv_pro;
     ImageView img_giohang;
     ArrayList<CategoryDTO> listCat;
+
+    ArrayList<DTO_SanPham> listProduct;
     RecyclerView rcv_cat;
     CategoryAdapter categoryAdapter;
+
+    RecyclerView rcv_trending;
+    Adapter_TrenddingProduct adapterTrenddingProduct;
+    long duration;
+    long startTime = System.currentTimeMillis();
     public Fragment_trangchu() {
 
     }
@@ -68,6 +77,7 @@ public class Fragment_trangchu extends Fragment {
         rcv_3 = viewok.findViewById(R.id.rcv3);
         img_giohang = viewok.findViewById(R.id.ic_giohang);
         rcv_cat = viewok.findViewById(R.id.rcv_cat);
+        rcv_trending = viewok.findViewById(R.id.rcv_trending);
         img_giohang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,8 +97,16 @@ public class Fragment_trangchu extends Fragment {
         categoryAdapter = new CategoryAdapter(getContext(),listCat);
         rcv_cat.setAdapter(categoryAdapter);
         getListCat();
+
+        listProduct = new ArrayList<>();
+        adapterTrenddingProduct = new Adapter_TrenddingProduct(getContext());
+        adapterTrenddingProduct.updateData(listProduct);
+        getListProductLimit();
+        rcv_trending.setAdapter(adapterTrenddingProduct);
+
         return viewok;
     }
+
 
 
 
@@ -97,7 +115,51 @@ public class Fragment_trangchu extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
+    private void getListProductLimit() {
+        try {
+            Gson gson = new GsonBuilder().setLenient().create();
 
+            // Create a new object from HttpLoggingInterceptor
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            // Add Interceptor to HttpClient
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .addInterceptor(interceptor).build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(client) // Set HttpClient to be used by Retrofit
+                    .build();
+            SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+            Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProductLimit();
+            objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+                @Override
+                public void onResponse(Call<List<DTO_SanPham>> call, Response<List<DTO_SanPham>> response) {
+                    if (response.isSuccessful()){
+                        listProduct.clear();
+                        listProduct.addAll(response.body());
+                        adapterTrenddingProduct.notifyDataSetChanged();
+                        Log.d("list2", "onResponse2: "+listProduct.size());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            long endTime = System.currentTimeMillis();
+            duration = endTime - startTime;
+            Log.e("manh", "Thời gian thực hiện API Trang Chu: " + duration + "ms");
+        }
+    }
     private void getListCat() {
         Gson gson = new GsonBuilder().setLenient().create();
 
