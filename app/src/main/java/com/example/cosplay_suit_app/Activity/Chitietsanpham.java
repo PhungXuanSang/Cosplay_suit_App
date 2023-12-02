@@ -282,7 +282,7 @@ public class Chitietsanpham extends AppCompatActivity {
                             public void onClick(View view) {
                                 dialog =  new Dialog(Chitietsanpham.this);
                                 Dialog_mualai.dialogmualai(Chitietsanpham.this,id,idproduct, dialog, priceproduct,slkho, stringsize
-                                        , listImage, listsize, adapterProperties);
+                                        , listImage, listsize, adapterProperties, id_shop, nameproduct);
                             }
                         });
                         findViewById(R.id.your_button_id).setOnClickListener(new View.OnClickListener() {

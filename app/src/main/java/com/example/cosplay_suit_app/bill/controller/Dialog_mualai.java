@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.bill.controller;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -14,13 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.MualaiActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_properties;
-import com.example.cosplay_suit_app.DTO.CartOrderDTO;
-import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
-import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -32,7 +30,7 @@ import java.util.List;
 
 public class Dialog_mualai {
     public static void dialogmualai(Context context, String id , String idproduct, Dialog dialog, int priceproduct, int slkho, String stringsize
-            , List<ItemImageDTO> listImage, ArrayList<DTO_properties> listsize, Adapter_properties adapterProperties){
+            , List<ItemImageDTO> listImage, ArrayList<DTO_properties> listsize, Adapter_properties adapterProperties, String id_shop, String nameproduct){
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_mualai);
 
@@ -117,17 +115,16 @@ public class Dialog_mualai {
             @Override
             public void onClick(View view) {
                 String selectedNameProperties = finalAdapterProperties.getSelectedNameProperties();
-                Cart_controller cartController = new Cart_controller(context);
-                if (selectedNameProperties != null) {
 
-//                    DTO_CartOrder cartOrder = new DTO_CartOrder();
-//                    cartOrder.setId_user(id);
-//                    cartOrder.setId_product(idproduct);
-//                    cartOrder.setTotalPayment(priceproduct);
-//                    cartOrder.setAmount(1);
-//                    cartOrder.setId_properties(selectedNameProperties);
-//
-//                    cartController.AddCart(cartOrder);
+                if (selectedNameProperties != null) {
+                    Intent intent = new Intent(context, MualaiActivity.class);
+                    intent.putExtra("idproduct", idproduct);
+                    intent.putExtra("priceproduct", priceproduct);
+                    intent.putExtra("amount", (tvsoluong.getText().toString()));
+                    intent.putExtra("selectedNameProperties", selectedNameProperties);
+                    intent.putExtra("id_shop", id_shop);
+                    intent.putExtra("nameproduct", nameproduct);
+                    context.startActivity(intent);
                 }else {
                     String title = "Thông báo mua hàng";
                     String msg = "Bạn phải chọn kích thước";

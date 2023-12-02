@@ -14,6 +14,7 @@ import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.DTO.DTO_idbill;
+import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.DTO.User;
@@ -103,7 +104,6 @@ public class Bill_controller {
                 dtoBilldetail.setTotalPayment(totalPayment);
                 dtoBilldetail.setId_bill(dtoIdbill.get_id());
                 dtoBilldetail.setId_product(idProduct);
-                dtoBilldetail.setSize(sizeValue);
 
                 Addbilldetail(dtoBilldetail);
             }
@@ -645,6 +645,38 @@ public class Bill_controller {
             }
         });
     }
+    public void UpdateProduct(String idproduct,DTO_properties dtoProperties){
+        //Tạo đối tượng chuyển đổi kiểu dữ liệu
+        Gson gson = new GsonBuilder().setLenient().create();
+        //Tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        // Khởi  tạo interface
+        Bill_interface userInterface = retrofit.create(Bill_interface.class);
+        // Tạo Call
+        Call<DTO_properties> objCall = userInterface.updateProduct(idproduct, dtoProperties);
+        // Thực hiện gửi dữ liệu lên server
+        objCall.enqueue(new Callback<DTO_properties>() {
+            @Override
+            public void onResponse(Call<DTO_properties> call, Response<DTO_properties> response) {
+                // kết quả server trả về ở đây
+                if (response.isSuccessful()) {
+
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<DTO_properties> call, Throwable t) {
+                // nếu xảy ra lỗi sẽ thông báo ở đây
+
+                Log.e(TAG, t.getLocalizedMessage());
+            }
+        });
+    }
+
     public interface ApiResponseCallback {
         void onApiGetidaddress(ProfileDTO profileDTO);
     }

@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.User;
 
@@ -24,4 +25,7 @@ public interface Bill_interface {
     Call<List<ProfileDTO>> getdskhach(@Path("id")String id);
     @POST("upsoluongproduct")
     Call<Void> Upsoluongproduct(@Body List<String> idList);
+
+    @POST("upproducts/{id}")
+    Call<DTO_properties> updateProduct(@Path("id") String productId, @Body DTO_properties updateRequest);
 }
