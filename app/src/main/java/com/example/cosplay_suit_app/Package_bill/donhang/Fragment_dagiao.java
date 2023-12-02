@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,7 @@ public class Fragment_dagiao extends Fragment {
     RecyclerView recyclerView;
     Context context;
     String checkactivity, checkstatus;
+    LinearLayout noProductMessage;
 
     public Fragment_dagiao(String checkactivity) {
         this.checkactivity = checkactivity;
@@ -37,6 +40,7 @@ public class Fragment_dagiao extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_dagiao, container, false);
         recyclerView = viewok.findViewById(R.id.rcv_danhgia);
+        noProductMessage = viewok.findViewById(R.id.noProductMessage);
         //danh sách sản phẩm
         list = new ArrayList<>();
         arrayAdapter = new Adapter_Bill(list, getContext(), checkactivity, checkstatus);
@@ -46,9 +50,16 @@ public class Fragment_dagiao extends Fragment {
         String id = sharedPreferences.getString("id","");
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(getContext());
-            billController.GetUserBillDone(id, list, arrayAdapter, "Done",checkactivity);
+            billController.GetUserBillDone(id, list, arrayAdapter, "Done",checkactivity, recyclerView, noProductMessage);
         } else {
             Toast.makeText(getContext(), "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
+        }
+        if (list.isEmpty()) {
+            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+            recyclerView.setVisibility(ListView.GONE);
+        } else {
+            noProductMessage.setVisibility(LinearLayout.GONE);
+            recyclerView.setVisibility(ListView.VISIBLE);
         }
         return viewok;
     }

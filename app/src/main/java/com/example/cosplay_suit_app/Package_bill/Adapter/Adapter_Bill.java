@@ -117,6 +117,19 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 holder1.btnmualai.setVisibility(View.GONE);
             }
             holder1.btn_upstatus.setVisibility(View.GONE);
+
+            if (billDetailDTO.getDtoBill().getStatus().equals("Wait")){
+                holder1.btn_upstatus.setText(" Xác nhận có hàng ");
+                holder1.tv_trangthai.setText("Đang xử lý");
+            } else if (billDetailDTO.getDtoBill().getStatus().equals("Pack")) {
+                holder1.btn_upstatus.setText(" Xác nhận Vận chuyển ");
+                holder1.tv_trangthai.setText("Đang đóng gói");
+            } else if (billDetailDTO.getDtoBill().getStatus().equals("Delivery")) {
+                holder1.btn_upstatus.setText(" Giao hoàn tất ");
+                holder1.tv_trangthai.setText("Đang giao");
+            }else {
+                holder1.btn_upstatus.setVisibility(View.GONE);
+            }
         }
 
 

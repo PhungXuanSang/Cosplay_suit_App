@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +59,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     Button btnbuynow;
     private TotalPriceManager totalPriceManager;
     ArrayList<String> totalPriceManagerListcart = new ArrayList<>();
+    LinearLayout noProductMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +106,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
 
             }
         });
+
         getShop(id);
     }
 
@@ -111,6 +115,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
         img_back = findViewById(R.id.id_back);
         tvtongtien = findViewById(R.id.tv_tongtien);
         btnbuynow = findViewById(R.id.btn_buynow);
+        noProductMessage = findViewById(R.id.noProductMessage);
     }
 
     public void getShop(String id){
@@ -146,7 +151,13 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                     list.clear();
                     list.addAll(response.body());
                     arrayAdapter.notifyDataSetChanged();
-
+                    if (list.isEmpty()) {
+                        noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                        recyclerView.setVisibility(ListView.GONE);
+                    } else {
+                        noProductMessage.setVisibility(LinearLayout.GONE);
+                        recyclerView.setVisibility(ListView.VISIBLE);
+                    }
                 } else {
                     Toast.makeText(CartOrderActivity.this,
                             "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
@@ -39,6 +41,7 @@ public class Giaohang_Activity extends AppCompatActivity {
     ImageView img_back;
 
     String checkactivity = "", checkstatus= "";
+    LinearLayout noProductMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +62,19 @@ public class Giaohang_Activity extends AppCompatActivity {
             }
         });
         Bill_controller billController = new Bill_controller(Giaohang_Activity.this);
-        billController.GetUserBillDelivery(id, list, arrayAdapter, "Delivery","user");
+        billController.GetUserBillDelivery(id, list, arrayAdapter, "Delivery","user",  recyclerView, noProductMessage);
+        if (list.isEmpty()) {
+            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+            recyclerView.setVisibility(ListView.GONE);
+        } else {
+            noProductMessage.setVisibility(LinearLayout.GONE);
+            recyclerView.setVisibility(ListView.VISIBLE);
+        }
     }
 
     public void Anhxa(){
         recyclerView = findViewById(R.id.rcv_danhgia);
         img_back = findViewById(R.id.id_back);
+        noProductMessage = findViewById(R.id.noProductMessage);
     }
 }

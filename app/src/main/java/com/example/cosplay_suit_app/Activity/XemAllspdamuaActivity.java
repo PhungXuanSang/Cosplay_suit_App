@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.example.cosplay_suit_app.Adapter.Adapter_XemAllspdamua;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
@@ -21,6 +23,7 @@ public class XemAllspdamuaActivity extends AppCompatActivity {
     ImageView id_back;
     List<BillDetailDTO> list;
     Adapter_XemAllspdamua adapterXemAllspdamua;
+    LinearLayout noProductMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +42,19 @@ public class XemAllspdamuaActivity extends AppCompatActivity {
         adapterXemAllspdamua = new Adapter_XemAllspdamua(list, this);
         rcv_Allmualai.setAdapter(adapterXemAllspdamua);
         Bill_controller billController = new Bill_controller(this);
-        billController.GetAllmualaisp(id, list, adapterXemAllspdamua);
+        billController.GetAllmualaisp(id, list, adapterXemAllspdamua, rcv_Allmualai, noProductMessage);
+        if (list.isEmpty()) {
+            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+            rcv_Allmualai.setVisibility(ListView.GONE);
+        } else {
+            noProductMessage.setVisibility(LinearLayout.GONE);
+            rcv_Allmualai.setVisibility(ListView.VISIBLE);
+        }
     }
 
     private void Anhxa() {
         rcv_Allmualai = findViewById(R.id.rcv_Allmualai);
         id_back = findViewById(R.id.id_back);
+        noProductMessage = findViewById(R.id.noProductMessage);
     }
 }

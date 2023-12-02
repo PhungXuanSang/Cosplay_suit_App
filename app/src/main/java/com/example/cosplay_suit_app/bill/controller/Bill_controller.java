@@ -2,7 +2,12 @@ package com.example.cosplay_suit_app.bill.controller;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.Dskhach_Activity;
@@ -168,7 +173,8 @@ public class Bill_controller {
             }
         });
     }
-    public void GetUserBillWait(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type) {
+    public void GetUserBillWait(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status, String type,
+                                RecyclerView recyclerView, LinearLayout noProductMessage) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -205,6 +211,13 @@ public class Bill_controller {
                                 list.add(billDetail);
                             }
                         }
+                        if (list.isEmpty()) {
+                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                            recyclerView.setVisibility(ListView.GONE);
+                        } else {
+                            noProductMessage.setVisibility(LinearLayout.GONE);
+                            recyclerView.setVisibility(ListView.VISIBLE);
+                        }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
 
@@ -222,7 +235,7 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillPack(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type) {
+    public void GetUserBillPack(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -259,6 +272,13 @@ public class Bill_controller {
                                 list.add(billDetail);
                             }
                         }
+                        if (list.isEmpty()) {
+                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                            recyclerView.setVisibility(ListView.GONE);
+                        } else {
+                            noProductMessage.setVisibility(LinearLayout.GONE);
+                            recyclerView.setVisibility(ListView.VISIBLE);
+                        }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
 
@@ -276,7 +296,7 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillDelivery(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type) {
+    public void GetUserBillDelivery(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -313,6 +333,13 @@ public class Bill_controller {
                                 list.add(billDetail);
                             }
                         }
+                        if (list.isEmpty()) {
+                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                            recyclerView.setVisibility(ListView.GONE);
+                        } else {
+                            noProductMessage.setVisibility(LinearLayout.GONE);
+                            recyclerView.setVisibility(ListView.VISIBLE);
+                        }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
 
@@ -330,7 +357,7 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillDone(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type) {
+    public void GetUserBillDone(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -366,6 +393,13 @@ public class Bill_controller {
                             if (billDetail.getDtoBill().getStatus().equals(status)){
                                 list.add(billDetail);
                             }
+                        }
+                        if (list.isEmpty()) {
+                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                            recyclerView.setVisibility(ListView.GONE);
+                        } else {
+                            noProductMessage.setVisibility(LinearLayout.GONE);
+                            recyclerView.setVisibility(ListView.VISIBLE);
                         }
                         arrayAdapter.notifyDataSetChanged();
                     } else {
@@ -563,7 +597,7 @@ public class Bill_controller {
             }
         });
     }
-    public void GetAllmualaisp(String id, List<BillDetailDTO> list, Adapter_XemAllspdamua adapterMualai){
+    public void GetAllmualaisp(String id, List<BillDetailDTO> list, Adapter_XemAllspdamua adapterMualai, RecyclerView recyclerView, LinearLayout noProductMessage){
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -597,6 +631,13 @@ public class Bill_controller {
                     if (profileDTOS != null && !profileDTOS.isEmpty()) {
                         for (BillDetailDTO profileDTO : profileDTOS) {
                             list.add(profileDTO);
+                        }
+                        if (list.isEmpty()) {
+                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                            recyclerView.setVisibility(ListView.GONE);
+                        } else {
+                            noProductMessage.setVisibility(LinearLayout.GONE);
+                            recyclerView.setVisibility(ListView.VISIBLE);
                         }
                         adapterMualai.notifyDataSetChanged();
                     } else {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/idtollbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#077A88">
@@ -19,7 +20,7 @@
         <TextView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Lấy hàng"
+            android:text="Chờ lấy hàng"
             android:textSize="20dp"
             android:textColor="@color/white"
             android:gravity="center"
@@ -33,6 +34,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_below="@+id/idtollbar"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/noProductMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/nobill"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Không có đơn hàng nào! "
+            android:layout_centerVertical="true" />
+    </LinearLayout>
+
+
+</RelativeLayout>
