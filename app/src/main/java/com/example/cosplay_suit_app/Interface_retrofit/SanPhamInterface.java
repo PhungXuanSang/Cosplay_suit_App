@@ -53,4 +53,7 @@ public interface SanPhamInterface {
     @GET("getlistsp/{id_shop}/{page}")
     Call<Product_Page> GetProductPage (@Path("id_shop") String tb_user , @Path("page") Integer page);
 
+    @GET("getlistsptrending/{id_shop}")
+    Call<List<DTO_SanPham>> GetProductTop (@Path("id_shop") String tb_user );
+
 }

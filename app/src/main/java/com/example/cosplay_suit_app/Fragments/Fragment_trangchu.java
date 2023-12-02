@@ -188,7 +188,7 @@ public class Fragment_trangchu extends Fragment {
 
             @Override
             public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
-
+                Log.e("manh", "onFailure: " + t.getLocalizedMessage() );
             }
         });
 

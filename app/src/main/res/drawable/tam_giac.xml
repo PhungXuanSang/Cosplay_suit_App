@@ -1,0 +1,26 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <!-- Bottom Right Triangle -->
+    <item android:width="600dp" android:height="500dp">
+        <rotate
+            android:fromDegrees="45"
+            android:pivotX="100%"
+            android:pivotY="15%">
+            <shape android:shape="rectangle">
+                <solid android:color="#E34412"/>
+            </shape>
+        </rotate>
+    </item>
+    <!-- Bottom Left Triangle -->
+    <item android:width="600dp" android:height="500dp">
+        <rotate
+            android:fromDegrees="-45"
+            android:pivotX="0%"
+            android:pivotY="15%">
+            <shape android:shape="rectangle">
+                <solid android:color="#E34412"/>
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
