@@ -23,7 +23,9 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.AdapterChat;
 import com.example.cosplay_suit_app.DTO.ChatDTO;
+import com.example.cosplay_suit_app.DTO.FcmMessage;
 import com.example.cosplay_suit_app.DTO.User;
+import com.example.cosplay_suit_app.Interface_retrofit.FcmApiService;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.android.gms.tasks.Continuation;
@@ -37,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -49,9 +52,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -127,6 +133,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
                 addMessage();
+                sendNotification(reciverUid, message);
             }
         });
         img_addImage.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +154,61 @@ public class ChatActivity extends AppCompatActivity {
         tv_nameShop = findViewById(R.id.tv_nameShop);
         img_addImage = findViewById(R.id.img_addImage);
     }
+    public void sendFcmData(String fcmToken, String content) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
+        FcmApiService apiService = retrofit.create(FcmApiService.class);
+
+        FcmMessage message = new FcmMessage();
+        message.setTo(fcmToken);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title", "Bạn có tin nhắn mới");
+        data.put("message", content);
+        Log.d("Chat", "sendFcmData: "+content);
+        message.setData(data);
+
+        Call<ResponseBody> call = apiService.sendFcmMessage(message);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+
+                    Log.d("ChatActivity", "Gửi thông báo FCM thành công");
+                } else {
+
+                    Log.e("ChatActivity", "Gửi thông báo FCM thất bại");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("ChatActivity", "Lỗi khi gửi thông báo FCM: " + t.getMessage());
+            }
+        });
+    }
+
+    private void sendNotification(String recipientUID, String message) {
+
+        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(recipientUID);
+        tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String recipientToken = dataSnapshot.getValue(String.class);
+                if (recipientToken != null) {
+
+                    sendFcmData(recipientToken, message);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("ChatActivity", "Lỗi khi lấy mã FCM của người nhận: " + databaseError.getMessage());
+            }
+        });
+    }
     private void setNameReciver() {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()

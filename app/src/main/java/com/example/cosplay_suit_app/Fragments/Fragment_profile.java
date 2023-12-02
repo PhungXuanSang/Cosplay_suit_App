@@ -47,6 +47,9 @@ import com.example.cosplay_suit_app.Package_bill.Activity.Layhang_Activity;
 import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
 import com.example.cosplay_suit_app.Package_bill.donhang.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -219,6 +222,11 @@ public class Fragment_profile extends Fragment {
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+
+                    String userUID =  sharedPreferences.getString("id", "");
+                    DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(userUID);
+                    tokenRef.removeValue();
                     sharedPreferences.edit().clear().commit();
                     startActivity(new Intent(getContext(), MainActivity.class));
                 }

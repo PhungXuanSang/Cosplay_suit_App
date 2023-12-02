@@ -1,5 +1,6 @@
 package com.example.cosplay_suit_app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -18,10 +19,13 @@ import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -153,7 +157,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         DatabaseReference myRefFullname = database.getReference("Users/" + dto.getUser().getId() + "/fullname");
                         myRefFullname.setValue(dto.getUser().getFullname());
-                        Log.e(TAG, "onResponse: " + dto.getUser().getId() );
+                        Log.e(TAG, "onResponse: " + dto.getUser().getId());
+
+                        saveUserFCMToken(dto.getUser().getId());
+
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finishAffinity();
                     }
@@ -214,6 +221,24 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void saveUserFCMToken(String id) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
 
+
+                        String token = task.getResult();
+
+                        String userUID = id;
+                        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(userUID);
+                        tokenRef.setValue(token);
+                    }
+                });
+    }
 
 }
