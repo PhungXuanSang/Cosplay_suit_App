@@ -13,6 +13,7 @@ import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.Dskhach_Activity;
 import com.example.cosplay_suit_app.Adapter.Adapter_XemAllspdamua;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
+import com.example.cosplay_suit_app.Adapter.Adapter_chitietbill;
 import com.example.cosplay_suit_app.Adapter.Adapter_dskhach;
 import com.example.cosplay_suit_app.Adapter.Adapter_mualai;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
@@ -20,6 +21,7 @@ import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.DTO.DTO_idbill;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
+import com.example.cosplay_suit_app.DTO.DTOcheck_productshop;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.DTO.User;
@@ -418,6 +420,128 @@ public class Bill_controller {
         });
 
     }
+    public void GetUserBillCancelled(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
+
+        // tạo đối tượng
+        Call<List<BillDetailDTO>> objCall = billDetailDTO.getstatusCancelled(type,id);
+        objCall.enqueue(new Callback<List<BillDetailDTO>>() {
+            @Override
+            public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
+                if (response.isSuccessful()) {
+                    list.clear();
+                    List<BillDetailDTO> billDetailList = response.body();
+                    if (billDetailList != null && !billDetailList.isEmpty()) {
+                        for (BillDetailDTO billDetail : billDetailList) {
+                            if (billDetail.getDtoBill().getStatus().equals(status)){
+                                list.add(billDetail);
+                            }
+                        }
+                        if (list.isEmpty()) {
+                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                            recyclerView.setVisibility(ListView.GONE);
+                        } else {
+                            noProductMessage.setVisibility(LinearLayout.GONE);
+                            recyclerView.setVisibility(ListView.VISIBLE);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    } else {
+
+                    }
+                } else {
+                    Toast.makeText(mContext,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+
+    }
+    public void GetUserBillReturns(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
+
+        // tạo đối tượng
+        Call<List<BillDetailDTO>> objCall = billDetailDTO.getstatusReturns(type,id);
+        objCall.enqueue(new Callback<List<BillDetailDTO>>() {
+            @Override
+            public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
+                if (response.isSuccessful()) {
+                    list.clear();
+                    List<BillDetailDTO> billDetailList = response.body();
+                    if (billDetailList != null && !billDetailList.isEmpty()) {
+                        for (BillDetailDTO billDetail : billDetailList) {
+                            if (billDetail.getDtoBill().getStatus().equals(status)){
+                                list.add(billDetail);
+                            }
+                        }
+                        if (list.isEmpty()) {
+                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                            recyclerView.setVisibility(ListView.GONE);
+                        } else {
+                            noProductMessage.setVisibility(LinearLayout.GONE);
+                            recyclerView.setVisibility(ListView.VISIBLE);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    } else {
+
+                    }
+                } else {
+                    Toast.makeText(mContext,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+
+    }
     public void UpdateStatusBill(String idbill,DTO_Bill dtoBill){
         //Tạo đối tượng chuyển đổi kiểu dữ liệu
         Gson gson = new GsonBuilder().setLenient().create();
@@ -717,8 +841,104 @@ public class Bill_controller {
             }
         });
     }
+    public void GetIdbilldetail(String idbill, List<BillDetailDTO> list, Adapter_chitietbill adapterChitietbill){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
 
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Billdentail_Interfece billDetailDTO = retrofit.create(Billdentail_Interfece.class);
+
+        // tạo đối tượng
+        Call<List<BillDetailDTO>> objCall = billDetailDTO.getIdbilldetail(idbill);
+        objCall.enqueue(new Callback<List<BillDetailDTO>>() {
+            @Override
+            public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
+                if (response.isSuccessful()) {
+                    list.clear();
+                    List<BillDetailDTO> profileDTOS = response.body();
+                    if (profileDTOS != null && !profileDTOS.isEmpty()) {
+                        for (BillDetailDTO profileDTO : profileDTOS) {
+                            list.add(profileDTO);
+                        }
+                        adapterChitietbill.notifyDataSetChanged();
+                    } else {
+
+                    }
+                } else {
+                    Toast.makeText(mContext,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BillDetailDTO>> call, Throwable t) {
+                Log.d(TAG, "onFailure Getdsmualaisp: " + t);
+            }
+        });
+    }
+    public void Getcheckproduct(String id, ApiResponseCallbackproduct callback){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Bill_interface billDetailDTO = retrofit.create(Bill_interface.class);
+
+        // tạo đối tượng
+        Call<DTOcheck_productshop> objCall = billDetailDTO.getcheckproduct(id);
+        objCall.enqueue(new Callback<DTOcheck_productshop>() {
+            @Override
+            public void onResponse(Call<DTOcheck_productshop> call, Response<DTOcheck_productshop> response) {
+                if (callback != null) {
+                    if (response.isSuccessful()) {
+                        callback.onApiGetcheckproduct(response.body());
+                    } else {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTOcheck_productshop> call, Throwable t) {
+                Log.d(TAG, "onFailure Getdsmualaisp: " + t);
+            }
+        });
+    }
     public interface ApiResponseCallback {
         void onApiGetidaddress(ProfileDTO profileDTO);
+    }
+    public interface ApiResponseCallbackproduct {
+        void onApiGetcheckproduct(DTOcheck_productshop profileDTO);
     }
 }

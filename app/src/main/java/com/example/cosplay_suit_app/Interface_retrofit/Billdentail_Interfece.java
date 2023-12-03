@@ -15,16 +15,16 @@ import retrofit2.http.Query;
 public interface Billdentail_Interfece {
     @GET("getstatuswait/{type}/{id}")
     Call<List<BillDetailDTO>> getstatuswait(@Path("type") String type,@Path("id") String id);
-
     @GET("getstatusDelivery/{type}/{id}")
     Call<List<BillDetailDTO>> getstatusDelivery(@Path("type") String type,@Path("id") String id);
-
     @GET("getstatusPack/{type}/{id}")
     Call<List<BillDetailDTO>> getstatusPack(@Path("type") String type,@Path("id") String id);
-
     @GET("getstatusDone/{type}/{id}")
     Call<List<BillDetailDTO>> getstatusDone(@Path("type") String type,@Path("id") String id);
-
+    @GET("getstatusCancelled/{type}/{id}")
+    Call<List<BillDetailDTO>> getstatusCancelled(@Path("type") String type,@Path("id") String id);
+    @GET("getstatusReturns/{type}/{id}")
+    Call<List<BillDetailDTO>> getstatusReturns(@Path("type") String type,@Path("id") String id);
     @POST("addbilldetail")
     Call<DTO_billdetail> addbilldetail(@Body DTO_billdetail dtoBill);
 
@@ -32,4 +32,6 @@ public interface Billdentail_Interfece {
     Call<List<BillDetailDTO>> getdsmualaisp(@Path("id") String id, @Query("limit") int limit);
     @GET("getallmualaisp/{id}")
     Call<List<BillDetailDTO>> getallmualaisp(@Path("id") String id);
+    @GET("getIdbilldetail/{id}")
+    Call<List<BillDetailDTO>> getIdbilldetail(@Path("id") String id);
 }

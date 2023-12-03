@@ -9,15 +9,25 @@ public class BillDetailDTO {
     @SerializedName("id_bill")
     BillDTO dtoBill;
     int amount, totalPayment;
+    String size;
 
     public BillDetailDTO() {
     }
 
-    public BillDetailDTO(DTO_SanPham dtoSanPham, BillDTO dtoBill, int amount, int totalPayment) {
+    public BillDetailDTO(DTO_SanPham dtoSanPham, BillDTO dtoBill, int amount, int totalPayment, String size) {
         this.dtoSanPham = dtoSanPham;
         this.dtoBill = dtoBill;
         this.amount = amount;
         this.totalPayment = totalPayment;
+        this.size = size;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public DTO_SanPham getDtoSanPham() {

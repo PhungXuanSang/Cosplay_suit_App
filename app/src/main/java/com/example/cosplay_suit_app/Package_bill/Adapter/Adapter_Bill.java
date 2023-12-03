@@ -3,6 +3,7 @@ package com.example.cosplay_suit_app.Package_bill.Adapter;
 import static com.example.cosplay_suit_app.Activity.BuynowActivity.formatDateTime;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cosplay_suit_app.Activity.Chitietbill_Activity;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +30,8 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     String TAG = "adapterbill";
     List<BillDetailDTO> list;
     Context context;
-    String checkactivity="", checkstatus ="";
+    String checkactivity="", checkstatus ="", stringstatus ="";
+
 
     public Adapter_Bill(List<BillDetailDTO> list, Context context, String checkactivity, String checkstatus) {
         this.list = list;
@@ -48,6 +52,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         BillDetailDTO billDetailDTO = list.get(position);
         Adapter_Bill.ItemViewHolder holder1 = (ItemViewHolder) holder;
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         if (billDetailDTO.getDtoSanPham().getListImage() != null && !billDetailDTO.getDtoSanPham().getListImage().isEmpty()) {
             ItemImageDTO firstImage = billDetailDTO.getDtoSanPham().getListImage().get(0);
             String imageUrl = firstImage.getImage();
@@ -61,12 +66,12 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     .into(holder1.imgproduct);
         }
         holder1.tvnamepro.setText(billDetailDTO.getDtoSanPham().getNameproduct());
-        holder1.tvprice.setText(""+billDetailDTO.getDtoSanPham().getPrice());
-        holder1.tvtongbill.setText(""+billDetailDTO.getDtoBill().getTotalPayment());
+        holder1.tvprice.setText(""+decimalFormat.format(billDetailDTO.getDtoSanPham().getPrice()) + " VND");
+        holder1.tvtongbill.setText(""+decimalFormat.format(billDetailDTO.getDtoBill().getTotalPayment()) + " VND");
         holder1.tv_nameshop.setText(billDetailDTO.getDtoBill().getShop().getNameshop());
         Bill_controller billController = new Bill_controller(context);
         //Check xem là bên nào sử dụng adapter shop hay khách hàng
-        if (checkactivity.equals("shop")){
+        if ("shop".equals(checkactivity)){
             holder1.btn_upstatus.setVisibility(View.VISIBLE);
             holder1.btnmualai.setVisibility(View.VISIBLE);
             holder1.btnmualai.setText("Hủy đơn hàng");
@@ -131,7 +136,31 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 holder1.btn_upstatus.setVisibility(View.GONE);
             }
         }
+        if (billDetailDTO.getDtoBill().getStatus().equals("Wait")){
+            stringstatus = "Wait";
+        } else if (billDetailDTO.getDtoBill().getStatus().equals("Pack")) {
+            stringstatus = "Pack";
+        } else if (billDetailDTO.getDtoBill().getStatus().equals("Delivery")) {
+            stringstatus = "Delivery";
+        }else if (billDetailDTO.getDtoBill().getStatus().equals("Done")){
+            stringstatus = "Done";
+        }else if (billDetailDTO.getDtoBill().getStatus().equals("Cancelled")){
+            stringstatus = "Cancelled";
+        }else if (billDetailDTO.getDtoBill().getStatus().equals("Returns")){
+            stringstatus = "Returns";
+        }
+        holder1.xemchitietbill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                Intent intent = new Intent(context, Chitietbill_Activity.class);
+                intent.putExtra("idbill", billDetailDTO.getDtoBill().get_id());
+                intent.putExtra("tongbill", billDetailDTO.getDtoBill().getTotalPayment());
+                intent.putExtra("stringstatus",stringstatus);
+                intent.putExtra("checkactivity", checkactivity);
+                context.startActivity(intent);
+            }
+        });
 
     }
 
@@ -142,7 +171,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imgproduct;
-        TextView tvnamepro, tvsize, tvprice, tvtongbill, tv_nameshop, tv_trangthai;
+        TextView tvnamepro, tvsize, tvprice, tvtongbill, tv_nameshop, tv_trangthai, xemchitietbill;
         Button btnmualai, btn_upstatus;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -155,6 +184,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tv_nameshop = itemView.findViewById(R.id.tv_nameshop);
             tv_trangthai = itemView.findViewById(R.id.tv_trangthai);
             btn_upstatus = itemView.findViewById(R.id.btn_upstatus);
+            xemchitietbill = itemView.findViewById(R.id.xemchitietbill);
         }
     }
 }

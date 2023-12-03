@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,9 @@ import com.example.cosplay_suit_app.DTO.CmtsDTO;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
+import com.example.cosplay_suit_app.DTO.DTOcheck_productshop;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.UserIdResponse;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
@@ -50,6 +53,7 @@ import com.example.cosplay_suit_app.Interface_retrofit.CmtsInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.example.cosplay_suit_app.bill.controller.Cart_controller;
 import com.example.cosplay_suit_app.bill.controller.Dialog_mualai;
 import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
@@ -91,7 +95,7 @@ public class Chitietsanpham extends AppCompatActivity {
     static final String BASE_URL_SHOP = url +"/shop/";
     static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite, img_chat, img_themgiohang;
-    TextView tv_price, tv_name,tv_slcmts ,tv_nameShop, tv_diachiShop ,tvSlSPShop, tv_noidung, tv_muahang;
+    TextView tv_price, tv_name,tv_slcmts ,tv_nameShop, tv_diachiShop ,tvSlSPShop, tv_noidung, tv_muahang,tvcheckshop;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category,stringsize, listImageJson;
     Dialog fullScreenDialog;
     int priceproduct, slkho;
@@ -113,6 +117,8 @@ public class Chitietsanpham extends AppCompatActivity {
     String nameShop,diachiShop,soluongSPShop;
 
     Dialog dialog;
+    Bill_controller billController;
+    TableLayout tblcheck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,7 +174,16 @@ public class Chitietsanpham extends AppCompatActivity {
             public void run() {
                 //cong viec background viet o day
                 Anhxa();
-
+                billController = new Bill_controller(Chitietsanpham.this);
+                billController.Getcheckproduct(idproduct, new Bill_controller.ApiResponseCallbackproduct() {
+                    @Override
+                    public void onApiGetcheckproduct(DTOcheck_productshop profileDTO) {
+                        if (profileDTO.getId_shop().getId_user().equals(id)){
+                            tvcheckshop.setVisibility(View.VISIBLE);
+                            tblcheck.setVisibility(View.GONE);
+                        }
+                    }
+                });
                 try {
                     Log.e(TAG, "run12: " + elapsedTime);
                     Thread.sleep(1999);
@@ -273,16 +288,28 @@ public class Chitietsanpham extends AppCompatActivity {
                         img_themgiohang.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                dialog =  new Dialog(Chitietsanpham.this);
-                                dialogaddcart(dialog,priceproduct,  slkho,stringsize, listImage);
+                                if ("".equals(id)){
+                                    String title ="Thông báo từ ứng dụng";
+                                    String msg = "Bạn cần đăng nhập để có thể mua hàng";
+                                    Dialogthongbao.showSuccessDialog(Chitietsanpham.this, title, msg);
+                                }else {
+                                    dialog =  new Dialog(Chitietsanpham.this);
+                                    dialogaddcart(dialog,priceproduct,  slkho,stringsize, listImage);
+                                }
                             }
                         });
                         tv_muahang.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                dialog =  new Dialog(Chitietsanpham.this);
-                                Dialog_mualai.dialogmualai(Chitietsanpham.this,id,idproduct, dialog, priceproduct,slkho, stringsize
-                                        , listImage, listsize, adapterProperties, id_shop, nameproduct);
+                                if ("".equals(id)){
+                                    String title ="Thông báo từ ứng dụng";
+                                    String msg = "Bạn cần đăng nhập để có thể mua hàng";
+                                    Dialogthongbao.showSuccessDialog(Chitietsanpham.this, title, msg);
+                                }else {
+                                    dialog =  new Dialog(Chitietsanpham.this);
+                                    Dialog_mualai.dialogmualai(Chitietsanpham.this,id,idproduct, dialog, priceproduct,slkho, stringsize
+                                            , listImage, listsize, adapterProperties, id_shop, nameproduct);
+                                }
                             }
                         });
                         findViewById(R.id.your_button_id).setOnClickListener(new View.OnClickListener() {
@@ -302,8 +329,6 @@ public class Chitietsanpham extends AppCompatActivity {
         });
     }
 
-
-
     public void Anhxa() {
         img_pro = findViewById(R.id.img_pro);
         tv_price = findViewById(R.id.tv_price);
@@ -319,6 +344,8 @@ public class Chitietsanpham extends AppCompatActivity {
         tvSlSPShop = findViewById(R.id.tv_soluongSPShop);
         tv_noidung = findViewById(R.id.tv_noidung);
         tv_muahang = findViewById(R.id.tv_muahang);
+        tblcheck = findViewById(R.id.tblcheck);
+        tvcheckshop = findViewById(R.id.tvcheckshop);
     }
     private void getIdUserByShop(String idproduct) {
         Gson gson = new GsonBuilder().setLenient().create();

@@ -31,6 +31,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Không có đơn hàng nào! "
-            android:layout_centerVertical="true"/>
+            />
     </LinearLayout>
 </RelativeLayout>

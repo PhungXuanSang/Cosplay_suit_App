@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,8 @@ public class Fragment_dahuy extends Fragment {
     Adapter_Bill arrayAdapter;
     RecyclerView recyclerView;
     Context context;
-    String checkactivity, checkstatus;
+    String checkactivity, checkstatus = "Cancelled";
+    LinearLayout noProductMessage;
 
     public Fragment_dahuy(String checkactivity) {
         this.checkactivity = checkactivity;
@@ -47,7 +49,7 @@ public class Fragment_dahuy extends Fragment {
         String id = sharedPreferences.getString("id","");
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(context);
-//            billController.GetUserBill(id, list, arrayAdapter, "Cancelled");
+            billController.GetUserBillCancelled(id, list, arrayAdapter, "Cancelled",checkactivity, recyclerView, noProductMessage);
         } else {
             Toast.makeText(context, "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
         }
