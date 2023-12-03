@@ -248,7 +248,7 @@ public class ChatActivity extends AppCompatActivity {
                 list.add(newMessage);
                 adapter.notifyDataSetChanged();
 
-
+                rcv_chat.smoothScrollToPosition(list.size() - 1);
 
             }
 
@@ -323,6 +323,7 @@ public class ChatActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 // Cập nhật UI hoặc thực hiện các công việc khác sau khi gửi tin nhắn
+                                rcv_chat.smoothScrollToPosition(list.size() - 1);
                             }
                         });
             }

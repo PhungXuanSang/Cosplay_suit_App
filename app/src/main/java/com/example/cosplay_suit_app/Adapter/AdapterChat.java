@@ -200,4 +200,14 @@ public class AdapterChat extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imageViewReceiver = itemView.findViewById(R.id.imageView_receiver);
         }
     }
+    public void updateMessages(ArrayList<ChatDTO> messages) {
+        this.messagesAdapterArrayList = messages;
+        notifyDataSetChanged();
+    }
+
+    public void addMessages(ArrayList<ChatDTO> newMessages) {
+        int startPosition = messagesAdapterArrayList.size();
+        messagesAdapterArrayList.addAll(newMessages);
+        notifyItemRangeInserted(startPosition, newMessages.size());
+    }
 }
