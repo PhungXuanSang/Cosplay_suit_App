@@ -1,30 +1,45 @@
 package com.example.cosplay_suit_app.DTO;
 
+
+
 import com.google.gson.annotations.SerializedName;
 
-public class ProfileDTO {
+public class Profile1_DTO {
     @SerializedName("_id")
     String id;
 
     @SerializedName("id_user")
-    User id_user;
-
-
+    String id_user;
 
     String phone,diachi,email,fullname;
-//    String id_user;
 
-    public ProfileDTO() {
+    public Profile1_DTO() {
     }
 
-    public ProfileDTO( String phone, String diachi, String email, String fullname, User id_user) {
+    public Profile1_DTO(String id, String id_user, String phone, String diachi, String email, String fullname) {
+        this.id = id;
+        this.id_user = id_user;
         this.phone = phone;
         this.diachi = diachi;
         this.email = email;
         this.fullname = fullname;
-        this.id_user = id_user;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
+    }
 
     public String getPhone() {
         return phone;
@@ -57,21 +72,4 @@ public class ProfileDTO {
     public void setFullname(String fullname) {
         this.fullname = fullname;
     }
-
-    public User getId_user() {
-        return id_user;
-    }
-
-    public void setId_user(User id_user) {
-        this.id_user = id_user;
-    }
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-
 }
