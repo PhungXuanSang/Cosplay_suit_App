@@ -15,6 +15,10 @@ public class User {
     private String time;
     private String image;
 
+    private long timeStamp;
+
+
+
     public String getImage() {
         return image;
     }
@@ -106,5 +110,13 @@ public class User {
 
 
     public User() {
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

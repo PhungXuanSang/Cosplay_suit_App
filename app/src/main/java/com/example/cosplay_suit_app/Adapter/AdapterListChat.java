@@ -16,6 +16,8 @@ import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -30,6 +32,14 @@ public class AdapterListChat extends RecyclerView.Adapter<AdapterListChat.viewho
 
     }
     public void updateList(ArrayList<User> userList) {
+        // Sắp xếp danh sách dựa trên thời điểm đánh dấu của tin nhắn cuối cùng theo thứ tự giảm dần
+        Collections.sort(userList, new Comparator<User>() {
+            @Override
+            public int compare(User user1, User user2) {
+                return Long.compare(user2.getTimeStamp(), user1.getTimeStamp());
+            }
+        });
+
         this.usersArrayList = userList;
         notifyDataSetChanged();
     }

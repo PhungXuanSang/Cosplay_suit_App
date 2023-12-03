@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,8 @@ public class Fragment_chat extends Fragment {
     TextView tv_null;
     SearchView sv_listChat;
     ArrayList<User> filteredList;
+    ProgressBar progressBar;
+
     public static Fragment_chat newInstance() {
         Fragment_chat fragmentChat = new Fragment_chat();
         return fragmentChat;
@@ -69,7 +72,7 @@ public class Fragment_chat extends Fragment {
         view = inflater.inflate(R.layout.fragment_chat, container, false);
         database = FirebaseDatabase.getInstance();
         rcv_listChat = view.findViewById(R.id.rcv_listChat);
-
+        progressBar = view.findViewById(R.id.progressBar);
         tv_null = view.findViewById(R.id.tv_null);
         sv_listChat = view.findViewById(R.id.sv_chat);
 
@@ -82,7 +85,7 @@ public class Fragment_chat extends Fragment {
         listIdUser = new ArrayList<>();
         adapter = new AdapterListChat(getContext(),list);
         rcv_listChat.setAdapter(adapter);
-
+        progressBar.setVisibility(View.VISIBLE);
 //        getList();
 
         sv_listChat.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -115,6 +118,7 @@ public class Fragment_chat extends Fragment {
     }
 
     private void getList() {
+        progressBar.setVisibility(View.VISIBLE);
         list.clear();
         DatabaseReference userRoomsReference = database.getReference().child("chats");
 
@@ -177,8 +181,9 @@ public class Fragment_chat extends Fragment {
                                                 if (fetchedUser != null) {
                                                     fetchedUser.setLastMess(lastMessage.getMessage());
                                                     fetchedUser.setTime(lastMessage.getTime());
+                                                    fetchedUser.setTimeStamp(lastMessage.getTimeStamp());
                                                     list.add(0, fetchedUser);
-
+                                                    adapter.updateList(list);
                                                     Log.d("DEBUG", "onResponse: id nguoi nhan =  "+receiverId+"  ten nguoi nhan = "+ fetchedUser.getFullname()+" time "+fetchedUser.getTime());
                                                     adapter.notifyDataSetChanged();
 
@@ -216,17 +221,24 @@ public class Fragment_chat extends Fragment {
 
     }
     private void checkAndUpdateUI() {
-        if(list.isEmpty()) {
-            tv_null.setVisibility(View.VISIBLE);
-            rcv_listChat.setVisibility(View.GONE);
+        if (list.isEmpty()) {
+            tv_null.postDelayed(() -> {
+                if (list.isEmpty()) {
+                    tv_null.setVisibility(View.VISIBLE);
+                    rcv_listChat.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }, 1000);
         } else {
             tv_null.setVisibility(View.GONE);
             rcv_listChat.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onResume() {
+
         super.onResume();
         getList();
     }
