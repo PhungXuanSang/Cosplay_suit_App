@@ -63,8 +63,8 @@ public class Adapter_Shop_SanPham1 extends RecyclerView.Adapter<RecyclerView.Vie
         Adapter_Shop_SanPham1.ItemViewHolder viewHolder = (Adapter_Shop_SanPham1.ItemViewHolder) holder;
         viewHolder.tv_nameSp.setText(sanPham.getNameproduct());
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        viewHolder.tv_gia.setText(decimalFormat.format(sanPham.getPrice())+"đ");
-        viewHolder.tv_gia_gachchan.setText(sanPham.getPrice()*2 +"đ");
+        viewHolder.tv_gia.setText(decimalFormat.format(sanPham.getPrice())+"vnđ");
+        viewHolder.tv_gia_gachchan.setText(sanPham.getPrice()*2 +"vnđ");
         viewHolder.tv_gia_gachchan.setPaintFlags(viewHolder.tv_gia_gachchan.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
             ItemImageDTO firstImage = sanPham.getListImage().get(0);

@@ -145,10 +145,11 @@ public class Fragment_Shop_Shop extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        id_bg_load.setVisibility(View.GONE);
+
                         id_recyclerShop1.setAdapter(adapterShopSanPham1);
                         id_recyclerShop3.setAdapter(adapterShopSanPham3);
                         id_recyclerShop2.setAdapter(adapterShopSanPham2);
+                        id_bg_load.setVisibility(View.GONE);
                         id_recyclerShop3.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                             @Override
                             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
