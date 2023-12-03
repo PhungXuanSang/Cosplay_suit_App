@@ -67,7 +67,7 @@ public class ProByCatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         viewHolder.tv_nameProByCat.setText(sanPham.getNameproduct());
 
-        viewHolder.tv_priceProByCat.setText(decimalFormat.format(sanPham.getPrice())+"đ");
+        viewHolder.tv_priceProByCat.setText(decimalFormat.format(sanPham.getPrice())+"vnđ");
 
 
         if (sanPham.getAvgStars() != -1) {

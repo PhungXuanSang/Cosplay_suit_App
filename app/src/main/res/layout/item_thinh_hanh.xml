@@ -35,18 +35,20 @@
             app:layout_constraintTop_toBottomOf="@id/tv_name_sanpham"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:textColor="#ff0000"
-                android:textSize="14dp"
-                android:text="₫"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textColor="#ff0000"
-                android:layout_marginLeft="1dp"
+
                 android:textSize="16dp"
                 android:id="@+id/tv_price_sanpham"
                 android:text="1.000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginLeft="1dp"
+                android:textColor="#ff0000"
+                android:textSize="14dp"
+                android:text="vn₫"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

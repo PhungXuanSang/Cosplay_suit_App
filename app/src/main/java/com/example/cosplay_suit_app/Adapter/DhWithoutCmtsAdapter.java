@@ -53,7 +53,7 @@ public class DhWithoutCmtsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         viewHolder.tv_nameShop.setText(itemDoneDTO.getProDoneDTO().getShop().getNameshop());
         viewHolder.tv_nameDone.setText(itemDoneDTO.getProDoneDTO().getNameproduct());
-        viewHolder.tv_gia.setText(decimalFormat.format(itemDoneDTO.getProDoneDTO().getPrice())+"đ");
+        viewHolder.tv_gia.setText(decimalFormat.format(itemDoneDTO.getProDoneDTO().getPrice())+"vnđ");
         if (itemDoneDTO.getProDoneDTO().getListImage() != null && !itemDoneDTO.getProDoneDTO().getListImage().isEmpty()) {
             ItemImageDTO firstImage = itemDoneDTO.getProDoneDTO().getListImage().get(0);
             imageUrl = firstImage.getImage();

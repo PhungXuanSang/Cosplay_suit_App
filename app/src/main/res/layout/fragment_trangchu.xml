@@ -16,19 +16,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageView5"
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/image_slider"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:background="@drawable/bg4" />
-
+                android:layout_height="180dp"
+                app:iss_auto_cycle="true"
+                app:iss_period="1000"
+                app:iss_delay="1000"
+                app:iss_error_image="@drawable/error"
+                app:iss_text_align="CENTER"/>
             <ImageView
                 android:id="@+id/ic_giohang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/giohang" />
+                android:src="@drawable/ic_cart" />
 
             <ImageView
                 android:id="@+id/ic_taikhoan"
@@ -38,13 +41,18 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/baseline_account_circle_24" />
-
+            <TextView
+                android:id="@+id/tv_phu"
+                android:layout_marginTop="140dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <androidx.cardview.widget.CardView
                 android:id="@+id/cartsearch"
                 android:layout_width="280dp"
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="110dp"
+                android:layout_below="@id/tv_phu"
                 app:cardCornerRadius="10dp">
 
                 <SearchView

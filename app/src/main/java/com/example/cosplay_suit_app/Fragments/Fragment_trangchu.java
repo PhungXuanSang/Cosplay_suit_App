@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.CartOrderActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
@@ -58,6 +61,7 @@ public class Fragment_trangchu extends Fragment {
     CategoryAdapter categoryAdapter;
 
     RecyclerView rcv_trending;
+    ImageSlider imgShow;
     Adapter_TrenddingProduct adapterTrenddingProduct;
     long duration;
     long startTime = System.currentTimeMillis();
@@ -78,6 +82,17 @@ public class Fragment_trangchu extends Fragment {
         img_giohang = viewok.findViewById(R.id.ic_giohang);
         rcv_cat = viewok.findViewById(R.id.rcv_cat);
         rcv_trending = viewok.findViewById(R.id.rcv_trending);
+        imgShow = viewok.findViewById(R.id.image_slider);
+
+        ArrayList<SlideModel> models = new ArrayList<>();
+//        models.add(new SlideModel(R.drawable.bg4,null));
+        models.add(new SlideModel(R.drawable.banner1,null));
+        models.add(new SlideModel(R.drawable.banner2,null));
+        models.add(new SlideModel(R.drawable.banner3,null));
+        models.add(new SlideModel(R.drawable.banner4,null));
+        models.add(new SlideModel(R.drawable.banner5,null));
+
+        imgShow.setImageList(models, ScaleTypes.CENTER_CROP);
         img_giohang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
