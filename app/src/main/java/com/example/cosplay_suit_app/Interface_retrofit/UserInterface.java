@@ -1,6 +1,7 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.LoginUser;
+import com.example.cosplay_suit_app.DTO.Profile1_DTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.SignUpUser;
@@ -43,10 +44,8 @@ public interface UserInterface {
     @GET("profile/{id_user}")
     Call<ProfileDTO> getUsere(@Path("id_user") String id_user);
 
-    @PUT("uprofile/{id_user}")
-    Call<ProfileDTO> updateUserField(
-            @Path("id_user") ProfileDTO userId
-    );
+    @PUT("uprofile/{id}")
+    Call<Profile1_DTO> updateUserField(@Path("id") String id_user, @Body Profile1_DTO updatedProfile);
 
     @POST("postprofile")
     Call<ProfileDTO> postUserField(@Body ProfileDTO dto);

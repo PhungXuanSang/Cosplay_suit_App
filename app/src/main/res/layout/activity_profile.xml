@@ -27,12 +27,16 @@
             android:layout_height="24dp"
             android:src="@drawable/ic_fixx"
             android:layout_marginStart="8dp"/>
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sđt:"
+            android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/id_Phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SĐT nhận hàng:"
+            android:text=""
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
@@ -49,12 +53,16 @@
             android:layout_marginStart="8dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_fixx"/>
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/id_Email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email:"
+            android:text=""
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
@@ -73,10 +81,15 @@
             android:src="@drawable/ic_fixx"
 />
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên:"
+            android:layout_marginStart="8dp"/>
+        <TextView
             android:id="@+id/id_Fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fullname:"
+            android:text=""
             android:layout_marginStart="8dp"/>
     </LinearLayout>
     <!-- role -->
@@ -93,13 +106,17 @@
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_fixx"
 />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ:"
+            android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/id_andress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Địa chỉ:"
+            android:text=""
             />
     </LinearLayout>
 
