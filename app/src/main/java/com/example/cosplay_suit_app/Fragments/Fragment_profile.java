@@ -69,7 +69,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Fragment_profile extends Fragment {
     static String url = API.URL;
     static final String BASE_URL = url +"/user/api/";
-    private TextView tv_fullname,tv_qlsp, tv_dky_shop, tv_donhangmua;
+    private TextView tv_fullname, tv_dky_shop, tv_donhangmua;
 
     private ImageView img_profile;
     private Button btn_login_profile;
@@ -128,8 +128,6 @@ public class Fragment_profile extends Fragment {
         img_profile = view.findViewById(R.id.img_profile);
         tv_donhangmua = view.findViewById(R.id.donhangmua);
         appCompatButton = view.findViewById(R.id.btn_login_profile);
-        tv_qlsp = view.findViewById(R.id.tvQlsp);
-        View view1 = view.findViewById(R.id.ivView);
         View view2 = view.findViewById(R.id.idview2);
         relative_newpass = view.findViewById(R.id.relative_newpass);
         idview5 = view.findViewById(R.id.idview5);
@@ -149,14 +147,6 @@ public class Fragment_profile extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Shopcuatoi_Activity.class);
-                startActivity(intent);
-            }
-        });
-
-        tv_qlsp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), QlspActivity.class);
                 startActivity(intent);
             }
         });
@@ -213,8 +203,6 @@ public class Fragment_profile extends Fragment {
             appCompatButton.setText("Sign Out");
             if (Objects.equals(role, "User")){
                 rll_shopcuatoi.setVisibility(View.GONE);
-                tv_qlsp.setVisibility(View.GONE);
-                view1.setVisibility(View.GONE);
             }else {
                 rlRole.setVisibility(View.GONE);
                 view2.setVisibility(View.GONE);
@@ -234,8 +222,6 @@ public class Fragment_profile extends Fragment {
         } else {
             appCompatButton.setText("Sign In");
             rll_shopcuatoi.setVisibility(View.GONE);
-            tv_qlsp.setVisibility(View.GONE);
-            view1.setVisibility(View.GONE);
 
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -87,7 +87,8 @@ public class AddProductActivity extends AppCompatActivity {
      List<DTO_properties> selectedProp;
 
     PropAdapter propAdapter;
-   int sold = 0;
+    boolean chklist = false;
+   int sold = 0,price=0;
 
     ItemImageDTO imageDTO = new ItemImageDTO();
 
@@ -157,6 +158,25 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     private void onClick() {
+
+        binding.ivdonglist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!chklist){
+                    binding.lllistSize.setVisibility(View.GONE);
+
+                    binding.ivdonglist.setImageResource(R.drawable.baseline_arrow_drop_up_24);
+                    chklist = true;
+                    Log.d("TAG", "onClick: "+chklist);
+                }else {
+                    binding.lllistSize.setVisibility(View.VISIBLE);
+                    binding.ivdonglist.setImageResource(R.drawable.baseline_arrow_drop_down_24);
+
+                    chklist = false;
+                    Log.d("TAG", "onClick: "+chklist);
+                }
+            }
+        });
 
         binding.ivAddProductnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,8 +275,13 @@ public class AddProductActivity extends AppCompatActivity {
         binding.btnRudProductAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (selectedImageList.isEmpty()){
+                    binding.tvNote.setText("Phần ảnh không được phép để trống.");
+                    binding.tvNote.setVisibility(View.VISIBLE);
+                }else {
+                    callapiRes();
+                }
 
-                callapiRes();
 
             }
         });
@@ -264,7 +289,17 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                callapiRes();
+                if (selectedImageList.isEmpty()){
+
+                    binding.tvNote.setText("Phần ảnh không được phép để trống.");
+                    binding.tvNote.setVisibility(View.VISIBLE);
+                }else if (selectedProp.isEmpty()){
+                    binding.tvNote.setText("Sản phẩm phải có ít nhất 1 kích thước.");
+                    binding.tvNote.setVisibility(View.VISIBLE);
+                }else {
+                    binding.tvNote.setVisibility(View.GONE);
+                    callapiRes();
+                }
 
             }
         });
@@ -274,6 +309,8 @@ public class AddProductActivity extends AppCompatActivity {
     private void callapiRes() {
 
         DTO_SanPham dtoSanPham = new DTO_SanPham();
+
+
         dtoSanPham.setId_shop(idshop);
         dtoSanPham.setNameproduct(Objects.requireNonNull(binding.edtRudProductName.getText()).toString());
         dtoSanPham.setId_category(categoryDTO.getId());
@@ -281,29 +318,21 @@ public class AddProductActivity extends AppCompatActivity {
         dtoSanPham.setListProp(selectedProp);
 
         int i =0;
-        int inputText;
         for (DTO_properties item : selectedProp) {
 
             i += item.getAmount();
         }
         if (selectedProp.size() != 0) {
             dtoSanPham.setAmount(i);
-//            binding.edtRudProductAmount.setText(String.valueOf(i));
-//            total = i;
-//            binding.edtRudProductAmount.setEnabled(false);
-        } else {
-            binding.edtRudProductAmount.setEnabled(true);
-            dtoSanPham.setAmount(Integer.parseInt(Objects.requireNonNull(binding.edtRudProductAmount.getText()).toString()));
         }
-//        dtoSanPham.setAmount(total);
         dtoSanPham.setStatus(true);
         dtoSanPham.setSold(sold);
-        dtoSanPham.setPrice(Integer.parseInt(Objects.requireNonNull(binding.edtRudProductPrice.getText()).toString()));
+        dtoSanPham.setPrice(price);
+//        dtoSanPham.setPrice(Integer.parseInt(Objects.requireNonNull(binding.edtRudProductPrice.getText()).toString()));
         dtoSanPham.setDescription(Objects.requireNonNull(binding.edtRudProductDescription.getText()).toString());
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
         dtoSanPham.setTime_product(String.valueOf(currentTime));
-
         callAddProduct(dtoSanPham);
 
     }
@@ -370,14 +399,38 @@ public class AddProductActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                String priceStr = editable.toString();
+
+                if (!priceStr.isEmpty()) {
+                     price = Integer.parseInt(priceStr);
+
+                    if (price < 1) {
+                        price = 1;
+                    } else if (price > 99999999) {
+                        price = 99999999;
+                    }
+
+                    if (price != parseLongSafely(priceStr)) {
+                        binding.edtRudProductPrice.setText(String.valueOf(price));
+                        binding.edtRudProductPrice.setSelection(binding.edtRudProductPrice.getText().length());
+                    }
+                }
 
             }
         });
+
         check();
     }
-
+    private long parseLongSafely(String number) {
+        try {
+            return Long.parseLong(number);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
 
     private void check() {
+
 
         if (binding.edtRudProductName.getText().toString().trim().isEmpty() || binding.edtRudProductAmount.getText().toString().trim().isEmpty()
                 || binding.edtRudProductPrice.getText().toString().trim().isEmpty() || binding.edtRudProductDescription.getText().toString().trim().isEmpty()) {
@@ -386,13 +439,14 @@ public class AddProductActivity extends AppCompatActivity {
             binding.btnRudProductAdd.setAlpha(0.3f);
             binding.ivProductToolbarAdd.setEnabled(false);
             binding.ivProductToolbarAdd.setAlpha(0.3f);
-
+            binding.edtRudProductAmount.setEnabled(false);
         } else {
             binding.tvNote.setVisibility(View.GONE);
             binding.btnRudProductAdd.setEnabled(true);
             binding.btnRudProductAdd.setAlpha(1.0f);
             binding.ivProductToolbarAdd.setEnabled(true);
             binding.ivProductToolbarAdd.setAlpha(1.0f);
+            binding.edtRudProductAmount.setEnabled(false);
         }
     }
     // Phương thức hỗ trợ để chuyển đổi InputStream thành mảng byte
@@ -544,6 +598,7 @@ public class AddProductActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
+
         Log.d("TAG1", "openImagePicker: " + selectedImageList);
     }
 

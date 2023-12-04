@@ -1,55 +1,56 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cosplay_suit_app.Activity.DetailProductActivity;
+import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
 
 import java.util.List;
 
-public class QlspAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    List<DTO_SanPham> mlist;
-    Context context;
+public class QlspAdapter extends RecyclerView.Adapter<QlspAdapter.ItemViewHolder> {
+    private List<DTO_SanPham> mlist;
+    private Context context;
+    private Onclick onclick;
 
-    Onclick onclickStatus;
-
-    public QlspAdapter(List<DTO_SanPham> mlist, Context context, Onclick onclickStatus) {
+    public QlspAdapter(List<DTO_SanPham> mlist, Context context) {
         this.mlist = mlist;
         this.context = context;
-        this.onclickStatus = onclickStatus;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_qlsp, parent, false);
         return new ItemViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         DTO_SanPham sanPham = mlist.get(position);
-        ItemViewHolder viewHolder = (ItemViewHolder) holder;
 
         if (sanPham.getSize() == null) {
-            viewHolder.tvName.setText(sanPham.getNameproduct());
+            holder.tvName.setText(sanPham.getNameproduct());
         } else {
-            viewHolder.tvName.setText(sanPham.getNameproduct() + "--" + sanPham.getSize());
+            holder.tvName.setText(sanPham.getNameproduct() + "--" + sanPham.getSize());
         }
-        viewHolder.tvAmount.setText(String.valueOf(sanPham.getAmount()));
-        viewHolder.tvPrice.setText(sanPham.getPrice() + "");
+        holder.tvAmount.setText(String.valueOf(sanPham.getAmount()));
+        holder.tvPrice.setText(String.valueOf(sanPham.getPrice()));
 
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
             ItemImageDTO firstImage = sanPham.getListImage().get(0);
@@ -60,50 +61,38 @@ public class QlspAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .error(R.drawable.image)
                     .placeholder(R.drawable.image)
                     .centerCrop()
-                    .into(viewHolder.img_AnhSp);
+                    .into(holder.img_AnhSp);
         }
 
-        viewHolder.tvHuy.setOnClickListener(new View.OnClickListener() {
+        holder.lllayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewHolder.llButtom.setVisibility(View.GONE);
-            }
-        });
-
-
-        if (sanPham.isStatus()) {
-            viewHolder.tvStatus.setText("Ẩn");
-        } else {
-            viewHolder.tvStatus.setText("Hiện");
-        }
-
-        viewHolder.tvStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (sanPham.isStatus()) {
-                    viewHolder.tvStatus.setText("Hiện");
-                    sanPham.setStatus(false);
-                    Toast.makeText(context, "Sản phẩm '"+sanPham.getNameproduct()+"' đã bị ẩn đi.", Toast.LENGTH_SHORT).show();
-                } else {
-                    viewHolder.tvStatus.setText("Ẩn");
-                    Toast.makeText(context, "Sản phẩm '"+sanPham.getNameproduct()+"' đã được hiển thị.", Toast.LENGTH_SHORT).show();
-                    sanPham.setStatus(true);
-                }
-
-                viewHolder.llButtom.setVisibility(View.GONE);
-                onclickStatus.status(sanPham, sanPham.getId());
+                Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_click_animation);
+                holder.itemView.startAnimation(animation);
+                onclick.onClickItem(sanPham);
+                Intent intent = new Intent(context, DetailProductActivity.class);
+                intent.putExtra("idProduct", sanPham.getId());
+                context.startActivity(intent);
             }
         });
     }
+
+    public void clearlistProduct(){
+            int itemCount = mlist.size();
+mlist.clear();
+notifyItemRangeRemoved(0,itemCount);
+
+    }
+
     @Override
     public int getItemCount() {
         return mlist.size();
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tvPrice, tvAmount, tvName, tvStatus, tvHuy;
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+        TextView tvPrice, tvAmount, tvName;
         ImageView img_AnhSp;
-        LinearLayout lllayout, llButtom;
+        LinearLayout lllayout;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -112,15 +101,11 @@ public class QlspAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             tvPrice = view.findViewById(R.id.tvListQlspPrice);
             img_AnhSp = view.findViewById(R.id.ivListQlspImage);
             tvAmount = view.findViewById(R.id.tvListQlspAmount);
-            tvStatus = view.findViewById(R.id.tvStutus);
-            tvHuy = view.findViewById(R.id.tvHuy);
             lllayout = view.findViewById(R.id.itemlistproduct);
-            llButtom = view.findViewById(R.id.llButtom);
         }
     }
-
     public interface Onclick {
-        void status(DTO_SanPham dtoSanPham, String idproduct);
+        void onClickItem(DTO_SanPham dtoSanPham);
     }
 
 }

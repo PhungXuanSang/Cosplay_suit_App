@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp"
+    android:id="@+id/cvLocCategory"
     android:layout_margin="10dp">
     <RelativeLayout
         android:layout_width="match_parent"

@@ -80,7 +80,7 @@ public class Adapter_XemAllspdamua extends RecyclerView.Adapter<RecyclerView.Vie
         viewHoldel.imggiohang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dialog_cartorder.dialogaddcart(context,id ,billDetailDTO.getDtoSanPham().getId(),dialog, billDetailDTO.getDtoSanPham().getPrice(),
+                Dialog_cartorder.dialogaddcart(context,id ,billDetailDTO.getDtoSanPham().getId(),dialog, (int) billDetailDTO.getDtoSanPham().getPrice(),
                 billDetailDTO.getDtoSanPham().getAmount(), listsizeJson, listImage,  arrayList, adapterProperties);
             }
         });
