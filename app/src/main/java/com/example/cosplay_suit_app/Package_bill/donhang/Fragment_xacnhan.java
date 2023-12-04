@@ -57,7 +57,13 @@ public class Fragment_xacnhan extends Fragment {
         } else {
             Toast.makeText(getContext(), "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
         }
-
+        if (list.isEmpty()) {
+            noProductMessage.setVisibility(LinearLayout.VISIBLE);
+            recyclerView.setVisibility(ListView.GONE);
+        } else {
+            noProductMessage.setVisibility(LinearLayout.GONE);
+            recyclerView.setVisibility(ListView.VISIBLE);
+        }
         return viewok;
     }
 

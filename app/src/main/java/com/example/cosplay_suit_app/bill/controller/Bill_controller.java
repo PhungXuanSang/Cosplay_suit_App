@@ -7,6 +7,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
@@ -18,6 +19,7 @@ import com.example.cosplay_suit_app.Adapter.Adapter_dskhach;
 import com.example.cosplay_suit_app.Adapter.Adapter_mualai;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
+import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.DTO.DTO_idbill;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
@@ -27,6 +29,7 @@ import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
+import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.Thanhtoan_interface;
 import com.example.cosplay_suit_app.Package_bill.Adapter.Adapter_Bill;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
@@ -48,6 +51,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Bill_controller {
     private static final String TAG = "addbill";
     static String url = API.URL;
+    static final String BASE_URL_properties = url + "/product/";
     static final String BASE_URL_CARTORDER = url + "/bill/";
     static final String BASE_URL_Thanhtoan = url + "/thanhtoan/";
     Context mContext;
@@ -935,10 +939,58 @@ public class Bill_controller {
             }
         });
     }
+    public void callApiProduct(String id, Apicheckshop apicheckshop) {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_properties)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+
+        // tạo đối tượng
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(id);
+        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
+                if (apicheckshop != null) {
+                    if (response.isSuccessful()) {
+                        apicheckshop.onApigetshop(response.body());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
+
+    }
+
+
     public interface ApiResponseCallback {
         void onApiGetidaddress(ProfileDTO profileDTO);
     }
     public interface ApiResponseCallbackproduct {
         void onApiGetcheckproduct(DTOcheck_productshop profileDTO);
+    }
+    public interface Apicheckshop {
+        void onApigetshop(List<DTO_SanPham> profileDTO);
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imgbanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/banerquangcao"
+        android:layout_marginTop="20dp"
+        android:layout_centerInParent="true"/>
+
+    <ImageView
+        android:id="@+id/Xbanne"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/xxbanner"
+        android:layout_alignLeft="@id/imgbanner"
+        android:layout_marginLeft="250dp"
+        android:layout_alignBottom="@id/imgbanner"
+        android:layout_marginBottom="250dp"/>
+</RelativeLayout>

@@ -40,6 +40,7 @@ public class Fragment_dahuy extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewok = inflater.inflate(R.layout.fragment_dahuy, container, false);
         recyclerView = viewok.findViewById(R.id.rcv_danhgia);
+        noProductMessage = viewok.findViewById(R.id.noProductMessage);
         //danh sách sản phẩm
         list = new ArrayList<>();
         arrayAdapter = new Adapter_Bill(list, getContext(), checkactivity, checkstatus);

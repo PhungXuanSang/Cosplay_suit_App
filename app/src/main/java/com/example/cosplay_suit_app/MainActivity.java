@@ -8,12 +8,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.Fragments.Fragment_chat;
@@ -25,12 +34,13 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
+    Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkAndRequestNotificationPermission();
         setContentView(R.layout.activity_main);
-
+        dialog = new Dialog(this);
         fragmentManager = getSupportFragmentManager();
         Fragment_trangchu fragmentTrangchu = new Fragment_trangchu();
         fragmentManager.beginTransaction().add(R.id.id_frame, fragmentTrangchu).commit();
@@ -53,6 +63,39 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialogbanner);
+
+                Window window = dialog.getWindow();
+                WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+                ImageView xbanner = dialog.findViewById(R.id.Xbanne);
+                xbanner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+                // Chiều rộng full màn hình
+                layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+                // Chiều cao theo dialog màn hình
+                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                // Đặt vị trí của dialog ở phía dưới cùng của màn hình
+                layoutParams.gravity = Gravity.CENTER;
+
+                window.setAttributes(layoutParams);
+                window.setBackgroundDrawableResource(android.R.color.transparent);
+
+                dialog.show();
+            }
+        }, 3000);
     }
 
     public void ralaceFragment(Fragment fragment){
@@ -106,5 +149,4 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
-
 }

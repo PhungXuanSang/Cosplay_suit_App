@@ -44,7 +44,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="5dp"
         android:layout_margin="2dp"
         android:background="#F4F4F4">
         <RelativeLayout
@@ -53,8 +53,8 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="100dp"
                 android:layout_height="120dp"
-                app:cardCornerRadius="10dp"
-                android:layout_margin="15dp">
+                app:cardCornerRadius="5dp"
+                android:layout_margin="10dp">
                 <ImageView
                     android:id="@+id/img_product"
                     android:layout_width="match_parent"
@@ -107,7 +107,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="5dp"
         android:layout_margin="2dp"
         android:background="#F4F4F4">
         <RelativeLayout
@@ -121,7 +121,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="Thành tiền x1: "
+                android:text="Tổng tiền: "
                 android:textSize="19dp"
                 android:textStyle="bold" />
 
@@ -152,8 +152,9 @@
                 android:text=" Xác nhận Status "
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="15dp"
+                android:textSize="14dp"
                 android:textStyle="bold"
+                android:padding="5dp"
                 android:layout_alignParentLeft="true"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_mualai"
@@ -170,8 +171,9 @@
                 android:text="Mua lại"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="15dp"
+                android:textSize="14dp"
                 android:textStyle="bold"
+                android:padding="5dp"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.Activity.Chitietbill_Activity;
+import com.example.cosplay_suit_app.Activity.ShowShopActivity;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
+import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
@@ -65,6 +67,24 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     .centerCrop()
                     .into(holder1.imgproduct);
         }
+        holder1.tv_nameshop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bill_controller billController = new Bill_controller(context);
+                billController.callApiProduct(billDetailDTO.getDtoBill().getShop().getId(), new Bill_controller.Apicheckshop() {
+                    @Override
+                    public void onApigetshop(List<DTO_SanPham> profileDTO) {
+                        String soluongSPShop = String.valueOf(profileDTO.size());
+                        Intent intent = new Intent(context, ShowShopActivity.class);
+                        intent.putExtra("id_shop", billDetailDTO.getDtoBill().getShop().getId());
+                        intent.putExtra("name_shop", billDetailDTO.getDtoBill().getShop().getNameshop());
+                        intent.putExtra("slsp_shop", soluongSPShop);
+                        intent.putExtra("id_user", billDetailDTO.getDtoBill().getShop().getId_user());
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        });
         holder1.tvnamepro.setText(billDetailDTO.getDtoSanPham().getNameproduct());
         holder1.tvprice.setText(""+decimalFormat.format(billDetailDTO.getDtoSanPham().getPrice()) + " VND");
         holder1.tvtongbill.setText(""+decimalFormat.format(billDetailDTO.getDtoBill().getTotalPayment()) + " VND");

@@ -1,6 +1,7 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.Chitietsanpham;
+import com.example.cosplay_suit_app.Activity.ShowShopActivity;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
+import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -85,6 +90,24 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
         ShopCartorderDTO shop = list.get(position);
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
         viewHolder.tvnameshop.setText(shop.getName_shop());
+        viewHolder.tvnameshop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bill_controller billController = new Bill_controller(context);
+                billController.callApiProduct(shop.getId(), new Bill_controller.Apicheckshop() {
+                    @Override
+                    public void onApigetshop(List<DTO_SanPham> profileDTO) {
+                        String soluongSPShop = String.valueOf(profileDTO.size());
+                        Intent intent = new Intent(context, ShowShopActivity.class);
+                        intent.putExtra("id_shop", shop.getId());
+                        intent.putExtra("name_shop", shop.getName_shop());
+                        intent.putExtra("slsp_shop", soluongSPShop);
+                        intent.putExtra("id_user", shop.getId_user());
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        });
 
         List<CartOrderDTO> ordersForShop = orderMap.get(shop.getId());
         arrayAdapter = new AdapterCartorder(ordersForShop, context, (AdapterCartorder.OnclickCheck) context);
