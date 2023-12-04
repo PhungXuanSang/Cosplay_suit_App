@@ -119,26 +119,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:background="#A89494" />
-    <TextView
-        android:id="@+id/tvQlsp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quản lý sản phẩm"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity=""
-        android:textSize="24sp"
-        android:textStyle="bold" />
 
-    <View
-        android:id="@+id/ivView"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
-        android:background="#A89494" />
+
 
     <RelativeLayout
         android:id="@+id/rlRole"

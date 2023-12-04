@@ -17,6 +17,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface SanPhamInterface {
 
@@ -59,4 +60,9 @@ public interface SanPhamInterface {
     @GET("getlistsptrending")
     Call<List<DTO_SanPham>> GetProductLimit();
 
+    @GET("searchProduct/{id_shop}")
+    Call<List<DTO_SanPham>> searchProduct (@Path("id_shop") String tb_user, @Query("nameproduct") String search);
+
+    @GET("getproductCategory/{id_shop}/{id_category}")
+    Call<List<DTO_SanPham>> GetProductCtegory (@Path("id_shop") String tb_user ,@Path("id_category") String id_category );
 }
