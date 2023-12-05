@@ -3,6 +3,7 @@ package com.example.cosplay_suit_app.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +17,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.SeenVoucherActivity;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_inbuynow;
 import com.example.cosplay_suit_app.DTO.DTO_voucher;
@@ -40,7 +43,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<DTO_voucher> mlist;
     Context context;
     String id;
@@ -48,6 +51,7 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
     VoucherInterface voucherInterface;
     static String url = API.URL;
     static final String BASE_URL = url + "/Voucher/";
+
 
     public Adapter_voucher(List<DTO_voucher> mlist, Context context) {
         this.mlist = mlist;
@@ -66,13 +70,20 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DTO_voucher voucher = mlist.get(position);
         Adapter_voucher.ItemViewHolder viewHolder = (Adapter_voucher.ItemViewHolder) holder;
-         voucher.getId();
+        voucher.getId();
         DTO_voucher dtoVoucher = new DTO_voucher();
 //            viewHolder.amount.setText("Số lượng: "+voucher.getAmount());
-            viewHolder.content.setText(voucher.getContent());
-            viewHolder.discount.setText("Giảm giá: "+voucher.getDiscount()+"%");
-            viewHolder.amount.setText("Số lượng:"+voucher.getAmount());
-
+        viewHolder.content.setText(voucher.getContent());
+        viewHolder.discount.setText("Giảm giá: " + voucher.getDiscount() + "%");
+        viewHolder.amount.setText("Số lượng:" + voucher.getAmount());
+        viewHolder.id_gui.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, SeenVoucherActivity.class);
+                intent.putExtra("id_voucher",dtoVoucher.getId());
+                context.startActivity(intent);
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,26 +172,30 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
         });
 
 
-
     }
 
     @Override
     public int getItemCount() {
         return mlist.size();
     }
-    public class ItemViewHolder extends RecyclerView.ViewHolder{
 
-        TextView amount,content, discount;
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
+
+        TextView amount, content, discount;
         ImageView edit, delete;
+        ConstraintLayout id_gui;
+
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-          amount=itemView.findViewById(R.id.amount);
-          content = itemView.findViewById(R.id.content);
-          discount = itemView.findViewById(R.id.discount);
+            amount = itemView.findViewById(R.id.amount);
+            content = itemView.findViewById(R.id.content);
+            discount = itemView.findViewById(R.id.discount);
             edit = itemView.findViewById(R.id.editButton);
             delete = itemView.findViewById(R.id.deleteButton);
+            id_gui = itemView.findViewById(R.id.id_gui);
         }
     }
+
     public void callUpdateProduct(DTO_voucher dtoVoucher) {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
@@ -189,20 +204,22 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 .build();
 
         voucherInterface = retrofit.create(VoucherInterface.class);
-        Call<DTO_voucher> objCall = voucherInterface.updateVoucherByShop(dtoVoucher.getId(),dtoVoucher);
+        Call<DTO_voucher> objCall = voucherInterface.updateVoucherByShop(dtoVoucher.getId(), dtoVoucher);
 
         objCall.enqueue(new Callback<DTO_voucher>() {
             @Override
             public void onResponse(@NonNull Call<DTO_voucher> call, Response<DTO_voucher> response) {
                 // Xử lý sau khi cập nhật thành công
-                Log.d("cc", "onResponse: "+response.message());
+                Log.d("cc", "onResponse: " + response.message());
             }
+
             @Override
             public void onFailure(@NonNull Call<DTO_voucher> call, Throwable t) {
-                Log.d("cc", "onFailure: "+t.getLocalizedMessage());
+                Log.d("cc", "onFailure: " + t.getLocalizedMessage());
             }
         });
     }
+
     public void callDeleteProduct(String id) {
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
@@ -217,15 +234,17 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onResponse(@NonNull Call<DTO_voucher> call, Response<DTO_voucher> response) {
                 // Xử lý sau khi xóa thành công
-                Log.d("cc", "onResponse: "+response.message());
+                Log.d("cc", "onResponse: " + response.message());
             }
 
             @Override
             public void onFailure(@NonNull Call<DTO_voucher> call, Throwable t) {
                 // Xử lý khi có lỗi xảy ra
-                Log.d("cc", "onFailure: "+t.getLocalizedMessage());
+                Log.d("cc", "onFailure: " + t.getLocalizedMessage());
             }
         });
     }
+
+
 
 }

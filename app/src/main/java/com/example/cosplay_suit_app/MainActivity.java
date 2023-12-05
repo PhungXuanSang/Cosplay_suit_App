@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
                 dialog.show();
             }
-        }, 3000);
+        }, 1000);
     }
 
     public void ralaceFragment(Fragment fragment){
