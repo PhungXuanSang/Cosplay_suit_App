@@ -5,6 +5,7 @@ import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.Favorite;
+import com.example.cosplay_suit_app.DTO.NameProDTO;
 import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.DTO.User;
 
@@ -65,4 +66,9 @@ public interface SanPhamInterface {
 
     @GET("getproductCategory/{id_shop}/{id_category}")
     Call<List<DTO_SanPham>> GetProductCtegory (@Path("id_shop") String tb_user ,@Path("id_category") String id_category );
+
+    @GET("getlistNameSP")
+    Call<NameProDTO> getListNamePro();
+    @GET("getlistsp?")
+    Call<List<DTO_SanPham>> getProdcutByName(@Query("nameproduct")String name);
 }

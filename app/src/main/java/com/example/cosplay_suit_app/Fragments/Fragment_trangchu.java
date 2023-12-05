@@ -1,5 +1,7 @@
 package com.example.cosplay_suit_app.Fragments;
 
+
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,12 +23,13 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.CartOrderActivity;
+
+import com.example.cosplay_suit_app.Activity.SearchActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_TrenddingProduct;
 import com.example.cosplay_suit_app.Adapter.CategoryAdapter;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
-import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.Interface_retrofit.CategoryInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
@@ -65,6 +69,9 @@ public class Fragment_trangchu extends Fragment {
     Adapter_TrenddingProduct adapterTrenddingProduct;
     long duration;
     long startTime = System.currentTimeMillis();
+    SearchView searchView;
+    CardView cardS;
+    ArrayList<String> yourSuggestionsList = new ArrayList<>();
     public Fragment_trangchu() {
 
     }
@@ -83,6 +90,15 @@ public class Fragment_trangchu extends Fragment {
         rcv_cat = viewok.findViewById(R.id.rcv_cat);
         rcv_trending = viewok.findViewById(R.id.rcv_trending);
         imgShow = viewok.findViewById(R.id.image_slider);
+
+        cardS = viewok.findViewById(R.id.cartsearch);
+
+        cardS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), SearchActivity.class));
+            }
+        });
 
         ArrayList<SlideModel> models = new ArrayList<>();
 //        models.add(new SlideModel(R.drawable.bg4,null));
@@ -121,7 +137,6 @@ public class Fragment_trangchu extends Fragment {
 
         return viewok;
     }
-
 
 
 
