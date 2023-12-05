@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -89,6 +90,7 @@ public class AddProductActivity extends AppCompatActivity {
     PropAdapter propAdapter;
     boolean chklist = false;
    int sold = 0,price=0;
+    private ArrayList<Uri> uriList = new ArrayList<>();
 
     ItemImageDTO imageDTO = new ItemImageDTO();
 
@@ -477,8 +479,9 @@ public class AddProductActivity extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(AddProductActivity.this, QlspActivity.class));
-                    finishAffinity();
+//                    startActivity(new Intent(AddProductActivity.this, QlspActivity.class));
+                    onBackPressed();
+
                 }
             }, displayTime);
 
@@ -576,44 +579,59 @@ public class AddProductActivity extends AppCompatActivity {
             dialog.show();
         }
     }
-    private void showTimedDialog2() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddProductActivity.this);
-        builder.setTitle("Thông báo");
-        builder.setMessage("Thêm sản phẩm không thành công ");
-        final AlertDialog dialog = builder.create();
-
-        final int displayTime = 2000; // Thời gian hiển thị dialog (2 giây)
-        dialog.show(); // Hiển thị dialog
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!AddProductActivity.this.isFinishing() && dialog.isShowing()) {
-                    dialog.dismiss(); // Đóng dialog khi hoạt động vẫn đang hoạt động và dialog đang hiển thị
-                }
-            }
-        }, displayTime);
-    }
 
     private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+//        Intent intent = new Intent(Intent.ACTION_PICK);
+//        intent.setType("image/*");
+//        startActivityForResult(intent, REQUEST_IMAGE_PICK);
+//
+//        Log.d("TAG1", "openImagePicker: " + selectedImageList);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều ảnh
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
-
-        Log.d("TAG1", "openImagePicker: " + selectedImageList);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+//            Uri imageUri = data.getData();
+//
+//            uri = imageUri;
+//            uploadImage();
+//
+//            imageAdapter.notifyDataSetChanged();
+//        }
+//    }
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+        if (data.getData() != null) {
+            // Chọn một ảnh
             Uri imageUri = data.getData();
+            uriList.add(imageUri);
+        } else if (data.getClipData() != null) {
+            // Chọn nhiều ảnh
+            ClipData clipData = data.getClipData();
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                Uri imageUri = clipData.getItemAt(i).getUri();
+                uriList.add(imageUri);
+            }
 
-            uri = imageUri;
-            uploadImage();
-
+            // Gọi phương thức uploadImage() hoặc xử lý các URI ở đây
+            uploadImages(uriList);
+            // Cập nhật RecyclerView hoặc Adapter của bạn nếu cần
             imageAdapter.notifyDataSetChanged();
         }
     }
+}
+
+
+
 
     private byte[] getBytesFromInputStream(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
@@ -625,49 +643,90 @@ public class AddProductActivity extends AppCompatActivity {
         return byteBuffer.toByteArray();
     }
 
-    private void uploadImage() {
-        if (uri != null) {
-            ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+//    private void uploadImage() {
+//        if (uri != null) {
+//            ProgressDialog progressDialog = new ProgressDialog(this);
+//            progressDialog.setTitle("Uploading...");
+//            progressDialog.show();
+//
+//            // Tạo đường dẫn lưu trữ file trong Firebase Storage
+//            StorageReference storageRef = storageReference.child("images/" + UUID.randomUUID().toString() + ".jpg");
+//
+//            // Tải ảnh lên Firebase Storage
+//            storageRef.putFile(uri)
+//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            progressDialog.dismiss();
+//
+//                            // Lấy URL ảnh sau khi tải lên thành công
+//                            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri downloadUri) {
+//                                    // Tạo đối tượng ItemImageDTO với URL ảnh và thêm vào danh sách
+//                                    ItemImageDTO itemImage = new ItemImageDTO(downloadUri.toString());
+//                                    selectedImageList.add(itemImage);
+//                                    imageAdapter.notifyDataSetChanged();
+//                                }
+//                            });
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            progressDialog.dismiss();
+//                            // Xử lý lỗi tải lên ảnh
+//                        }
+//                    })
+//                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                            // Cập nhật tiến trình tải lên (nếu cần)
+//                        }
+//                    });
+//        }
+//    }
+private void uploadImages(List<Uri> uriList) {
+    if (uriList != null && !uriList.isEmpty()) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
 
+        // Tạo đối tượng StorageReference để tham chiếu đến Firebase Storage
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+
+        // Duyệt qua từng URI và tải lên Firebase Storage
+        for (Uri uri : uriList) {
             // Tạo đường dẫn lưu trữ file trong Firebase Storage
-            StorageReference storageRef = storageReference.child("images/" + UUID.randomUUID().toString() + ".jpg");
+            StorageReference imageRef = storageReference.child("images/" + UUID.randomUUID().toString() + ".jpg");
 
             // Tải ảnh lên Firebase Storage
-            storageRef.putFile(uri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
+            imageRef.putFile(uri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Lấy URL ảnh sau khi tải lên thành công
+                        imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                            // Tạo đối tượng ItemImageDTO với URL ảnh và thêm vào danh sách
+                            ItemImageDTO itemImage = new ItemImageDTO(downloadUri.toString());
+                            selectedImageList.add(itemImage);
 
-                            // Lấy URL ảnh sau khi tải lên thành công
-                            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri downloadUri) {
-                                    // Tạo đối tượng ItemImageDTO với URL ảnh và thêm vào danh sách
-                                    ItemImageDTO itemImage = new ItemImageDTO(downloadUri.toString());
-                                    selectedImageList.add(itemImage);
-                                    imageAdapter.notifyDataSetChanged();
-                                }
-                            });
-                        }
+                            // Cập nhật RecyclerView
+                            imageAdapter.notifyDataSetChanged();
+                        });
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            // Xử lý lỗi tải lên ảnh
-                        }
+                    .addOnFailureListener(e -> {
+                        // Xử lý lỗi tải lên ảnh
+                        progressDialog.dismiss();
                     })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            // Cập nhật tiến trình tải lên (nếu cần)
-                        }
+                    .addOnProgressListener(taskSnapshot -> {
+                        // Cập nhật tiến trình tải lên (nếu cần)
                     });
         }
+
+        // Ẩn progressDialog sau khi đã tải lên tất cả ảnh
+        progressDialog.dismiss();
     }
+}
+
 
 
 }

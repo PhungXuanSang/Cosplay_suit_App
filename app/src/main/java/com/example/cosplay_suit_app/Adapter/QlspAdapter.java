@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +16,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.Activity.DetailProductActivity;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.R;
+import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class QlspAdapter extends RecyclerView.Adapter<QlspAdapter.ItemViewHolder> {
     private List<DTO_SanPham> mlist;
     private Context context;
-    private Onclick onclick;
+
 
     public QlspAdapter(List<DTO_SanPham> mlist, Context context) {
         this.mlist = mlist;
         this.context = context;
+
     }
 
     @NonNull
@@ -49,9 +54,10 @@ public class QlspAdapter extends RecyclerView.Adapter<QlspAdapter.ItemViewHolder
         } else {
             holder.tvName.setText(sanPham.getNameproduct() + "--" + sanPham.getSize());
         }
-        holder.tvAmount.setText(String.valueOf(sanPham.getAmount()));
-        holder.tvPrice.setText(String.valueOf(sanPham.getPrice()));
 
+        holder.tvAmount.setText(String.valueOf(sanPham.getAmount()));
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        holder.tvPrice.setText(decimalFormat.format(sanPham.getPrice())+" vnđ");
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
             ItemImageDTO firstImage = sanPham.getListImage().get(0);
             String imageUrl = firstImage.getImage();
@@ -69,9 +75,27 @@ public class QlspAdapter extends RecyclerView.Adapter<QlspAdapter.ItemViewHolder
             public void onClick(View view) {
                 Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_click_animation);
                 holder.itemView.startAnimation(animation);
-                onclick.onClickItem(sanPham);
+
                 Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("idProduct", sanPham.getId());
+                intent.putExtra("id_product", sanPham.getId());
+                intent.putExtra("name", sanPham.getNameproduct());
+                intent.putExtra("price", sanPham.getPrice());
+                intent.putExtra("about", sanPham.getDescription());
+                intent.putExtra("slkho", sanPham.getAmount());
+                intent.putExtra("id_shop",sanPham.getId_shop());
+                intent.putExtra("time_product",sanPham.getTime_product());
+                intent.putExtra("id_category",sanPham.getId_category());
+                intent.putExtra("status",sanPham.isStatus());
+                intent.putExtra("sold",sanPham.getSold());
+                intent.putExtra("dtoSanpham",sanPham);
+                // Chuyển danh sách thành JSON
+                String listImageJson = new Gson().toJson(sanPham.getListImage());
+                // Đặt chuỗi JSON vào Intent
+                intent.putExtra("listImage", listImageJson);
+
+                String listsizeJson = new Gson().toJson(sanPham.getListProp());
+                intent.putExtra("listsize", listsizeJson);
+                Log.d("check", "onClick: " + listsizeJson);
                 context.startActivity(intent);
             }
         });
@@ -103,9 +127,6 @@ notifyItemRangeRemoved(0,itemCount);
             tvAmount = view.findViewById(R.id.tvListQlspAmount);
             lllayout = view.findViewById(R.id.itemlistproduct);
         }
-    }
-    public interface Onclick {
-        void onClickItem(DTO_SanPham dtoSanPham);
     }
 
 }

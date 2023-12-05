@@ -17,4 +17,8 @@ public interface CategoryInterface {
 
     @GET("getlistprobyidcat/{id}")
     Call<List<ProByCatDTO>> getListProByIdCat(@Path("id") String id);
+
+    @GET("getListCat/{id}")
+    Call<CategoryDTO> getListTheloai(@Path("id") String id);
+
 }

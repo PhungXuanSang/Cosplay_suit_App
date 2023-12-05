@@ -19,8 +19,8 @@
             android:id="@+id/ivProductToolbarCancel"
             android:layout_width="?android:attr/actionBarSize"
             android:layout_height="?android:attr/actionBarSize"
-            android:padding="10dp"
-            android:src="@drawable/baseline_close_24" />
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/ic_backprofile" />
 
         <TextView
             android:layout_width="?android:attr/actionBarSize"
@@ -33,11 +33,11 @@
             android:textSize="25dp" />
 
         <ImageView
-            android:id="@+id/ivProductToolbarAdd"
+            android:id="@+id/ivProductToolbarUpdate"
             android:layout_width="?android:attr/actionBarSize"
             android:layout_height="?android:attr/actionBarSize"
-            android:padding="10dp"
-            android:src="@drawable/baseline_done_24" />
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/baseline_update_24" />
 
     </LinearLayout>
 
@@ -67,7 +67,8 @@
                     android:layout_height="60dp"
                     android:layout_marginEnd="15dp"
                     android:background="@color/white"
-                    android:src="@drawable/ic_add_img" />
+                    android:src="@drawable/ic_add_img"
+                    android:enabled="false"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rclvImage"
@@ -81,6 +82,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_10sdp"
                 app:cardCornerRadius="10dp">
 
                 <LinearLayout
@@ -118,18 +120,30 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:padding="@dimen/_6sdp"
                         >
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_16sdp"
-                            android:text="sss"
-                            android:layout_marginLeft="@dimen/_8sdp"
-                            android:textStyle="bold"
-                            />
+                            android:layout_marginVertical="8dp"
+                            android:hint="Name"
+                            android:textColorHint="#A3A1A1"
+                            app:boxBackgroundMode="none"
+                            app:boxStrokeWidth="0dp"
+                            app:hintTextColor="#03A9F4">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtDeltaProductName"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:backgroundTint="#C5C3C3"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:textSize="22dp"
+                                android:enabled="false"
+                                />
+                        </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>
                     <View
@@ -144,28 +158,38 @@
                         android:orientation="horizontal"
                         android:padding="@dimen/_6sdp"
                         >
-                        <TextView
-                            android:layout_width="wrap_content"
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Giá : "
-                            android:layout_marginRight="@dimen/_12sdp"
+                            android:layout_marginVertical="8dp"
                             android:layout_weight="1"
-                            android:textSize="@dimen/_16sdp"
-                            android:layout_marginLeft="@dimen/_8sdp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=": "
-                            android:textSize="@dimen/_16sdp"
+                            android:hint="Price"
+                            android:textColorHint="#A3A1A1"
+                            app:boxBackgroundMode="none"
+                            app:boxStrokeWidth="0dp"
+                            app:hintTextColor="#03A9F4">
 
-                            />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtRudProductPrice"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:backgroundTint="#C5C3C3"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:inputType="number"
+                                android:enabled="false"
+                                android:textSize="22dp" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
+                            android:text="vnđ"
+                            android:paddingRight="@dimen/_6sdp"
                             android:textSize="@dimen/_16sdp"
-                            android:text="sss"
+                            android:layout_gravity="bottom"
+                            android:paddingBottom="@dimen/_8sdp"
                             />
 
                     </LinearLayout>
@@ -182,11 +206,13 @@
                         android:padding="@dimen/_6sdp"
                         >
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:text="Danh mục"
                             android:textSize="@dimen/_16sdp"
+                            android:gravity="bottom"
+                            android:padding="@dimen/_6sdp"
                             android:layout_marginLeft="@dimen/_8sdp"
 
                             />
@@ -197,12 +223,12 @@
                             android:textSize="@dimen/_16sdp"
 
                             />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/_16sdp"
-                            android:layout_weight="3"
-                            android:text="sss"
+                        <Spinner
+                            android:id="@+id/spnAddProductLoai"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:padding="8dp"
                             />
 
                     </LinearLayout>
@@ -213,7 +239,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"
+                android:layout_marginVertical="@dimen/_10sdp"
                 app:cardCornerRadius="10dp">
 
                 <LinearLayout
@@ -243,22 +269,88 @@
 
 
                     </LinearLayout>
-                    <TextView
-
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="sadhasudaushduhsdiuhdhdishdihdsaidhsihiuhadhdihdiudaiudaidhaidhaidhaidhadisahdishdshsaisiudi"
-                       android:layout_marginHorizontal="@dimen/_10sdp"
-                        android:textSize="@dimen/_14sdp"
-                        android:padding="@dimen/_6sdp"
-                        />
+                        android:layout_marginVertical="8dp"
+                        android:hint="Description"
+                        android:textColorHint="#A3A1A1"
+                        app:boxBackgroundMode="none"
+                        app:boxStrokeWidth="0dp"
+                        app:hintTextColor="#03A9F4">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtRudProductDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:backgroundTint="#C5C3C3"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:enabled="false"
+                            android:textSize="22dp" />
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/baseline_category_24" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="Kích thước"
+                            android:textSize="@dimen/_20sdp"
+                            android:layout_marginRight="10dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rclvSize"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_10sdp"
                 app:cardCornerRadius="10dp">
 
                 <LinearLayout
@@ -309,6 +401,7 @@
                           android:textSize="@dimen/_16sdp"
                           />
                       <TextView
+                          android:id="@+id/tvDeltaProductMount"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="1000"
@@ -322,58 +415,7 @@
 
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"
-                app:cardCornerRadius="10dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
-
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/baseline_category_24" />
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="Kích thước"
-                            android:textSize="@dimen/_20sdp"
-                            android:layout_marginRight="10dp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rclvSize"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            />
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
  <androidx.cardview.widget.CardView
      android:layout_width="match_parent"
@@ -382,11 +424,13 @@
      >
 
      <LinearLayout
+         android:id="@+id/lldetailProductStatus"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:background="#AEE6B0"
          android:orientation="horizontal"
          android:padding="@dimen/_6sdp"
+
 
          >
 
@@ -405,9 +449,11 @@
              android:textSize="@dimen/_16sdp" />
 
          <TextView
+             android:enabled="false"
+             android:id="@+id/tvDetailProductStatus"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:text="Được bán"
+             android:text="Có thể bán"
              android:layout_gravity="center"
              android:textSize="@dimen/_16sdp" />
 
@@ -423,7 +469,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
+        android:id="@+id/llbtnLuu"
+        android:visibility="gone"
         >
 
         <TextView

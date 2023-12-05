@@ -121,8 +121,8 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(QlspActivity.this,Shopcuatoi_Activity.class));
-
+//                startActivity(new Intent(QlspActivity.this,Shopcuatoi_Activity.class));
+                onBackPressed();
             }
         });
 
@@ -474,4 +474,5 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         Log.d("TAG", "onClickItem: "+categoryDTO.getId());
 
     }
+
 }
