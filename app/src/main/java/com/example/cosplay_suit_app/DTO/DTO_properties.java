@@ -54,4 +54,8 @@ public class DTO_properties implements Serializable {
     public void setId_product(String id_product) {
         this.id_product = id_product;
     }
+    @Override
+    public String toString() {
+        return nameproperties;
+    }
 }

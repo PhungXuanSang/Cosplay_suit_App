@@ -5,6 +5,15 @@ import java.util.List;
 public class ShopCartorderDTO {
     String _id, nameshop, address, id_user;
     List<CartOrderDTO> list;
+    private boolean isChecked; // Thuộc tính để lưu trạng thái của CheckBox
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public ShopCartorderDTO() {
     }

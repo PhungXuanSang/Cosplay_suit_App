@@ -121,4 +121,8 @@ public class Cart_controller {
         });
     }
 
+    public void Listproperties(String id){
+
+    }
+
 }

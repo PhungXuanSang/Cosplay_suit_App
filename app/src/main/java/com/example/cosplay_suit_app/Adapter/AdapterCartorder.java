@@ -5,8 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,8 +19,8 @@ import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.CartShopManager;
+import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
-import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
@@ -42,12 +45,16 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     int tonggia = 0, soluong = 1;
     String TAG = "adaptercartorder";
     OnclickCheck onclickCheck;
+    OnclickCheckbox onclickCheckbox;
     String idcart, idshop;
+    TextView tvsoluong;
+    List<DTO_properties> listproper;
 
-    public AdapterCartorder(List<CartOrderDTO> list, Context context, OnclickCheck onclickCheck) {
+    public AdapterCartorder(List<CartOrderDTO> list, Context context, OnclickCheck onclickCheck, OnclickCheckbox onclickCheckbox) {
         this.list = list;
         this.context = context;
         this.onclickCheck = onclickCheck;
+        this.onclickCheckbox = onclickCheckbox;
     }
 
     @NonNull
@@ -79,15 +86,24 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.tvnamepro.setText(order.getDtoSanPham().getNameproduct());
             viewHolder.tvsize.setText("Size: "+order.getId_properties());
             viewHolder.tvprice.setText(decimalFormat.format(order.getDtoSanPham().getPrice()) + " VND");
-            viewHolder.tvsoluong.setText(""+order.getAmount());
-
+            tvsoluong.setText(""+order.getAmount());
+            viewHolder.cbkcart.setChecked(order.isChecked());
+            if (order.isChecked()) {
+                idcart = order.get_id();
+                idshop = order.getDtoSanPham().getId_shop();
+                tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(tvsoluong.getText().toString().trim());
+                TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
+                TotalPriceManager.getInstance().updateIdcartTrue(idcart);
+                onclickCheck.onCheckboxTrue();
+                CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(),order.get_id());
+            }
             viewHolder.imgcong.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    soluong = Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim()) + 1;
+                    soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) + 1;
                     if (soluong < 101){
                         String slmoi = String.valueOf(soluong);
-                        viewHolder.tvsoluong.setText(slmoi);
+                        tvsoluong.setText(slmoi);
                         if (viewHolder.cbkcart.isChecked()){
                             tonggia = order.getDtoSanPham().getPrice();
                             TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
@@ -104,10 +120,10 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.imgtru.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    soluong = Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim()) - 1;
+                    soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) - 1;
                     if (soluong > 0){
                         String slmoi = String.valueOf(soluong);
-                        viewHolder.tvsoluong.setText(slmoi);
+                        tvsoluong.setText(slmoi);
                         if (viewHolder.cbkcart.isChecked()){
                             tonggia = order.getDtoSanPham().getPrice();
                             TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
@@ -124,24 +140,26 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.cbkcart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (viewHolder.cbkcart.isChecked()) {
-                        idcart = order.get_id();
-                        idshop = order.getDtoSanPham().getId_shop();
-                        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
+                    boolean isChecked = viewHolder.cbkcart.isChecked();
+                    order.setChecked(isChecked);
+
+                    idcart = order.get_id();
+                    idshop = order.getDtoSanPham().getId_shop();
+                    tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(tvsoluong.getText().toString().trim());
+
+                    if (isChecked) {
                         TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
                         TotalPriceManager.getInstance().updateIdcartTrue(idcart);
                         onclickCheck.onCheckboxTrue();
-                        CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(),order.get_id());
+                        CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(), idcart);
                     } else {
-                        idcart = order.get_id();
-                        idshop = order.getDtoSanPham().getId_shop();
-                        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                         TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
                         TotalPriceManager.getInstance().updateIdcartFalse(idcart);
-                        CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(),order.get_id());
+                        CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(), idcart);
                         onclickCheck.onCheckboxFalse();
                     }
-
+                    // Kiểm tra và cập nhật trạng thái của checkbox cha
+                    updateParentCheckboxStatus();
                 }
             });
             viewHolder.tv_xoa.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +169,28 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
 
+            listproper = new ArrayList<>();
+            listproper = list.get(position).getDtoSanPham().getListProp();
+
+            // Tạo ArrayAdapter cho Spinner sử dụng danh sách thuộc tính từ DTO_SanPham
+            ArrayAdapter<DTO_properties> propertyAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listproper);
+            propertyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // Liên kết ArrayAdapter với Spinner
+            viewHolder.spinnerproper.setAdapter(propertyAdapter);
+            // Xử lý sự kiện khi một mục được chọn trong Spinner
+            viewHolder.spinnerproper.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int pos, long id) {
+                    // Lấy đối tượng DTO_properties được chọn
+                    DTO_properties selectedProperty = (DTO_properties) parentView.getItemAtPosition(pos);
+                    viewHolder.tvsize.setText("Size: " + selectedProperty.getNameproperties());
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // Xử lý khi không có mục nào được chọn
+                }
+            });
         } else {
             Log.d("Adapter_ShopCartOrder", "No orders found for shop with ID: ");
         }
@@ -162,8 +202,9 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imgproduct, imgcong, imgtru;
-        TextView tvnamepro, tvsize, tvprice, tvsoluong, tv_xoa;
+        TextView tvnamepro, tvsize, tvprice, tv_xoa;
         CheckBox cbkcart;
+        Spinner spinnerproper;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -176,6 +217,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             tvsoluong = itemView.findViewById(R.id.tv_soluong);
             cbkcart = itemView.findViewById(R.id.cbk_cart);
             tv_xoa = itemView.findViewById(R.id.tv_xoa);
+            spinnerproper = itemView.findViewById(R.id.spinnerproper);
         }
     }
     public interface OnclickCheck{
@@ -183,8 +225,6 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onCheckboxFalse();
         void onClickXoa(String idcart);
     }
-
-
     public void updatedata(CartOrderDTO dto, String idcart){
         //Tạo đối tượng chuyển đổi kiểu dữ liệu
         Gson gson = new GsonBuilder().setLenient().create();
@@ -220,5 +260,30 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                 Log.e(TAG, t.getLocalizedMessage());
             }
         });
+    }
+    public void onParentCheckboxUnchecked(CartOrderDTO order) {
+        idcart = order.get_id();
+        idshop = order.getDtoSanPham().getId_shop();
+        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(tvsoluong.getText().toString().trim());
+        TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
+        TotalPriceManager.getInstance().updateIdcartFalse(idcart);
+        CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(),order.get_id());
+        onclickCheck.onCheckboxFalse();
+    }
+    public interface OnclickCheckbox {
+        // ... (các phương thức khác)
+        void onUpdateParentCheckbox(boolean allChecked);
+    }
+    // Cập nhật trạng thái của checkbox cha dựa trên trạng thái của checkbox con
+    private void updateParentCheckboxStatus() {
+        boolean allChecked = true;
+        for (CartOrderDTO order : list) {
+            if (!order.isChecked()) {
+                allChecked = false;
+                break;
+            }
+        }
+        // Gọi phương thức của interface để cập nhật trạng thái của checkbox cha
+        onclickCheckbox.onUpdateParentCheckbox(allChecked);
     }
 }

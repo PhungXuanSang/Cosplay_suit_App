@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -60,6 +61,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     private TotalPriceManager totalPriceManager;
     ArrayList<String> totalPriceManagerListcart = new ArrayList<>();
     LinearLayout noProductMessage;
+    CheckBox cbkSelectAll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +118,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
         tvtongtien = findViewById(R.id.tv_tongtien);
         btnbuynow = findViewById(R.id.btn_buynow);
         noProductMessage = findViewById(R.id.noProductMessage);
+        cbkSelectAll = findViewById(R.id.cbkcart);
     }
 
     public void getShop(String id){
@@ -170,21 +173,18 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
             }
         });
     }
-
     @Override
     public void onCheckboxTrue() {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         int tt = totalPriceManager.getTotalOrderPrice();
         tvtongtien.setText(decimalFormat.format(tt) + " VND");
     }
-
     @Override
     public void onCheckboxFalse() {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         int tt = totalPriceManager.getTotalOrderPrice();
         tvtongtien.setText(decimalFormat.format(tt) + " VND");
     }
-
     @Override
     public void onClickXoa(String idcart){
         new AlertDialog.Builder(CartOrderActivity.this)

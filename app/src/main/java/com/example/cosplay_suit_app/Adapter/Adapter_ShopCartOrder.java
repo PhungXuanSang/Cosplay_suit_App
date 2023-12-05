@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     List<ShopCartorderDTO> list;
@@ -46,6 +47,7 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
     private List<CartOrderDTO> allOrders;
     AdapterCartorder arrayAdapter;
     String TAG = "adaptershopcartorder";
+    CheckBox cbkcart;
     public Adapter_ShopCartOrder(List<ShopCartorderDTO> list, Context context) {
         this.list = list;
         this.context = context;
@@ -110,9 +112,27 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
         });
 
         List<CartOrderDTO> ordersForShop = orderMap.get(shop.getId());
-        arrayAdapter = new AdapterCartorder(ordersForShop, context, (AdapterCartorder.OnclickCheck) context);
+        arrayAdapter = new AdapterCartorder(ordersForShop, context, (AdapterCartorder.OnclickCheck) context
+                , new AdapterCartorder.OnclickCheckbox() {
+            @Override
+            public void onUpdateParentCheckbox(boolean allChecked) {
+                // Cập nhật trạng thái của checkbox cha dựa trên trạng thái của checkbox con
+                updateParentCheckboxStatus(allChecked);
+            }
+        });
         viewHolder.rcvcart.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
+
+        cbkcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isChecked = cbkcart.isChecked();
+                // Cập nhật trạng thái của CheckBox trong Adapter cha
+                ordersForShop.get(position).setChecked(isChecked);
+                // Gọi method để cập nhật tất cả các CheckBox trong Adapter con
+                updateAllChildCheckBoxes(isChecked, ordersForShop.get(position));
+            }
+        });
     }
 
     @Override
@@ -128,6 +148,7 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
             super(itemView);
             tvnameshop = itemView.findViewById(R.id.tv_nameshop);
             rcvcart = itemView.findViewById(R.id.rcv_cart);
+            cbkcart = itemView.findViewById(R.id.cbkcart);
         }
     }
     public void getOrdersByUserId(String userId, Callback<List<CartOrderDTO>> callback) {
@@ -164,5 +185,21 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
             orders.add(order);
             orderMap.put(idShop, orders);
         }
+    }
+    public void updateAllChildCheckBoxes(boolean isChecked, CartOrderDTO ordera) {
+        for (Map.Entry<String, List<CartOrderDTO>> entry : orderMap.entrySet()) {
+            for (CartOrderDTO order : entry.getValue()) {
+                order.setChecked(isChecked);
+                // Thông báo cho Adapter con khi CheckBox cha không được chọn nữa và truyền order
+                if (!isChecked) {
+                    arrayAdapter.onParentCheckboxUnchecked(order);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+    // Cập nhật trạng thái của checkbox cha dựa trên trạng thái của checkbox con
+    private void updateParentCheckboxStatus(boolean allChecked) {
+        cbkcart.setChecked(allChecked);
     }
 }
