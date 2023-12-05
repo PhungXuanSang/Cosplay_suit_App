@@ -80,7 +80,8 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SeenVoucherActivity.class);
-                intent.putExtra("id_voucher",dtoVoucher.getId());
+                intent.putExtra("id_voucher",voucher.getId());
+                intent.putExtra("amount",voucher.getAmount());
                 context.startActivity(intent);
             }
         });
