@@ -41,6 +41,9 @@
             android:name=".Activity.MualaiActivity"
             android:exported="false" />
         <activity
+            android:name=".Activity.ThongKeShopActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.XemAllspdamuaActivity"
             android:exported="false" />
         <activity
