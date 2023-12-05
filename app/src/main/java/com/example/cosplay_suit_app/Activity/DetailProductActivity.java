@@ -140,7 +140,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         categotyAdapter = new SpinnerCategotyAdapter(this, R.layout.item_spinner_category, listLoai);
         categotyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spnAddProductLoai.setAdapter(categotyAdapter);
-        checkAndSetCategory(id_category);
+//        checkAndSetCategory(id_category);
 
         if (status == false) {
             binding.tvDetailProductStatus.setText("Không thể bán");
@@ -172,17 +172,27 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
                 String priceStr = editable.toString();
 
                 if (!priceStr.isEmpty()) {
-                    price = Integer.parseInt(priceStr);
+                    // Xóa dấu phẩy từ chuỗi
+                    String priceWithoutComma = priceStr.replaceAll(",", "");
 
-                    if (price < 1) {
-                        price = 1;
-                    } else if (price > 99999999) {
-                        price = 99999999;
-                    }
+                    try {
+                        // Chuyển đổi chuỗi thành số
+                        price = Integer.parseInt(priceWithoutComma);
 
-                    if (price != parseLongSafely(priceStr)) {
-                        binding.edtRudProductPrice.setText(String.valueOf(price));
-                        binding.edtRudProductPrice.setSelection(binding.edtRudProductPrice.getText().length());
+                        // Kiểm tra giá trị giới hạn
+                        if (price < 1) {
+                            price = 1;
+                        } else if (price > 99999999) {
+                            price = 99999999;
+                        }
+
+                        // Nếu giá trị đã thay đổi sau khi xử lý, cập nhật EditText
+                        if (price != Integer.parseInt(priceStr)) {
+                            binding.edtRudProductPrice.setText(String.valueOf(price));
+                            binding.edtRudProductPrice.setSelection(binding.edtRudProductPrice.getText().length());
+                        }
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
                     }
                 }
 
