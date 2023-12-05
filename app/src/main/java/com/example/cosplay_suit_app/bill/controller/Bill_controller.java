@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.Dskhach_Activity;
+import com.example.cosplay_suit_app.Adapter.AdapterKhachHang;
 import com.example.cosplay_suit_app.Adapter.Adapter_XemAllspdamua;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.Adapter.Adapter_chitietbill;
@@ -1015,6 +1016,63 @@ public class Bill_controller {
             }
         });
     }
+
+
+//manh
+    public void GetdskhachVoucher(String id, ArrayList<ProfileDTO> list, AdapterKhachHang arrayAdapter){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Bill_interface billDetailDTO = retrofit.create(Bill_interface.class);
+
+        // tạo đối tượng
+        Call<List<ProfileDTO>> objCall = billDetailDTO.getdskhach(id);
+        objCall.enqueue(new Callback<List<ProfileDTO>>() {
+            @Override
+            public void onResponse(Call<List<ProfileDTO>> call, Response<List<ProfileDTO>> response) {
+                if (response.isSuccessful()) {
+                    list.clear();
+                    List<ProfileDTO> profileDTOS = response.body();
+                    if (profileDTOS != null && !profileDTOS.isEmpty()) {
+                        for (ProfileDTO profileDTO : profileDTOS) {
+                            list.add(profileDTO);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    } else {
+
+                    }
+                } else {
+                    Toast.makeText(mContext,
+                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProfileDTO>> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+
+    }
+
+
 
 
     public interface ApiResponseCallback {

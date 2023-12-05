@@ -40,7 +40,7 @@
             android:id="@+id/recyclerViewVouchers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             android:padding="16dp"
             app:spanCount="2"/>

@@ -17,7 +17,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:src="@drawable/imgshop"
             android:layout_gravity="center"
             android:id="@+id/anh_sp"
             android:layout_width="190dp"
