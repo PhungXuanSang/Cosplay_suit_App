@@ -25,8 +25,6 @@ import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -99,7 +97,9 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder1.btnmualai.setText("Hủy đơn hàng");
             DTO_Bill dtoBill = new DTO_Bill();
             // Lấy đối tượng Date hiện tại
-            String currentDateTime = getCurrentDateTime();
+            Date currentDate = new Date();
+            // Định dạng ngày giờ theo yyyyMMddHHmmss
+            String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
             if ("Wait".equals(checkstatus)){
                 billDetailDTO.getDtoBill().setStatus("Pack");
                 dtoBill.setStatus("Pack");
@@ -107,7 +107,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 dtoBill.setStatus("Delivery");
             }else if ("Delivery".equals(checkstatus)) {
                 dtoBill.setStatus("Done");
-                dtoBill.setTimeend(currentDateTime);
+                dtoBill.setTimeend(formattedDateTime);
             }
             holder1.btn_upstatus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,7 +119,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     dtoBill.setStatus("Cancelled");
-                    dtoBill.setTimeend(currentDateTime);
+                    dtoBill.setTimeend(formattedDateTime);
                     billController.UpdateStatusBill(billDetailDTO.getDtoBill().get_id(),dtoBill);
                 }
             });
@@ -206,10 +206,5 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             btn_upstatus = itemView.findViewById(R.id.btn_upstatus);
             xemchitietbill = itemView.findViewById(R.id.xemchitietbill);
         }
-    }
-    private String getCurrentDateTime() {
-        Date currentDate = Calendar.getInstance().getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return dateFormat.format(currentDate);
     }
 }
