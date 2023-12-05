@@ -20,10 +20,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
+import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
+import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.MainActivity;
@@ -37,6 +40,7 @@ import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.example.cosplay_suit_app.bill.controller.Mualai_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -55,22 +59,15 @@ public class MualaiActivity extends AppCompatActivity {
     static String url = API.URL;
     static final String BASE_URL_VNPAY = url +"/payment/";
     String TAG = "buynowactivity";
-    ImageView img_back;
-    TextView tv_tongtien;
-    TextView idchonphuongthuc;
-    TextView tv_hoten;
-    TextView tv_sdt;
-    TextView tv_diachi;
-    TextView tvname_product;
-    TextView tvsize_product;
-    TextView tv_soluong;
-    TextView tvprice_product;
-    TextView tv_tonggia;
+    ImageView img_back, img_product;
+    TextView tv_tongtien,idchonphuongthuc,tv_hoten,tv_sdt,tv_diachi,tvname_product,tvsize_product,tv_soluong, tvprice_product
+            , tv_tonggia, tv_sua;
     Button btnbuynow;
-    String checkphuongthuc;
     Bill_controller billController = new Bill_controller(this);
-    String idproduct, selectedNameProperties, id_shop, id, nameproduct;
+    String idproduct, selectedNameProperties, id_shop, id, nameproduct, listImageJson, checkphuongthuc;
     int priceproduct, amount;
+    List<ItemImageDTO> listImage;
+    String hoten, sodienthoai, diachi,idaddress;
 
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
@@ -87,28 +84,38 @@ public class MualaiActivity extends AppCompatActivity {
             }
         });
 
+        //Lấy dữ liệu từ item
         Intent intent = getIntent();
-        Log.d("Debug", "Intent idproduct: " + getIntent().getStringExtra("idproduct"));
-        Log.d("Debug", "Intent priceproduct: " + getIntent().getIntExtra("priceproduct", 0));
-        Log.d("Debug", "Intent amount: " + getIntent().getStringExtra("amount"));
-        Log.d("Debug", "Intent selectedNameProperties: " + getIntent().getStringExtra("selectedNameProperties"));
-        Log.d("Debug", "Intent id_shop: " + getIntent().getStringExtra("id_shop"));
-
         selectedNameProperties = intent.getStringExtra("selectedNameProperties");
         idproduct = intent.getStringExtra("idproduct");
         amount = Integer.parseInt(intent.getStringExtra("amount"));
         priceproduct = getIntent().getIntExtra("priceproduct", 0);
         id_shop = intent.getStringExtra("id_shop");
         nameproduct = intent.getStringExtra("nameproduct");
+        listImageJson = intent.getStringExtra("listImage");
+        // Chuyển chuỗi JSON thành danh sách đối tượng
+        listImage = new Gson().fromJson(listImageJson,
+                new TypeToken<List<ItemImageDTO>>() {}.getType());
+
 
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
+        // truyền dữ liệu vào giao diện
         tvname_product.setText(nameproduct);
         tvsize_product.setText("Kích thước: "+selectedNameProperties);
         tv_soluong.setText("Số lượng: "+amount);
         tvprice_product.setText("Giá: "+decimalFormat.format(priceproduct));
         tv_tonggia.setText(decimalFormat.format(amount*priceproduct) + " VND");
         tv_tongtien.setText(decimalFormat.format(amount*priceproduct) + " VND");
+        ItemImageDTO firstImage = listImage.get(0);
+        String imageUrl = firstImage.getImage();
+        // Tiến hành tải và hiển thị ảnh từ URL bằng Glide
+        Glide.with(this)
+                .load(imageUrl)
+                .error(R.drawable.image)
+                .placeholder(R.drawable.image)
+                .centerCrop()
+                .into(img_product);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id","");
@@ -117,85 +124,124 @@ public class MualaiActivity extends AppCompatActivity {
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkphuongthuc != null) {
-                    if (checkphuongthuc.equals("thanhtoansau")) {
-                        UUID uuid = UUID.randomUUID();
-                        String vnp_TxnRef = uuid.toString().trim();
-                        // Lấy đối tượng Date hiện tại
-                        Date currentDate = new Date();
-                        // Định dạng ngày giờ theo yyyyMMddHHmmss
-                        String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
-
-                        DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
-                        dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
-                        dtovnpay.setVnp_Amount(String.valueOf(amount*priceproduct));
-                        dtovnpay.setVnp_PayDate(formattedDateTime);
-                        dtovnpay.setVnp_TxnRef(vnp_TxnRef);
-                        Bill_controller billController = new Bill_controller(MualaiActivity.this);
-                        billController.AddThanhtoan(dtovnpay);
-
-                        String currentDateTime = getCurrentDateTime();
-                        Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
-                        DTO_Bill dtoBill = new DTO_Bill();
-                        dtoBill.setId_user(id);
-                        dtoBill.setId_shop(id_shop);
-                        dtoBill.setVnp_TxnRef(vnp_TxnRef);
-                        dtoBill.setStatus("Wait");
-                        dtoBill.setTotalPayment(amount*priceproduct);
-                        dtoBill.setMa_voucher("");
-                        dtoBill.setTimestart(currentDateTime);
-                        dtoBill.setTimeend("");
-                        mualaiController.Addbill(dtoBill);
-
-                        //sửa số lượng sp
-                        DTO_properties dtoProperties = new DTO_properties();
-                        dtoProperties.setAmount(amount);
-                        dtoProperties.setNameproperties(selectedNameProperties);
-                        billController.UpdateProduct(idproduct, dtoProperties);
-                        mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
-                            @Override
-                            public void onAddBillComplete() {
-                                // Gọi databilldetail khi Addbill đã hoàn thành
-                                mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
-
-                            }
-                        });
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(MualaiActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        },4000);
-                    }
-                    if (checkphuongthuc.equals("thanhtoanvnpay")) {
-                        DTO_vnpay dtovnpay = new DTO_vnpay();
-                        dtovnpay.setAmount((amount*priceproduct));
-                        dtovnpay.setBankCode("NCB");
-                        postthamso(dtovnpay);
-                    }
-                }else {
+                if (hoten.equals("") || sodienthoai.equals("") || diachi.equals("")){
                     String tile = "Thông báo mua hàng";
-                    String msg = "Bạn phải chọn phương thức";
+                    String msg = "Bạn phải chọn điền đầy đủ địa chỉ";
                     Dialogthongbao.showSuccessDialog(MualaiActivity.this,tile, msg);
+                }else {
+                    if (checkphuongthuc != null) {
+                        if (checkphuongthuc.equals("thanhtoansau")) {
+                            UUID uuid = UUID.randomUUID();
+                            String vnp_TxnRef = uuid.toString().trim();
+                            // Lấy đối tượng Date hiện tại
+                            Date currentDate = new Date();
+                            // Định dạng ngày giờ theo yyyyMMddHHmmss
+                            String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
+
+                            //Thêm vào bảng thanh toán
+                            DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
+                            dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
+                            dtovnpay.setVnp_Amount(String.valueOf(amount*priceproduct));
+                            dtovnpay.setVnp_PayDate(formattedDateTime);
+                            dtovnpay.setVnp_TxnRef(vnp_TxnRef);
+                            Bill_controller billController = new Bill_controller(MualaiActivity.this);
+                            billController.AddThanhtoan(dtovnpay);
+
+                            //Thêm vào bảng address
+                            DTO_Address dtoAddress = new DTO_Address();
+                            dtoAddress.setAddress(diachi);
+                            dtoAddress.setFullname(hoten);
+                            dtoAddress.setPhone(sodienthoai);
+                            billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                                @Override
+                                public void onApiAddress(DTO_Address profileDTO) {
+                                    idaddress = profileDTO.get_id();
+                                    //Thêm vào bảng bill
+                                    String currentDateTime = getCurrentDateTime();
+                                    Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
+                                    DTO_Bill dtoBill = new DTO_Bill();
+                                    dtoBill.setId_user(id);
+                                    dtoBill.setId_address(idaddress);
+                                    dtoBill.setId_shop(id_shop);
+                                    dtoBill.setVnp_TxnRef(vnp_TxnRef);
+                                    dtoBill.setStatus("Wait");
+                                    dtoBill.setTotalPayment(amount*priceproduct);
+                                    dtoBill.setMa_voucher("");
+                                    dtoBill.setTimestart(currentDateTime);
+                                    dtoBill.setTimeend("");
+                                    mualaiController.Addbill(dtoBill);
+
+                                    //sửa số lượng sp
+                                    DTO_properties dtoProperties = new DTO_properties();
+                                    dtoProperties.setAmount(amount);
+                                    dtoProperties.setNameproperties(selectedNameProperties);
+                                    billController.UpdateProduct(idproduct, dtoProperties);
+                                    mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                                        @Override
+                                        public void onAddBillComplete() {
+                                            // Gọi databilldetail khi Addbill đã hoàn thành
+                                            mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
+
+                                        }
+                                    });
+                                }
+                            });
+
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(MualaiActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            },4000);
+                        }
+                        if (checkphuongthuc.equals("thanhtoanvnpay")) {
+                            DTO_vnpay dtovnpay = new DTO_vnpay();
+                            dtovnpay.setAmount((amount*priceproduct));
+                            dtovnpay.setBankCode("NCB");
+                            postthamso(dtovnpay);
+                        }
+                    }else {
+                        String tile = "Thông báo mua hàng";
+                        String msg = "Bạn phải chọn phương thức";
+                        Dialogthongbao.showSuccessDialog(MualaiActivity.this,tile, msg);
+                    }
                 }
+
             }
         });
 
-        billController.Getidaddress(id, new Bill_controller.ApiResponseCallback() {
-            @Override
-            public void onApiGetidaddress(ProfileDTO profileDTO) {
-                tv_hoten.setText(profileDTO.getFullname());
-                tv_sdt.setText(profileDTO.getPhone());
-                tv_diachi.setText(profileDTO.getDiachi());
-            }
-        });
+
 
         idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialogchonthanhtoan();
+            }
+        });
+        tv_sua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MualaiActivity.this, ProfileActivity.class);
+                intent.putExtra("buynow" , "buynow");
+                // Start the new activity
+                startActivity(intent);
+            }
+        });
+        diachi();
+    }
+    public void diachi(){
+        billController.Getidaddress(id, new Bill_controller.ApiResponseCallback() {
+            @Override
+            public void onApiGetidaddress(ProfileDTO profileDTO) {
+                hoten = profileDTO.getFullname();
+                sodienthoai =profileDTO.getPhone();
+                diachi = profileDTO.getDiachi();
+                tv_hoten.setText(hoten);
+                tv_sdt.setText(sodienthoai);
+                tv_diachi.setText(diachi);
             }
         });
     }
@@ -213,7 +259,8 @@ public class MualaiActivity extends AppCompatActivity {
         tv_soluong = findViewById(R.id.tv_soluong);
         tvprice_product = findViewById(R.id.tvprice_product);
         tv_tonggia = findViewById(R.id.tv_tonggia);
-
+        img_product = findViewById(R.id.img_product);
+        tv_sua = findViewById(R.id.tv_sua);
     }
 
     public void dialogchonthanhtoan(){
@@ -331,19 +378,7 @@ public class MualaiActivity extends AppCompatActivity {
                     String vnp_TxnRef = result.getData().getStringExtra("vnp_TxnRef");
                     String vnp_SecureHash = result.getData().getStringExtra("vnp_SecureHash");
 
-                    Log.d(TAG, "vnp_Amount: " + vnp_Amount);
-                    Log.d(TAG, ": vnp_BankCode" +vnp_BankCode);
-                    Log.d(TAG, ":vnp_BankTranNo " +vnp_BankTranNo);
-                    Log.d(TAG, ": vnp_CardType" +vnp_CardType);
-                    Log.d(TAG, ": vnp_OrderInfo" +vnp_OrderInfo);
-                    Log.d(TAG, ": vnp_PayDate" +vnp_PayDate);
-                    Log.d(TAG, ": vnp_ResponseCode" +vnp_ResponseCode);
-                    Log.d(TAG, ": vnp_TmnCode" +vnp_TmnCode);
-                    Log.d(TAG, ": vnp_TransactionStatus" +vnp_TransactionStatus);
-                    Log.d(TAG, ": vnp_TransactionNo" +vnp_TransactionNo);
-                    Log.d(TAG, ": vnp_TxnRef" +vnp_TxnRef);
-                    Log.d(TAG, ": vnp_SecureHash" +vnp_SecureHash);
-
+                    //Thêm vào bảng thanh toán
                     DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
                     dtovnpay.setVnp_CardType(vnp_CardType);
                     dtovnpay.setVnp_Amount(vnp_Amount);
@@ -360,27 +395,40 @@ public class MualaiActivity extends AppCompatActivity {
                     Bill_controller billController = new Bill_controller(this);
                     billController.AddThanhtoan(dtovnpay);
 
-                    //Thêm vào bảng bill
-                    String currentDateTime = getCurrentDateTime();
-                    Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
-                    DTO_Bill dtoBill = new DTO_Bill();
-                    dtoBill.setId_user(id);
-                    dtoBill.setId_shop(id_shop);
-                    dtoBill.setVnp_TxnRef(vnp_TxnRef);
-                    dtoBill.setStatus("Wait");
-                    dtoBill.setTotalPayment(amount*priceproduct);
-                    dtoBill.setMa_voucher("");
-                    dtoBill.setTimestart(currentDateTime);
-                    dtoBill.setTimeend("");
-                    mualaiController.Addbill(dtoBill);
-                    mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                    //Thêm vào bảng address
+                    DTO_Address dtoAddress = new DTO_Address();
+                    dtoAddress.setAddress(diachi);
+                    dtoAddress.setFullname(hoten);
+                    dtoAddress.setPhone(sodienthoai);
+                    billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
                         @Override
-                        public void onAddBillComplete() {
-                            // Gọi databilldetail khi Addbill đã hoàn thành
-                            mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
-
+                        public void onApiAddress(DTO_Address profileDTO) {
+                            idaddress = profileDTO.get_id();
+                            //Thêm vào bảng bill
+                            String currentDateTime = getCurrentDateTime();
+                            Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
+                            DTO_Bill dtoBill = new DTO_Bill();
+                            dtoBill.setId_user(id);
+                            dtoBill.setId_shop(id_shop);
+                            dtoBill.setId_address(idaddress);
+                            dtoBill.setVnp_TxnRef(vnp_TxnRef);
+                            dtoBill.setStatus("Wait");
+                            dtoBill.setTotalPayment(amount*priceproduct);
+                            dtoBill.setMa_voucher("");
+                            dtoBill.setTimestart(currentDateTime);
+                            dtoBill.setTimeend("");
+                            mualaiController.Addbill(dtoBill);
+                            mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                                @Override
+                                public void onAddBillComplete() {
+                                    // Gọi databilldetail khi Addbill đã hoàn thành
+                                    mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
+                                }
+                            });
                         }
                     });
+
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -406,5 +454,10 @@ public class MualaiActivity extends AppCompatActivity {
         Date currentDate = Calendar.getInstance().getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dateFormat.format(currentDate);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        diachi();
     }
 }

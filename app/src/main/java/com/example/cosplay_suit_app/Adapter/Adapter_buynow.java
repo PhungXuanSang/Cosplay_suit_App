@@ -214,13 +214,14 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
     }
-    public void performActionOnAllItems(String vnp_TxnRef) {
+    public void performActionOnAllItems(String vnp_TxnRef, String addres) {
         // Thực hiện công việc cần thiết trên tất cả các item
         for (DTO_buynow item : list) {
             String currentDateTime = getCurrentDateTime();
             DTO_Bill dtoBill = new DTO_Bill();
             dtoBill.setId_user(id);
             dtoBill.setId_shop(item.get_id());
+            dtoBill.setId_address(addres);
             dtoBill.setTimestart(currentDateTime);
             dtoBill.setTimeend("");
             dtoBill.setStatus("Wait");

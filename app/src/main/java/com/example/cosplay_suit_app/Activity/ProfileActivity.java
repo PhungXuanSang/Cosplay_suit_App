@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Khai báo các TextView và ImageView tương ứng với các thuộc tính trong giao diện
     TextView tv_email, tv_sdt, tv_fullname, tv_andress;
-    ImageView btn_11, btn_12, btn_13, btn_14;
+    ImageView btn_11, btn_12, btn_13, btn_14, id_back;
     String id_user,_idprofile;
 
 
@@ -61,6 +62,14 @@ public class ProfileActivity extends AppCompatActivity {
         tv_email = findViewById(R.id.id_Email);
         tv_fullname = findViewById(R.id.id_Fullname);
         tv_andress = findViewById(R.id.id_andress);
+        id_back = findViewById(R.id.id_back);
+
+        id_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
 
         btn_11 = findViewById(R.id.btn_11);

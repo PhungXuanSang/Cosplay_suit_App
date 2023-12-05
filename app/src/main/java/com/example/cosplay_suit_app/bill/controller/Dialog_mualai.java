@@ -124,6 +124,9 @@ public class Dialog_mualai {
                     intent.putExtra("selectedNameProperties", selectedNameProperties);
                     intent.putExtra("id_shop", id_shop);
                     intent.putExtra("nameproduct", nameproduct);
+                    String listImageJson = new Gson().toJson(listImage);
+                    // Đặt chuỗi JSON vào Intent
+                    intent.putExtra("listImage", listImageJson);
                     context.startActivity(intent);
                 }else {
                     String title = "Thông báo mua hàng";

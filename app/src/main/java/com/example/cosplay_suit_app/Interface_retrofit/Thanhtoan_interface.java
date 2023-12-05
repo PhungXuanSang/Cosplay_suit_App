@@ -1,5 +1,6 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
+import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
 
@@ -13,7 +14,8 @@ import retrofit2.http.Path;
 public interface Thanhtoan_interface {
     @POST("Addthanhtoan")
     Call<DTO_thanhtoan> Addthanhtoan(@Body DTO_thanhtoan dtoThanhtoan);
-
     @GET("getidaddress/{id}")
     Call<ProfileDTO> getidaddress(@Path("id") String id);
+    @POST("Add_address")
+    Call<DTO_Address> Add_address(@Body DTO_Address dtoAddress);
 }

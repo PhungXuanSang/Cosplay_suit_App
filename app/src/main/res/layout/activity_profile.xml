@@ -3,8 +3,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#077A88">
+        <ImageView
+            android:id="@+id/id_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_back"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thông tin của tôi"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"
+            />
+    </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:layout_gravity="center"
@@ -12,6 +32,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@drawable/user"
+        android:layout_marginTop="20dp"
         />
 
     <!-- Phone -->

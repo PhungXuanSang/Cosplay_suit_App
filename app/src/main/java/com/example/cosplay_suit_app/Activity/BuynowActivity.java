@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.DTO.CartShopManager;
+import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
@@ -69,10 +70,11 @@ public class BuynowActivity extends AppCompatActivity{
     Adapter_buynow arrayAdapter;
     RecyclerView recyclerView;
     private TotalPriceManager totalPriceManager;
-    String checkphuongthuc;
     Bill_controller billController = new Bill_controller(this);
     Set<String> idShopSet = CartShopManager.getInstance().getListidshop();
     List<String> idShopList;
+    String id, hoten, sodienthoai, diachi,checkphuongthuc, idaddress;
+    ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,64 +93,73 @@ public class BuynowActivity extends AppCompatActivity{
         arrayAdapter.notifyDataSetChanged();
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
 
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkphuongthuc != null) {
-                    if (checkphuongthuc.equals("thanhtoansau")) {
-                        UUID uuid = UUID.randomUUID();
-                        String vnp_TxnRef = uuid.toString().trim();
-                        // Lấy đối tượng Date hiện tại
-                        Date currentDate = new Date();
-                        // Định dạng ngày giờ theo yyyyMMddHHmmss
-                        String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
-
-                        DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
-                        dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
-                        dtovnpay.setVnp_Amount(String.valueOf(totalPriceManager.getTotalOrderPrice()));
-                        dtovnpay.setVnp_PayDate(formattedDateTime);
-                        dtovnpay.setVnp_TxnRef(vnp_TxnRef);
-                        Bill_controller billController = new Bill_controller(BuynowActivity.this);
-                        billController.AddThanhtoan(dtovnpay);
-                        List<String> list1 = totalPriceManager.getListcart();
-                        billController.Upsoluongproduct(list1);
-                        arrayAdapter.performActionOnAllItems(vnp_TxnRef);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(BuynowActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        },4000);
-                    }
-                    if (checkphuongthuc.equals("thanhtoanvnpay")) {
-                        DTO_vnpay dtovnpay = new DTO_vnpay();
-                        dtovnpay.setAmount(totalPriceManager.getTotalOrderPrice());
-                        dtovnpay.setBankCode("NCB");
-                        postthamso(dtovnpay);
-                    }
-                }else {
+                if (hoten.equals("") || sodienthoai.equals("") || diachi.equals("")){
                     String tile = "Thông báo mua hàng";
-                    String msg = "Bạn phải chọn phương thức";
+                    String msg = "Bạn phải chọn điền đầy đủ địa chỉ";
                     Dialogthongbao.showSuccessDialog(BuynowActivity.this,tile, msg);
+                }else {
+                    if (checkphuongthuc != null) {
+                        if (checkphuongthuc.equals("thanhtoansau")) {
+                            UUID uuid = UUID.randomUUID();
+                            String vnp_TxnRef = uuid.toString().trim();
+                            // Lấy đối tượng Date hiện tại
+                            Date currentDate = new Date();
+                            // Định dạng ngày giờ theo yyyyMMddHHmmss
+                            String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
+
+                            DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
+                            dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
+                            dtovnpay.setVnp_Amount(String.valueOf(totalPriceManager.getTotalOrderPrice()));
+                            dtovnpay.setVnp_PayDate(formattedDateTime);
+                            dtovnpay.setVnp_TxnRef(vnp_TxnRef);
+                            Bill_controller billController = new Bill_controller(BuynowActivity.this);
+                            billController.AddThanhtoan(dtovnpay);
+
+                            DTO_Address dtoAddress = new DTO_Address();
+                            dtoAddress.setAddress(diachi);
+                            dtoAddress.setFullname(hoten);
+                            dtoAddress.setPhone(sodienthoai);
+                            idaddress = "";
+                            billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                                @Override
+                                public void onApiAddress(DTO_Address profileDTO) {
+                                    idaddress = profileDTO.get_id();
+                                    arrayAdapter.performActionOnAllItems(vnp_TxnRef, idaddress);
+                                }
+                            });
+                            List<String> list1 = totalPriceManager.getListcart();
+                            billController.Upsoluongproduct(list1);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(BuynowActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            },4000);
+                        }
+                        if (checkphuongthuc.equals("thanhtoanvnpay")) {
+                            DTO_vnpay dtovnpay = new DTO_vnpay();
+                            dtovnpay.setAmount(totalPriceManager.getTotalOrderPrice());
+                            dtovnpay.setBankCode("NCB");
+                            postthamso(dtovnpay);
+                        }
+                    }else {
+                        String tile = "Thông báo mua hàng";
+                        String msg = "Bạn phải chọn phương thức";
+                        Dialogthongbao.showSuccessDialog(BuynowActivity.this,tile, msg);
+                    }
                 }
             }
         });
         totalPriceManager = TotalPriceManager.getInstance();
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         tv_tongtien.setText(decimalFormat.format(totalPriceManager.getTotalOrderPrice()) + " VND");
-
-        billController.Getidaddress(id, new Bill_controller.ApiResponseCallback() {
-            @Override
-            public void onApiGetidaddress(ProfileDTO profileDTO) {
-                tv_hoten.setText(profileDTO.getFullname());
-                tv_sdt.setText(profileDTO.getPhone());
-                tv_diachi.setText(profileDTO.getDiachi());
-            }
-        });
 
         getShopBuynow(id);
         idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
@@ -378,7 +389,18 @@ public class BuynowActivity extends AppCompatActivity{
                     billController.AddThanhtoan(dtovnpay);
                     List<String> list1 = totalPriceManager.getListcart();
                     billController.Upsoluongproduct(list1);
-                    arrayAdapter.performActionOnAllItems(vnp_TxnRef);
+
+                    DTO_Address dtoAddress = new DTO_Address();
+                    dtoAddress.setAddress(diachi);
+                    dtoAddress.setFullname(hoten);
+                    dtoAddress.setPhone(sodienthoai);
+                    billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                        @Override
+                        public void onApiAddress(DTO_Address profileDTO) {
+                            idaddress = profileDTO.get_id();
+                            arrayAdapter.performActionOnAllItems(vnp_TxnRef, idaddress);
+                        }
+                    });
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -392,12 +414,29 @@ public class BuynowActivity extends AppCompatActivity{
                 }
             }
     );
-
     public static String formatDateTime(Date date, String format) {
         // Tạo đối tượng SimpleDateFormat với định dạng
         SimpleDateFormat sdf = new SimpleDateFormat(format);
 
         // Chuyển đổi Date thành chuỗi định dạng
         return sdf.format(date);
+    }
+    public void diachi(){
+        billController.Getidaddress(id, new Bill_controller.ApiResponseCallback() {
+            @Override
+            public void onApiGetidaddress(ProfileDTO profileDTO) {
+                hoten = profileDTO.getFullname();
+                sodienthoai =profileDTO.getPhone();
+                diachi = profileDTO.getDiachi();
+                tv_hoten.setText(hoten);
+                tv_sdt.setText(sodienthoai);
+                tv_diachi.setText(diachi);
+            }
+        });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        diachi();
     }
 }

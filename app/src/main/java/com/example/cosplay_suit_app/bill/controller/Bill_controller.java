@@ -18,6 +18,7 @@ import com.example.cosplay_suit_app.Adapter.Adapter_chitietbill;
 import com.example.cosplay_suit_app.Adapter.Adapter_dskhach;
 import com.example.cosplay_suit_app.Adapter.Adapter_mualai;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
+import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_billdetail;
@@ -56,6 +57,7 @@ public class Bill_controller {
     static final String BASE_URL_Thanhtoan = url + "/thanhtoan/";
     Context mContext;
     DTO_idbill dtoIdbill;
+    String bienhoten,  biendiachi,  bienphone;
     private Adapter_buynow.OnAddBillCompleteListener onAddBillCompleteListener;
     public void setOnAddBillCompleteListener(Adapter_buynow.OnAddBillCompleteListener listener) {
         this.onAddBillCompleteListener = listener;
@@ -179,6 +181,38 @@ public class Bill_controller {
             }
         });
     }
+    public void Add_address(DTO_Address dtoAddress, ApiAddress apiAddress){
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_Thanhtoan)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        Thanhtoan_interface thanhtoanInterface = retrofit.create(Thanhtoan_interface.class);
+        Call<DTO_Address> objCall = thanhtoanInterface.Add_address(dtoAddress);
+
+        objCall.enqueue(new Callback<DTO_Address>() {
+            @Override
+            public void onResponse(Call<DTO_Address> call, Response<DTO_Address> response) {
+                if (response.isSuccessful()) {
+                    if (apiAddress != null) {
+                        if (response.isSuccessful()) {
+                            apiAddress.onApiAddress(response.body());
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "ADdres thất bại: ");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTO_Address> call, Throwable t) {
+                // Sử dụng mContext để hiển thị thông báo lỗi
+                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
+            }
+        });
+    }
+
     public void GetUserBillWait(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status, String type,
                                 RecyclerView recyclerView, LinearLayout noProductMessage) {
         // tạo gson
@@ -980,7 +1014,6 @@ public class Bill_controller {
                 Log.d("TAG", "onFailure: "+t.getMessage());
             }
         });
-
     }
 
 
@@ -992,5 +1025,8 @@ public class Bill_controller {
     }
     public interface Apicheckshop {
         void onApigetshop(List<DTO_SanPham> profileDTO);
+    }
+    public interface ApiAddress {
+        void onApiAddress(DTO_Address profileDTO);
     }
 }
