@@ -1,8 +1,11 @@
 package com.example.cosplay_suit_app.DTO;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CategoryDTO {
-    String _id,name;
-    String time_category;
+    @SerializedName("_id")
+    String _id;
+    String time_category,name;
 
     String imageCategory;
 

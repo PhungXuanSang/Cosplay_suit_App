@@ -2,9 +2,12 @@ package com.example.cosplay_suit_app.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DTO_properties {
+import java.io.Serializable;
+
+public class DTO_properties implements Serializable {
     @SerializedName("_id")
     String id_properties;
+    @SerializedName("nameproperties")
     String nameproperties;
     @SerializedName("amount")
     int amount;

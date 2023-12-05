@@ -36,8 +36,18 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         ItemImageDTO itemImage = imageList.get(position);
 //        String base64Image = itemImage.getImage();
 
-        Glide.with(context).load(itemImage.getImage()).centerCrop().into(holder.imageView);
+//        Glide.with(context).load(itemImage.getImage()).centerCrop().into(holder.imageView);
 
+        if (itemImage.getImage() != null) {
+            Glide.with(holder.itemView.getContext())
+                    .load(itemImage.getImage())
+                    .error(R.drawable.image)
+                    .placeholder(R.drawable.image)
+                    .centerCrop()
+                    .into(holder.imageView);
+        } else {
+            // Xử lý khi imageDTO hoặc imageDTO.getImage() là null
+        }
 //        // Giải mã chuỗi Base64 thành mảng byte
 //        byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
 //

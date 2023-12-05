@@ -50,8 +50,10 @@ public interface SanPhamInterface {
     Call<List<CategoryDTO>> ListCategory();
 
     @PUT("updateSP/{id}")
-    Call<DTO_SanPham> updateProduct(@Path("id") String id, @Body DTO_SanPham dtoSanPham);
+    Call<DTO_SanPham> updateProductNamePriceDec(@Path("id") String id, @Body DTO_SanPham dtoSanPham);
 
+    @PUT("updateStatus/{id}")
+    Call<DTO_SanPham> updateStatus(@Path("id") String id, @Body DTO_SanPham dtoSanPham);
     @GET("getlistsp/{id_shop}/{page}")
     Call<Product_Page> GetProductPage (@Path("id_shop") String tb_user , @Path("page") Integer page);
 
@@ -66,6 +68,10 @@ public interface SanPhamInterface {
 
     @GET("getproductCategory/{id_shop}/{id_category}")
     Call<List<DTO_SanPham>> GetProductCtegory (@Path("id_shop") String tb_user ,@Path("id_category") String id_category );
+
+    @PUT("updateProductPop/{nameproperties}/{id}")
+    Call<List<DTO_properties>> updateSize(@Path("id") String id,@Path("nameproperties") String name, @Body DTO_properties dtoSanPham);
+
 
     @GET("getlistNameSP")
     Call<NameProDTO> getListNamePro();

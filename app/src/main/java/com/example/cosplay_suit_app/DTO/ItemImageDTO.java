@@ -2,7 +2,9 @@ package com.example.cosplay_suit_app.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ItemImageDTO {
+import java.io.Serializable;
+
+public class ItemImageDTO implements Serializable {
     @SerializedName("anhnd")
     String image;
     public String getImage() {
