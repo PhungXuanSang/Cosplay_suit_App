@@ -387,6 +387,7 @@ public class BuynowActivity extends AppCompatActivity{
                     dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                     Bill_controller billController = new Bill_controller(this);
                     billController.AddThanhtoan(dtovnpay);
+
                     List<String> list1 = totalPriceManager.getListcart();
                     billController.Upsoluongproduct(list1);
 

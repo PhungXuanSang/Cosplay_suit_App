@@ -101,9 +101,10 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Định dạng ngày giờ theo yyyyMMddHHmmss
             String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
             if ("Wait".equals(checkstatus)){
-                billDetailDTO.getDtoBill().setStatus("Pack");
                 dtoBill.setStatus("Pack");
+                dtoBill.setTimeend("");
             } else if ("Pack".equals(checkstatus)) {
+                dtoBill.setTimeend("");
                 dtoBill.setStatus("Delivery");
             }else if ("Delivery".equals(checkstatus)) {
                 dtoBill.setStatus("Done");

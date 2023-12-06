@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,8 +13,11 @@ import android.widget.TextView;
 
 import com.example.cosplay_suit_app.Adapter.Adapter_chitietbill;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
+import com.example.cosplay_suit_app.DTO.DTO_Bill;
+import com.example.cosplay_suit_app.Package_bill.DTO.BillDTO;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
+import com.example.cosplay_suit_app.bill.controller.Cart_controller;
 
 import org.w3c.dom.Text;
 
@@ -27,10 +31,11 @@ public class Chitietbill_Activity extends AppCompatActivity {
     List<BillDetailDTO> list;
     Adapter_chitietbill chitietbill;
     RecyclerView recyclerView;
-    TextView tvstatusbill,idsotienthanhtoan;
+    TextView tvstatusbill,idsotienthanhtoan, idchonphuongthuc,tv_thoigianhoanthanh,tv_thanhtoan,tv_thoigiandat, tv_hoten, tv_sdt, tv_diachi;
     ImageView imgdonhang, id_back;
     Button btnmualai;
     int tongbill;
+    Cart_controller cartController = new Cart_controller(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +93,29 @@ public class Chitietbill_Activity extends AppCompatActivity {
                 imgdonhang.setImageResource(R.drawable.returnsbill);
             }
         }
+
+        cartController.getidbill(idbill, new Cart_controller.Apigetidbill() {
+            @Override
+            public void onApigetidbill(BillDTO billDTO) {
+                tv_thoigiandat.setText(billDTO.getTimestart());
+                if (billDTO.getVnp_TxnRef().length() > 8){
+                    Log.d("cd", "billDTO.getVnp_TxnRef(): " + billDTO.getVnp_TxnRef());
+                    idchonphuongthuc.setText("Thanh toán khi nhận hàng");
+                }else {
+                    idchonphuongthuc.setText("Thanh toán chuyển khoản");
+                }
+                if (billDTO.getTimeend().equals("")){
+                    tv_thoigianhoanthanh.setText("Đơn hàng chưa giao đến");
+                }else {
+                    Log.d("cd", "billDTO.getTimeend(): " + billDTO.getTimeend());
+                    tv_thoigianhoanthanh.setText(billDTO.getTimeend());
+                }
+                tv_hoten.setText(billDTO.getAddress().getFullname());
+                tv_diachi.setText(billDTO.getAddress().getAddress());
+                tv_sdt.setText(billDTO.getAddress().getPhone());
+
+            }
+        });
     }
 
     private void Anhxa() {
@@ -97,5 +125,12 @@ public class Chitietbill_Activity extends AppCompatActivity {
         id_back = findViewById(R.id.id_back);
         idsotienthanhtoan = findViewById(R.id.idsotienthanhtoan);
         btnmualai = findViewById(R.id.mualai);
+        idchonphuongthuc = findViewById(R.id.idchonphuongthuc);
+        tv_thoigiandat = findViewById(R.id.tv_thoigiandat);
+        tv_thanhtoan = findViewById(R.id.tv_thanhtoan);
+        tv_thoigianhoanthanh = findViewById(R.id.tv_thoigianhoanthanh);
+        tv_hoten = findViewById(R.id.tv_hoten);
+        tv_sdt = findViewById(R.id.tv_sdt);
+        tv_diachi = findViewById(R.id.tv_diachi);
     }
 }

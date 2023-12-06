@@ -1,5 +1,6 @@
 package com.example.cosplay_suit_app.Package_bill.DTO;
 
+import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
 import com.google.gson.annotations.SerializedName;
@@ -11,21 +12,41 @@ public class BillDTO {
     User user;
     @SerializedName("id_shop")
     Shop shop;
-    String timestart, timeend, status, ma_voucher;
+    @SerializedName("id_address")
+    DTO_Address address;
+    String timestart, timeend, status, ma_voucher,vnp_TxnRef;
     int totalPayment;
 
     public BillDTO() {
     }
 
-    public BillDTO(String _id, User user, Shop shop, String timestart, String timeend, String status, String ma_voucher, int totalPayment) {
+    public BillDTO(String _id, User user, Shop shop, DTO_Address address, String timestart, String timeend, String status, String ma_voucher, String vnp_TxnRef, int totalPayment) {
         this._id = _id;
         this.user = user;
         this.shop = shop;
+        this.address = address;
         this.timestart = timestart;
         this.timeend = timeend;
         this.status = status;
         this.ma_voucher = ma_voucher;
+        this.vnp_TxnRef = vnp_TxnRef;
         this.totalPayment = totalPayment;
+    }
+
+    public String getVnp_TxnRef() {
+        return vnp_TxnRef;
+    }
+
+    public void setVnp_TxnRef(String vnp_TxnRef) {
+        this.vnp_TxnRef = vnp_TxnRef;
+    }
+
+    public DTO_Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(DTO_Address address) {
+        this.address = address;
     }
 
     public String get_id() {

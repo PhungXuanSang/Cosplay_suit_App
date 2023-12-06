@@ -5,13 +5,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.BuynowActivity;
 import com.example.cosplay_suit_app.Activity.CartOrderActivity;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
+import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
+import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
+import com.example.cosplay_suit_app.Package_bill.DTO.BillDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -121,8 +126,53 @@ public class Cart_controller {
         });
     }
 
-    public void Listproperties(String id){
+    public void getidbill(String id, Apigetidbill apigetidbill){
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
 
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        CartOrderInterface billInterface = retrofit.create(CartOrderInterface.class);
+
+        // tạo đối tượng
+        Call<BillDTO> objCall = billInterface.getidbill(id);
+        objCall.enqueue(new Callback<BillDTO>() {
+            @Override
+            public void onResponse(Call<BillDTO> call, Response<BillDTO> response) {
+                if (response.isSuccessful()) {
+                    if (apigetidbill != null) {
+                        if (response.isSuccessful()) {
+                            apigetidbill.onApigetidbill(response.body());
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Không lấy được dữ liệu: ");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BillDTO> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+    }
+    public interface Apigetidbill {
+        void onApigetidbill(BillDTO billDTO);
     }
 
 }

@@ -1,11 +1,13 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
+import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_inbuynow;
 import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
+import com.example.cosplay_suit_app.Package_bill.DTO.BillDTO;
 
 import java.util.List;
 
@@ -37,6 +39,7 @@ public interface CartOrderInterface {
 
     @DELETE("deletecart/{id}")
     Call<CartOrderDTO> deletecart(@Path("id") String id);
-
+    @GET("getidbill/{id}")
+    Call<BillDTO> getidbill(@Path("id") String id);
 
 }

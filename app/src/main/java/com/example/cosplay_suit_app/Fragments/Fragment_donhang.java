@@ -33,6 +33,7 @@ import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
 import com.example.cosplay_suit_app.Package_bill.donhang.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
+import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -91,44 +92,80 @@ public class Fragment_donhang extends Fragment {
         rlxacnhandon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), xannhandon_Activity.class);
-                startActivity(intent);
+                if (id.equals("")){
+                    String tille = "Thông báo ứng dụng";
+                    String msg = "Bạn cần đăng nhập để sử dụng chức năng";
+                    Dialogthongbao.showSuccessDialog(getContext(), tille, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), xannhandon_Activity.class);
+                    startActivity(intent);
+                }
             }
         });
         rllayhang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Layhang_Activity.class);
-                startActivity(intent);
+                if (id.equals("")){
+                    String tille = "Thông báo ứng dụng";
+                    String msg = "Bạn cần đăng nhập để sử dụng chức năng";
+                    Dialogthongbao.showSuccessDialog(getContext(), tille, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), Layhang_Activity.class);
+                    startActivity(intent);
+                }
             }
         });
         rldanggiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Giaohang_Activity.class);
-                startActivity(intent);
+                if (id.equals("")){
+                    String tille = "Thông báo ứng dụng";
+                    String msg = "Bạn cần đăng nhập để sử dụng chức năng";
+                    Dialogthongbao.showSuccessDialog(getContext(), tille, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), Giaohang_Activity.class);
+                    startActivity(intent);
+                }
             }
         });
         rlhoanthanh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Danhgia_Activity.class);
-                startActivity(intent);
+                if (id.equals("")){
+                    String tille = "Thông báo ứng dụng";
+                    String msg = "Bạn cần đăng nhập để sử dụng chức năng";
+                    Dialogthongbao.showSuccessDialog(getContext(), tille, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), Danhgia_Activity.class);
+                    startActivity(intent);
+                }
             }
         });
         tvdonhangmua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Collection_adapter_bill.class);
-                intent.putExtra("checkactivity","user");
-                startActivity(intent);
+                if (id.equals("")){
+                    String tille = "Thông báo ứng dụng";
+                    String msg = "Bạn cần đăng nhập để sử dụng chức năng";
+                    Dialogthongbao.showSuccessDialog(getContext(), tille, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), Collection_adapter_bill.class);
+                    intent.putExtra("checkactivity","user");
+                    startActivity(intent);
+                }
             }
         });
         rl_allmualai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(),XemAllspdamuaActivity.class );
-                startActivity(intent);
+                if (id.equals("")){
+                    String tille = "Thông báo ứng dụng";
+                    String msg = "Bạn cần đăng nhập để sử dụng chức năng";
+                    Dialogthongbao.showSuccessDialog(getContext(), tille, msg);
+                }else {
+                    Intent intent = new Intent(getContext(),XemAllspdamuaActivity.class );
+                    startActivity(intent);
+                }
             }
         });
         list = new ArrayList<>();

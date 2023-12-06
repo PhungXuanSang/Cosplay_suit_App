@@ -24,6 +24,7 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.CartOrderActivity;
 
+import com.example.cosplay_suit_app.Activity.ProfileActivity;
 import com.example.cosplay_suit_app.Activity.SearchActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_TrenddingProduct;
@@ -72,6 +73,7 @@ public class Fragment_trangchu extends Fragment {
     SearchView searchView;
     CardView cardS;
     ArrayList<String> yourSuggestionsList = new ArrayList<>();
+    ImageView ic_taikhoan;
     public Fragment_trangchu() {
 
     }
@@ -90,6 +92,14 @@ public class Fragment_trangchu extends Fragment {
         rcv_cat = viewok.findViewById(R.id.rcv_cat);
         rcv_trending = viewok.findViewById(R.id.rcv_trending);
         imgShow = viewok.findViewById(R.id.image_slider);
+        ic_taikhoan = viewok.findViewById(R.id.ic_taikhoan);
+        ic_taikhoan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         cardS = viewok.findViewById(R.id.cartsearch);
 
