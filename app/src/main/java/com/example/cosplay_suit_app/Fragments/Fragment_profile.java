@@ -9,10 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -259,13 +261,24 @@ public class Fragment_profile extends Fragment {
 
     public void showDialog(Context context, String name, String address ) {
          dialog = new Dialog(getActivity());
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_register_shop);
 
         progressDialog = new ProgressDialog(getContext());
         sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         id_user = sharedPreferences.getString("id", "");
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao theo dialog màn hình
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
+        // Đặt vị trí của dialog ở phía dưới cùng của màn hình
+        layoutParams.gravity = Gravity.CENTER;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
 
         Button btn_regisshop = dialog.findViewById(R.id.btn_register_shop);
         EditText ed_nameshop = dialog.findViewById(R.id.signup_nameshop);
@@ -278,21 +291,28 @@ public class Fragment_profile extends Fragment {
 
                 String fname = ed_nameshop.getText().toString();
                 String a = ed_address.getText().toString();
+                if (fname.isEmpty()){
+                    Toast.makeText(context, "Bạn cần phải nhập tên shop!", Toast.LENGTH_SHORT).show();
+                }else if (a.isEmpty()){
+                    Toast.makeText(context, "Bạn cần phải nhập địa chỉ shop!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Log.d("zzzz", "id_user: " + id_user);
+                    Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+                    Shop shop = new Shop();
+                    shop.setNameshop(fname);
+                    shop.setAddress(a);
+                    shop.setId_user(id_user);
 
 
-                Log.d("zzzz", "id_user: " + id_user);
-                Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
-                Shop shop = new Shop();
-                shop.setNameshop(fname);
-                shop.setAddress(a);
-                shop.setId_user(id_user);
+                    AddShop(shop);
+                    User us = new User();
+                    us.setRole("Salesman");
+
+                    UpdateRole(us);
+                }
 
 
-                AddShop(shop);
-                User us = new User();
-                us.setRole("Salesman");
 
-                UpdateRole(us);
 
 
 
@@ -362,7 +382,7 @@ public class Fragment_profile extends Fragment {
                 if (response.isSuccessful()){
 
                     Log.e("zzzzz", "onResponse1: " +shop.getId_user());
-                    Toast.makeText(getContext(), shop.getId(), Toast.LENGTH_SHORT).show();
+
 
                 }else{
 //                    Log.e("zzz", "onResponse: " +signUpUser.getMessage());
