@@ -19,6 +19,7 @@ import com.example.cosplay_suit_app.DTO.DTO_SeenVoucher;
 import com.example.cosplay_suit_app.DTO.DTO_SeenVoucher_Check;
 import com.example.cosplay_suit_app.DTO.DTO_voucher;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
+import com.example.cosplay_suit_app.DTO.ShopCartorderDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.VoucherInterface;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
@@ -55,7 +56,12 @@ public class AdapterKhachHang extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.onlickCheck = onlickCheck;
         this.id_voucher = id_voucher;
     }
-
+    public void updateCheckBoxes(boolean isChecked) {
+        for (ProfileDTO profileDTO : arrayList) {
+            profileDTO.setCheck(isChecked);
+        }
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -104,6 +110,7 @@ public class AdapterKhachHang extends RecyclerView.Adapter<RecyclerView.ViewHold
                         Log.e("manh", "onBindViewHolder: " + dto_seenVoucherList.get(i).getId_user() );
                         if (user.getId().equalsIgnoreCase(dto_seenVoucherList.get(i).getId_user())){
                             viewHoldel.box.setEnabled(false);
+
                         }
                     }
                 } else {
@@ -121,13 +128,25 @@ public class AdapterKhachHang extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 if (viewHoldel.box.isChecked()){
                     onlickCheck.Check_ID(user.getId());
-                }else{
+                }else {
                     onlickCheck.Check_Delete_ID(user.getId());
                 }
-
             }
         });
+        viewHoldel.box.setChecked(user.isCheck());
+        if(user.isCheck() == true){
+            if (viewHoldel.box.isEnabled() == true){
+                onlickCheck.Check_ID(user.getId());
+                Log.e("manh", "onBindViewHolder 1: " + user.isCheck() );
+            }
+
+        }
+        if(user.isCheck() == false){
+            onlickCheck.Check_Delete_ID(user.getId());
+            Log.e("manh", "onBindViewHolder 2: " + user.isCheck() );
+        }
     }
+
 
     @Override
     public int getItemCount() {
