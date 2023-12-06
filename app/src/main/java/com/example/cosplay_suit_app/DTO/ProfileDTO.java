@@ -9,7 +9,7 @@ public class ProfileDTO {
     @SerializedName("id_user")
     User id_user;
 
-
+    boolean check = false;
 
     String phone,diachi,email,fullname;
 //    String id_user;
@@ -25,6 +25,14 @@ public class ProfileDTO {
         this.id_user = id_user;
     }
 
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
 
     public String getPhone() {
         return phone;
