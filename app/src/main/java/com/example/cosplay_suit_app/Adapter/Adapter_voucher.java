@@ -78,10 +78,15 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
         viewHolder.id_gui.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, SeenVoucherActivity.class);
-                intent.putExtra("id_voucher",voucher.getId());
-                intent.putExtra("amount",voucher.getAmount());
-                context.startActivity(intent);
+                if (voucher.getAmount().equalsIgnoreCase("0")){
+                    Toast.makeText(context, "Bạn đã hết voucher!", Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(context, SeenVoucherActivity.class);
+                    intent.putExtra("id_voucher",voucher.getId());
+                    intent.putExtra("amount",voucher.getAmount());
+                    context.startActivity(intent);
+                }
+
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -4,6 +4,7 @@ package com.example.cosplay_suit_app.Interface_retrofit;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SeenVoucher;
+import com.example.cosplay_suit_app.DTO.DTO_SeenVoucher_Check;
 import com.example.cosplay_suit_app.DTO.DTO_voucher;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 
@@ -28,5 +29,11 @@ public interface VoucherInterface {
     Call<DTO_voucher> deleteVoucherByShop(@Path("id") String id);
 
     @POST("seenvoucher")
-    Call<DTO_SeenVoucher> postSeen(@Body DTO_SeenVoucher dto);
+    Call<DTO_SeenVoucher_Check> postSeen(@Body DTO_SeenVoucher dto);
+
+    @PUT("updatevoucherSeen/{id}")
+    Call<DTO_voucher> updateVoucherSeen(@Path("id") String id,@Body DTO_voucher dtoVoucher);
+
+    @GET("listvoucher/{id_voucher}")
+    Call<List<DTO_SeenVoucher>> getlistSeen(@Path("id_voucher") String id_voucher);
 }
