@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F1E6E6"
     android:orientation="vertical">
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -40,24 +41,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/btn_11"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_fixx"
+            android:src="@drawable/ic_phoneee"
             android:layout_marginStart="8dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sđt:"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/id_Phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:textSize="17dp"
+            android:text="aaaa"
+            android:textStyle="bold"
+            android:gravity="center"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
@@ -66,24 +73,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/btn_12"
             android:layout_width="24dp"
             android:layout_marginStart="8dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_fixx"/>
+
+            android:src="@drawable/ic_emailll"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Email:"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/id_Email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
@@ -92,25 +106,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/btn_13"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/ic_fixx"
+
+            android:src="@drawable/ic_nameee"
 />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tên:"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/id_Fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
     <!-- role -->
@@ -118,26 +139,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/btn_14"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/ic_fixx"
+            android:src="@drawable/ic_diachiii"
 />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Địa chỉ:"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"/>
         <TextView
             android:id="@+id/id_andress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_gravity="center"
             android:text=""
+            android:textStyle="bold"
+            android:textSize="17dp"
             />
     </LinearLayout>
 
