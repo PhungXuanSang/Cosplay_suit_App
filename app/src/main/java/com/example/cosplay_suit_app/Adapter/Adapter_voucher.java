@@ -72,7 +72,6 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Adapter_voucher.ItemViewHolder viewHolder = (Adapter_voucher.ItemViewHolder) holder;
         voucher.getId();
         DTO_voucher dtoVoucher = new DTO_voucher();
-//            viewHolder.amount.setText("Số lượng: "+voucher.getAmount());
         viewHolder.content.setText(voucher.getContent());
         viewHolder.discount.setText("Giảm giá: " + voucher.getDiscount() + "%");
         viewHolder.amount.setText("Số lượng:" + voucher.getAmount());
