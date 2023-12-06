@@ -133,59 +133,58 @@ public class MualaiActivity extends AppCompatActivity {
                         if (checkphuongthuc.equals("thanhtoansau")) {
                             UUID uuid = UUID.randomUUID();
                             String vnp_TxnRef = uuid.toString().trim();
-                            // Lấy đối tượng Date hiện tại
-                            Date currentDate = new Date();
-                            // Định dạng ngày giờ theo yyyyMMddHHmmss
-                            String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
-
                             //Thêm vào bảng thanh toán
                             DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
                             dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
                             dtovnpay.setVnp_Amount(String.valueOf(amount*priceproduct));
-                            dtovnpay.setVnp_PayDate(formattedDateTime);
                             dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                             Bill_controller billController = new Bill_controller(MualaiActivity.this);
-                            billController.AddThanhtoan(dtovnpay);
-
-                            //Thêm vào bảng address
-                            DTO_Address dtoAddress = new DTO_Address();
-                            dtoAddress.setAddress(diachi);
-                            dtoAddress.setFullname(hoten);
-                            dtoAddress.setPhone(sodienthoai);
-                            billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                            billController.AddThanhtoan(dtovnpay, new Bill_controller.ApiAddThanhtoan() {
                                 @Override
-                                public void onApiAddress(DTO_Address profileDTO) {
-                                    idaddress = profileDTO.get_id();
-                                    //Thêm vào bảng bill
-                                    String currentDateTime = getCurrentDateTime();
-                                    Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
-                                    DTO_Bill dtoBill = new DTO_Bill();
-                                    dtoBill.setId_user(id);
-                                    dtoBill.setId_address(idaddress);
-                                    dtoBill.setId_shop(id_shop);
-                                    dtoBill.setVnp_TxnRef(vnp_TxnRef);
-                                    dtoBill.setStatus("Wait");
-                                    dtoBill.setTotalPayment(amount*priceproduct);
-                                    dtoBill.setMa_voucher("");
-                                    dtoBill.setTimestart(currentDateTime);
-                                    dtoBill.setTimeend("");
-                                    mualaiController.Addbill(dtoBill);
-
-                                    //sửa số lượng sp
-                                    DTO_properties dtoProperties = new DTO_properties();
-                                    dtoProperties.setAmount(amount);
-                                    dtoProperties.setNameproperties(selectedNameProperties);
-                                    billController.UpdateProduct(idproduct, dtoProperties);
-                                    mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                                public void onApiAddThanhtoan(DTO_thanhtoan dtoThanhtoan) {
+                                    //Thêm vào bảng address
+                                    DTO_Address dtoAddress = new DTO_Address();
+                                    dtoAddress.setAddress(diachi);
+                                    dtoAddress.setFullname(hoten);
+                                    dtoAddress.setPhone(sodienthoai);
+                                    billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
                                         @Override
-                                        public void onAddBillComplete() {
-                                            // Gọi databilldetail khi Addbill đã hoàn thành
-                                            mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
+                                        public void onApiAddress(DTO_Address dto_address) {
+                                            idaddress = dto_address.get_id();
+                                            //Thêm vào bảng bill
+                                            String currentDateTime = getCurrentDateTime();
+                                            Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
+                                            DTO_Bill dtoBill = new DTO_Bill();
+                                            dtoBill.setId_user(id);
+                                            dtoBill.setId_address(idaddress);
+                                            dtoBill.setId_shop(id_shop);
+                                            dtoBill.setId_thanhtoan(dtoThanhtoan.getIdthanhtoan());
+                                            dtoBill.setStatus("Wait");
+                                            dtoBill.setTotalPayment(amount*priceproduct);
+                                            dtoBill.setMa_voucher("");
+                                            dtoBill.setTimestart(currentDateTime);
+                                            dtoBill.setTimeend("");
+                                            mualaiController.Addbill(dtoBill);
 
+                                            //sửa số lượng sp
+                                            DTO_properties dtoProperties = new DTO_properties();
+                                            dtoProperties.setAmount(amount);
+                                            dtoProperties.setNameproperties(selectedNameProperties);
+                                            billController.UpdateProduct(idproduct, dtoProperties);
+                                            mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                                                @Override
+                                                public void onAddBillComplete() {
+                                                    // Gọi databilldetail khi Addbill đã hoàn thành
+                                                    mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
+
+                                                }
+                                            });
                                         }
                                     });
                                 }
                             });
+
+
 
 
                             new Handler().postDelayed(new Runnable() {
@@ -381,7 +380,7 @@ public class MualaiActivity extends AppCompatActivity {
                     //Thêm vào bảng thanh toán
                     DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
                     dtovnpay.setVnp_CardType(vnp_CardType);
-                    dtovnpay.setVnp_Amount(vnp_Amount);
+                    dtovnpay.setVnp_Amount(String.valueOf(Integer.parseInt(vnp_Amount) /100));
                     dtovnpay.setVnp_BankCode(vnp_BankCode);
                     dtovnpay.setVnp_BankTranNo(vnp_BankTranNo);
                     dtovnpay.setVnp_OrderInfo(vnp_OrderInfo);
@@ -393,42 +392,43 @@ public class MualaiActivity extends AppCompatActivity {
                     dtovnpay.setVnp_SecureHash(vnp_SecureHash);
                     dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                     Bill_controller billController = new Bill_controller(this);
-                    billController.AddThanhtoan(dtovnpay);
-
-                    //Thêm vào bảng address
-                    DTO_Address dtoAddress = new DTO_Address();
-                    dtoAddress.setAddress(diachi);
-                    dtoAddress.setFullname(hoten);
-                    dtoAddress.setPhone(sodienthoai);
-                    billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                    billController.AddThanhtoan(dtovnpay, new Bill_controller.ApiAddThanhtoan() {
                         @Override
-                        public void onApiAddress(DTO_Address profileDTO) {
-                            idaddress = profileDTO.get_id();
-                            //Thêm vào bảng bill
-                            String currentDateTime = getCurrentDateTime();
-                            Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
-                            DTO_Bill dtoBill = new DTO_Bill();
-                            dtoBill.setId_user(id);
-                            dtoBill.setId_shop(id_shop);
-                            dtoBill.setId_address(idaddress);
-                            dtoBill.setVnp_TxnRef(vnp_TxnRef);
-                            dtoBill.setStatus("Wait");
-                            dtoBill.setTotalPayment(amount*priceproduct);
-                            dtoBill.setMa_voucher("");
-                            dtoBill.setTimestart(currentDateTime);
-                            dtoBill.setTimeend("");
-                            mualaiController.Addbill(dtoBill);
-                            mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                        public void onApiAddThanhtoan(DTO_thanhtoan dtoThanhtoan) {
+                            //Thêm vào bảng address
+                            DTO_Address dtoAddress = new DTO_Address();
+                            dtoAddress.setAddress(diachi);
+                            dtoAddress.setFullname(hoten);
+                            dtoAddress.setPhone(sodienthoai);
+                            billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
                                 @Override
-                                public void onAddBillComplete() {
-                                    // Gọi databilldetail khi Addbill đã hoàn thành
-                                    mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
+                                public void onApiAddress(DTO_Address dto_address) {
+                                    idaddress = dto_address.get_id();
+                                    //Thêm vào bảng bill
+                                    String currentDateTime = getCurrentDateTime();
+                                    Mualai_controller mualaiController = new Mualai_controller(MualaiActivity.this);
+                                    DTO_Bill dtoBill = new DTO_Bill();
+                                    dtoBill.setId_user(id);
+                                    dtoBill.setId_shop(id_shop);
+                                    dtoBill.setId_address(idaddress);
+                                    dtoBill.setId_thanhtoan(dtoThanhtoan.getIdthanhtoan());
+                                    dtoBill.setStatus("Wait");
+                                    dtoBill.setTotalPayment(amount*priceproduct);
+                                    dtoBill.setMa_voucher("");
+                                    dtoBill.setTimestart(currentDateTime);
+                                    dtoBill.setTimeend("");
+                                    mualaiController.Addbill(dtoBill);
+                                    mualaiController.setOnAddBillCompleteListener(new OnAddBillCompleteListener() {
+                                        @Override
+                                        public void onAddBillComplete() {
+                                            // Gọi databilldetail khi Addbill đã hoàn thành
+                                            mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
+                                        }
+                                    });
                                 }
                             });
                         }
                     });
-
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

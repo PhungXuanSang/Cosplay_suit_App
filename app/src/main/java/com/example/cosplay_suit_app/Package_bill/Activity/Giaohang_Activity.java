@@ -40,7 +40,7 @@ public class Giaohang_Activity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView img_back;
 
-    String checkactivity = "", checkstatus= "";
+    String checkactivity = "user", checkstatus= "";
     LinearLayout noProductMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,15 +61,29 @@ public class Giaohang_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        Bill_controller billController = new Bill_controller(Giaohang_Activity.this);
-        billController.GetUserBillDelivery(id, list, arrayAdapter, "Delivery","user",  recyclerView, noProductMessage);
-        if (list.isEmpty()) {
-            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-            recyclerView.setVisibility(ListView.GONE);
-        } else {
-            noProductMessage.setVisibility(LinearLayout.GONE);
-            recyclerView.setVisibility(ListView.VISIBLE);
+        if (id != null && !id.isEmpty()) {
+            Bill_controller billController = new Bill_controller(this);
+            billController.GetUserBillDelivery(id, checkactivity, new Bill_controller.ApiGetUserBillDelivery() {
+                @Override
+                public void onApiGetUserBillDelivery(List<BillDetailDTO> profileDTO) {
+                    list.clear();
+                    if (profileDTO != null && !profileDTO.isEmpty()) {
+                        for (BillDetailDTO billDetail : profileDTO) {
+                            list.add(billDetail);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                    if (list.isEmpty()) {
+                        noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                        recyclerView.setVisibility(ListView.GONE);
+                    } else {
+                        noProductMessage.setVisibility(LinearLayout.GONE);
+                        recyclerView.setVisibility(ListView.VISIBLE);
+                    }
+                }
+            });
         }
+
     }
 
     public void Anhxa(){

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -49,11 +50,28 @@ public class Fragment_dahuy extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         String id = sharedPreferences.getString("id","");
         if (id != null && !id.isEmpty()) {
-            Bill_controller billController = new Bill_controller(context);
-            billController.GetUserBillCancelled(id, list, arrayAdapter, "Cancelled",checkactivity, recyclerView, noProductMessage);
-        } else {
-            Toast.makeText(context, "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
+            Bill_controller billController = new Bill_controller(getContext());
+            billController.GetUserBillCancelled(id, checkactivity, new Bill_controller.ApiGetUserBillCancelled() {
+                @Override
+                public void onApiGetUserBillCancelled(List<BillDetailDTO> profileDTO) {
+                    list.clear();
+                    if (profileDTO != null && !profileDTO.isEmpty()) {
+                        for (BillDetailDTO billDetail : profileDTO) {
+                            list.add(billDetail);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                    if (list.isEmpty()) {
+                        noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                        recyclerView.setVisibility(ListView.GONE);
+                    } else {
+                        noProductMessage.setVisibility(LinearLayout.GONE);
+                        recyclerView.setVisibility(ListView.VISIBLE);
+                    }
+                }
+            });
         }
+
         return viewok;
     }
 

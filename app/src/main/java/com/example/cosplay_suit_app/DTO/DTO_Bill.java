@@ -5,23 +5,31 @@ import com.google.gson.annotations.SerializedName;
 public class DTO_Bill {
     @SerializedName("_id")
     String _id;
-    String id_user, id_shop, timestart, timeend, status, ma_voucher, vnp_TxnRef, id_address;
+    String id_user, id_shop,id_thanhtoan, timestart, timeend, status, ma_voucher, id_address;
     int totalPayment;
 
     public DTO_Bill() {
     }
 
-    public DTO_Bill(String _id, String id_user, String id_shop, String timestart, String timeend, String status, String ma_voucher, String vnp_TxnRef,String id_address, int totalPayment) {
+    public DTO_Bill(String _id, String id_user, String id_shop, String id_thanhtoan, String timestart, String timeend, String status, String ma_voucher, String id_address, int totalPayment) {
         this._id = _id;
         this.id_user = id_user;
         this.id_shop = id_shop;
+        this.id_thanhtoan = id_thanhtoan;
         this.timestart = timestart;
         this.timeend = timeend;
         this.status = status;
         this.ma_voucher = ma_voucher;
-        this.vnp_TxnRef = vnp_TxnRef;
-        this.totalPayment = totalPayment;
         this.id_address = id_address;
+        this.totalPayment = totalPayment;
+    }
+
+    public String getId_thanhtoan() {
+        return id_thanhtoan;
+    }
+
+    public void setId_thanhtoan(String id_thanhtoan) {
+        this.id_thanhtoan = id_thanhtoan;
     }
 
     public String getId_address() {
@@ -30,14 +38,6 @@ public class DTO_Bill {
 
     public void setId_address(String id_address) {
         this.id_address = id_address;
-    }
-
-    public String getVnp_TxnRef() {
-        return vnp_TxnRef;
-    }
-
-    public void setVnp_TxnRef(String vnp_TxnRef) {
-        this.vnp_TxnRef = vnp_TxnRef;
     }
 
     public String get_id() {

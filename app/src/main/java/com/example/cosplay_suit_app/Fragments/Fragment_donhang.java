@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,14 +58,15 @@ public class Fragment_donhang extends Fragment {
     static String id="";
     String username_u;
     RelativeLayout rlhoanthanh, rlxacnhandon, rllayhang, rldanggiao, rl_allmualai;
-    TextView tv_sldanhgia, tvdonhangmua;
+    TextView tv_sldanhgia, tvdonhangmua,tv_slxacnhan,tv_sllayhang,tv_sldanggiao;
     RecyclerView rcv_mualai;
     List<BillDetailDTO> listmualaisp ;
     Adapter_mualai adapterMualai;
     Bill_controller billController = new Bill_controller(getActivity());
     NestedScrollView nestedScrollView;
-    LinearLayout llxemthemsp;
-
+    List<BillDetailDTO> listxacnhan;
+    List<BillDetailDTO> listlayhang;
+    List<BillDetailDTO> listdanggiao;
     public Fragment_donhang() {
     }
 
@@ -81,6 +83,9 @@ public class Fragment_donhang extends Fragment {
         rllayhang = viewok.findViewById(R.id.rl_layhang);
         rldanggiao = viewok.findViewById(R.id.rl_danggiao);
         tv_sldanhgia = viewok.findViewById(R.id.tv_sldanhgia);
+        tv_slxacnhan = viewok.findViewById(R.id.tv_slxacnhan);
+        tv_sllayhang = viewok.findViewById(R.id.tv_sllayhang);
+        tv_sldanggiao = viewok.findViewById(R.id.tv_sldanggiao);
         tvdonhangmua = viewok.findViewById(R.id.donhangmua);
         rcv_mualai = viewok.findViewById(R.id.rcv_mualai);
         rl_allmualai = viewok.findViewById(R.id.rl_allmualai);
@@ -170,6 +175,9 @@ public class Fragment_donhang extends Fragment {
         });
         list = new ArrayList<>();
         adapter = new DhWithoutCmtsAdapter(getContext(),list);
+        listxacnhan = new ArrayList<>();
+        listlayhang = new ArrayList<>();
+        listdanggiao = new ArrayList<>();
 
         listmualaisp = new ArrayList<>();
         adapterMualai = new Adapter_mualai(listmualaisp, getActivity());
@@ -191,6 +199,9 @@ public class Fragment_donhang extends Fragment {
         if (id != null && !id.isEmpty()) {
             billController.Getdsmualaisp(id,listmualaisp,adapterMualai);
             getsoluongdg();
+            getsoluongxacnhan();
+            getsoluonglayhang();
+            getsoluongdanggiao();
         }
     }
     private void getsoluongdg() {
@@ -240,6 +251,66 @@ public class Fragment_donhang extends Fragment {
             @Override
             public void onFailure(Call<List<ItemDoneDTO>> call, Throwable t) {
                 Log.d("CDG", "onFailure: " + t);
+            }
+        });
+    }
+    private void getsoluongxacnhan(){
+        billController.GetUserBillWait(id, "user", new Bill_controller.ApiGetUserBillWait() {
+            @Override
+            public void onApiGetUserBillWait(List<BillDetailDTO> profileDTO) {
+                listxacnhan.clear();
+                if (profileDTO != null && !profileDTO.isEmpty()) {
+                    for (BillDetailDTO billDetail : profileDTO) {
+                        listxacnhan.add(billDetail);
+                    }
+                }
+                int soLuong = listxacnhan.size();
+                if (soLuong > 0) {
+                    tv_slxacnhan.setVisibility(View.VISIBLE);
+                    tv_slxacnhan.setText(String.valueOf(soLuong));
+                } else {
+                    tv_slxacnhan.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+    private void getsoluonglayhang(){
+        billController.GetUserBillPack(id, "user", new Bill_controller.ApiGetUserBillPack() {
+            @Override
+            public void onApiGetUserBillPack(List<BillDetailDTO> profileDTO) {
+                listlayhang.clear();
+                if (profileDTO != null && !profileDTO.isEmpty()) {
+                    for (BillDetailDTO billDetail : profileDTO) {
+                        listlayhang.add(billDetail);
+                    }
+                }
+                int soLuong = listlayhang.size();
+                if (soLuong > 0) {
+                    tv_sllayhang.setVisibility(View.VISIBLE);
+                    tv_sllayhang.setText(String.valueOf(soLuong));
+                } else {
+                    tv_sllayhang.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+    private void getsoluongdanggiao(){
+        billController.GetUserBillDelivery(id, "user", new Bill_controller.ApiGetUserBillDelivery() {
+            @Override
+            public void onApiGetUserBillDelivery(List<BillDetailDTO> profileDTO) {
+                listdanggiao.clear();
+                if (profileDTO != null && !profileDTO.isEmpty()) {
+                    for (BillDetailDTO billDetail : profileDTO) {
+                        listdanggiao.add(billDetail);
+                    }
+                }
+                int soLuong = listdanggiao.size();
+                if (soLuong > 0) {
+                    tv_sldanggiao.setVisibility(View.VISIBLE);
+                    tv_sldanggiao.setText(String.valueOf(soLuong));
+                } else {
+                    tv_sldanggiao.setVisibility(View.GONE);
+                }
             }
         });
     }

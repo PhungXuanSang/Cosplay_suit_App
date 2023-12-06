@@ -1,7 +1,11 @@
 package com.example.cosplay_suit_app.ThanhtoanVNpay;
 
+import com.google.gson.annotations.SerializedName;
+
 public class DTO_thanhtoan {
-    String id_bill,idthanhtoan, vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType, vnp_OrderInfo, vnp_PayDate, vnp_ResponseCode,
+    @SerializedName("_id")
+    String idthanhtoan;
+    String id_bill, vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType, vnp_OrderInfo, vnp_PayDate, vnp_ResponseCode,
             vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus, vnp_TxnRef, vnp_SecureHash;
 
     public DTO_thanhtoan() {

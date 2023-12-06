@@ -48,6 +48,21 @@
                     android:text="Chờ xác nhận"
                     android:textSize="10dp"
                     android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_slxacnhan"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignTop="@id/img3"
+                    android:layout_alignRight="@id/img3"
+                    android:layout_marginTop="-3dp"
+                    android:layout_marginRight="-3dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:padding="3dp"
+                    android:textColor="@android:color/white"
+                    android:text="0"
+                    android:textSize="10sp"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -73,6 +88,21 @@
                     android:text="Lấy hàng"
                     android:textSize="10dp"
                     android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_sllayhang"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignTop="@id/img4"
+                    android:layout_alignRight="@id/img4"
+                    android:layout_marginTop="-3dp"
+                    android:layout_marginRight="-3dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:padding="3dp"
+                    android:textColor="@android:color/white"
+                    android:text="0"
+                    android:textSize="10sp"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -97,6 +127,21 @@
                     android:text="Đang giao"
                     android:textSize="10dp"
                     android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_sldanggiao"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignTop="@id/img5"
+                    android:layout_alignRight="@id/img5"
+                    android:layout_marginTop="-3dp"
+                    android:layout_marginRight="-3dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:padding="3dp"
+                    android:textColor="@android:color/white"
+                    android:text="0"
+                    android:textSize="10sp"
+                    android:visibility="gone"/>
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/rl_hoanthanh"
@@ -132,7 +177,8 @@
                     android:padding="3dp"
                     android:textColor="@android:color/white"
                     android:text="0"
-                    android:textSize="10sp"/>
+                    android:textSize="10sp"
+                    android:visibility="gone"/>
             </RelativeLayout>
         </TableRow>
     </TableLayout>

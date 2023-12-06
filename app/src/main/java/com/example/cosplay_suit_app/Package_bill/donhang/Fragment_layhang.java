@@ -50,17 +50,27 @@ public class Fragment_layhang extends Fragment {
         String id = sharedPreferences.getString("id","");
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(getContext());
-            billController.GetUserBillPack(id, list, arrayAdapter, "Pack",checkactivity, recyclerView, noProductMessage);
-        } else {
-            Toast.makeText(getContext(), "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
+            billController.GetUserBillPack(id, checkactivity, new Bill_controller.ApiGetUserBillPack() {
+                @Override
+                public void onApiGetUserBillPack(List<BillDetailDTO> profileDTO) {
+                    list.clear();
+                    if (profileDTO != null && !profileDTO.isEmpty()) {
+                        for (BillDetailDTO billDetail : profileDTO) {
+                            list.add(billDetail);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                    if (list.isEmpty()) {
+                        noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                        recyclerView.setVisibility(ListView.GONE);
+                    } else {
+                        noProductMessage.setVisibility(LinearLayout.GONE);
+                        recyclerView.setVisibility(ListView.VISIBLE);
+                    }
+                }
+            });
         }
-        if (list.isEmpty()) {
-            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-            recyclerView.setVisibility(ListView.GONE);
-        } else {
-            noProductMessage.setVisibility(LinearLayout.GONE);
-            recyclerView.setVisibility(ListView.VISIBLE);
-        }
+
         return viewok;
     }
 

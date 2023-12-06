@@ -214,7 +214,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
     }
-    public void performActionOnAllItems(String vnp_TxnRef, String addres) {
+    public void performActionOnAllItems(String idthanhtoan, String addres) {
         // Thực hiện công việc cần thiết trên tất cả các item
         for (DTO_buynow item : list) {
             String currentDateTime = getCurrentDateTime();
@@ -226,7 +226,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             dtoBill.setTimeend("");
             dtoBill.setStatus("Wait");
             dtoBill.setMa_voucher("");
-            dtoBill.setVnp_TxnRef(vnp_TxnRef);
+            dtoBill.setId_thanhtoan(idthanhtoan);
             dtoBill.setTotalPayment(item.getTongbill());
             Bill_controller billController = new Bill_controller(context);
             billController.Addbill(dtoBill);

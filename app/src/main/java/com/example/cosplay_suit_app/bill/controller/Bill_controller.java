@@ -4,14 +4,12 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
-import com.example.cosplay_suit_app.Activity.Dskhach_Activity;
 import com.example.cosplay_suit_app.Adapter.AdapterKhachHang;
 import com.example.cosplay_suit_app.Adapter.Adapter_XemAllspdamua;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
@@ -27,8 +25,6 @@ import com.example.cosplay_suit_app.DTO.DTO_idbill;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.DTOcheck_productshop;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
-import com.example.cosplay_suit_app.DTO.TotalPriceManager;
-import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
@@ -88,6 +84,9 @@ public class Bill_controller {
                     if (onAddBillCompleteListener != null) {
                         onAddBillCompleteListener.onAddBillComplete();
                     }
+                    String title = "Thông báo mua hàng";
+                    String msg = "Mua hàng thành công, hãy kiểm tra lại đơn hàng";
+                    Dialogthongbao.showSuccessDialog(mContext, title, msg);
                 } else {
                     Log.d(TAG, "nguyen1: " + response.message());
                 }
@@ -151,7 +150,7 @@ public class Bill_controller {
             }
         });
     }
-    public void AddThanhtoan(DTO_thanhtoan dtoThanhtoan){
+    public void AddThanhtoan(DTO_thanhtoan dtoThanhtoan, ApiAddThanhtoan apiAddThanhtoan){
         Gson gson = new GsonBuilder().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL_Thanhtoan)
@@ -163,14 +162,10 @@ public class Bill_controller {
         objCall.enqueue(new Callback<DTO_thanhtoan>() {
             @Override
             public void onResponse(Call<DTO_thanhtoan> call, Response<DTO_thanhtoan> response) {
-                if (response.isSuccessful()) {
-                    String title = "Thông báo mua hàng";
-                    String msg = "Đặt hàng thành công. Vui lòng kiểm tra đơn hàng";
-                    Dialogthongbao.showSuccessDialog(mContext, title, msg);
-                } else {
-                    String title = "Thông báo mua hàng";
-                    String msg = "Gặp vấn đề về thanh toán";
-                    Dialogthongbao.showSuccessDialog(mContext, title, msg);
+                if (apiAddThanhtoan != null) {
+                    if (response.isSuccessful()) {
+                        apiAddThanhtoan.onApiAddThanhtoan(response.body());
+                    }
                 }
             }
 
@@ -181,6 +176,9 @@ public class Bill_controller {
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
             }
         });
+    }
+    public interface ApiAddThanhtoan {
+        void onApiAddThanhtoan(DTO_thanhtoan profileDTO);
     }
     public void Add_address(DTO_Address dtoAddress, ApiAddress apiAddress){
         Gson gson = new GsonBuilder().setLenient().create();
@@ -213,9 +211,7 @@ public class Bill_controller {
             }
         });
     }
-
-    public void GetUserBillWait(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status, String type,
-                                RecyclerView recyclerView, LinearLayout noProductMessage) {
+    public void GetUserBillWait(String id, String type, ApiGetUserBillWait apiGetUserBillWait) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -243,29 +239,10 @@ public class Bill_controller {
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    List<BillDetailDTO> billDetailList = response.body();
-                    if (billDetailList != null && !billDetailList.isEmpty()) {
-                        for (BillDetailDTO billDetail : billDetailList) {
-                            if (billDetail.getDtoBill().getStatus().equals(status)){
-                                list.add(billDetail);
-                            }
-                        }
-                        if (list.isEmpty()) {
-                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-                            recyclerView.setVisibility(ListView.GONE);
-                        } else {
-                            noProductMessage.setVisibility(LinearLayout.GONE);
-                            recyclerView.setVisibility(ListView.VISIBLE);
-                        }
-                        arrayAdapter.notifyDataSetChanged();
-                    } else {
-
+                if (apiGetUserBillWait != null) {
+                    if (response.isSuccessful()) {
+                        apiGetUserBillWait.onApiGetUserBillWait(response.body());
                     }
-                } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -276,7 +253,10 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillPack(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
+    public interface ApiGetUserBillWait {
+        void onApiGetUserBillWait(List<BillDetailDTO> profileDTO);
+    }
+    public void GetUserBillPack(String id, String type, ApiGetUserBillPack apiGetUserBillWait) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -304,29 +284,10 @@ public class Bill_controller {
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    List<BillDetailDTO> billDetailList = response.body();
-                    if (billDetailList != null && !billDetailList.isEmpty()) {
-                        for (BillDetailDTO billDetail : billDetailList) {
-                            if (billDetail.getDtoBill().getStatus().equals(status)){
-                                list.add(billDetail);
-                            }
-                        }
-                        if (list.isEmpty()) {
-                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-                            recyclerView.setVisibility(ListView.GONE);
-                        } else {
-                            noProductMessage.setVisibility(LinearLayout.GONE);
-                            recyclerView.setVisibility(ListView.VISIBLE);
-                        }
-                        arrayAdapter.notifyDataSetChanged();
-                    } else {
-
+                if (apiGetUserBillWait != null) {
+                    if (response.isSuccessful()) {
+                        apiGetUserBillWait.onApiGetUserBillPack(response.body());
                     }
-                } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -337,7 +298,10 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillDelivery(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
+    public interface ApiGetUserBillPack {
+        void onApiGetUserBillPack(List<BillDetailDTO> profileDTO);
+    }
+    public void GetUserBillDelivery(String id, String type, ApiGetUserBillDelivery apiGetUserBillWait) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -365,29 +329,10 @@ public class Bill_controller {
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    List<BillDetailDTO> billDetailList = response.body();
-                    if (billDetailList != null && !billDetailList.isEmpty()) {
-                        for (BillDetailDTO billDetail : billDetailList) {
-                            if (billDetail.getDtoBill().getStatus().equals(status)){
-                                list.add(billDetail);
-                            }
-                        }
-                        if (list.isEmpty()) {
-                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-                            recyclerView.setVisibility(ListView.GONE);
-                        } else {
-                            noProductMessage.setVisibility(LinearLayout.GONE);
-                            recyclerView.setVisibility(ListView.VISIBLE);
-                        }
-                        arrayAdapter.notifyDataSetChanged();
-                    } else {
-
+                if (apiGetUserBillWait != null) {
+                    if (response.isSuccessful()) {
+                        apiGetUserBillWait.onApiGetUserBillDelivery(response.body());
                     }
-                } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -398,7 +343,10 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillDone(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
+    public interface ApiGetUserBillDelivery {
+        void onApiGetUserBillDelivery(List<BillDetailDTO> profileDTO);
+    }
+    public void GetUserBillDone(String id, String type, ApiGetUserBillDone apiGetUserBillWait) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -426,29 +374,10 @@ public class Bill_controller {
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    List<BillDetailDTO> billDetailList = response.body();
-                    if (billDetailList != null && !billDetailList.isEmpty()) {
-                        for (BillDetailDTO billDetail : billDetailList) {
-                            if (billDetail.getDtoBill().getStatus().equals(status)){
-                                list.add(billDetail);
-                            }
-                        }
-                        if (list.isEmpty()) {
-                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-                            recyclerView.setVisibility(ListView.GONE);
-                        } else {
-                            noProductMessage.setVisibility(LinearLayout.GONE);
-                            recyclerView.setVisibility(ListView.VISIBLE);
-                        }
-                        arrayAdapter.notifyDataSetChanged();
-                    } else {
-
+                if (apiGetUserBillWait != null) {
+                    if (response.isSuccessful()) {
+                        apiGetUserBillWait.onApiGetUserBillDone(response.body());
                     }
-                } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -459,7 +388,10 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillCancelled(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
+    public interface ApiGetUserBillDone {
+        void onApiGetUserBillDone(List<BillDetailDTO> profileDTO);
+    }
+    public void GetUserBillCancelled(String id, String type, ApiGetUserBillCancelled apiGetUserBillWait) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -487,29 +419,10 @@ public class Bill_controller {
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    List<BillDetailDTO> billDetailList = response.body();
-                    if (billDetailList != null && !billDetailList.isEmpty()) {
-                        for (BillDetailDTO billDetail : billDetailList) {
-                            if (billDetail.getDtoBill().getStatus().equals(status)){
-                                list.add(billDetail);
-                            }
-                        }
-                        if (list.isEmpty()) {
-                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-                            recyclerView.setVisibility(ListView.GONE);
-                        } else {
-                            noProductMessage.setVisibility(LinearLayout.GONE);
-                            recyclerView.setVisibility(ListView.VISIBLE);
-                        }
-                        arrayAdapter.notifyDataSetChanged();
-                    } else {
-
+                if (apiGetUserBillWait != null) {
+                    if (response.isSuccessful()) {
+                        apiGetUserBillWait.onApiGetUserBillCancelled(response.body());
                     }
-                } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -520,7 +433,10 @@ public class Bill_controller {
         });
 
     }
-    public void GetUserBillReturns(String id, List<BillDetailDTO> list, Adapter_Bill arrayAdapter, String status,String type, RecyclerView recyclerView, LinearLayout noProductMessage) {
+    public interface ApiGetUserBillCancelled {
+        void onApiGetUserBillCancelled(List<BillDetailDTO> profileDTO);
+    }
+    public void GetUserBillReturns(String id, String type, ApiGetUserBillReturns apiGetUserBillWait) {
         // tạo gson
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -548,29 +464,10 @@ public class Bill_controller {
         objCall.enqueue(new Callback<List<BillDetailDTO>>() {
             @Override
             public void onResponse(Call<List<BillDetailDTO>> call, Response<List<BillDetailDTO>> response) {
-                if (response.isSuccessful()) {
-                    list.clear();
-                    List<BillDetailDTO> billDetailList = response.body();
-                    if (billDetailList != null && !billDetailList.isEmpty()) {
-                        for (BillDetailDTO billDetail : billDetailList) {
-                            if (billDetail.getDtoBill().getStatus().equals(status)){
-                                list.add(billDetail);
-                            }
-                        }
-                        if (list.isEmpty()) {
-                            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-                            recyclerView.setVisibility(ListView.GONE);
-                        } else {
-                            noProductMessage.setVisibility(LinearLayout.GONE);
-                            recyclerView.setVisibility(ListView.VISIBLE);
-                        }
-                        arrayAdapter.notifyDataSetChanged();
-                    } else {
-
+                if (apiGetUserBillWait != null) {
+                    if (response.isSuccessful()) {
+                        apiGetUserBillWait.onApiGetUserBillReturns(response.body());
                     }
-                } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -580,6 +477,9 @@ public class Bill_controller {
             }
         });
 
+    }
+    public interface ApiGetUserBillReturns {
+        void onApiGetUserBillReturns(List<BillDetailDTO> profileDTO);
     }
     public void UpdateStatusBill(String idbill,DTO_Bill dtoBill){
         //Tạo đối tượng chuyển đổi kiểu dữ liệu

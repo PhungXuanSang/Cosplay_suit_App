@@ -30,7 +30,6 @@ public class Fragment_xacnhan extends Fragment {
     List<BillDetailDTO> list;
     Adapter_Bill arrayAdapter;
     RecyclerView recyclerView;
-    Context context;
     String checkactivity, checkstatus= "Wait";
     LinearLayout noProductMessage;
 
@@ -53,16 +52,25 @@ public class Fragment_xacnhan extends Fragment {
         String id = sharedPreferences.getString("id","");
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(getContext());
-            billController.GetUserBillWait(id, list, arrayAdapter, "Wait",checkactivity, recyclerView, noProductMessage);
-        } else {
-            Toast.makeText(getContext(), "Lỗi id không tồn tại", Toast.LENGTH_SHORT).show();
-        }
-        if (list.isEmpty()) {
-            noProductMessage.setVisibility(LinearLayout.VISIBLE);
-            recyclerView.setVisibility(ListView.GONE);
-        } else {
-            noProductMessage.setVisibility(LinearLayout.GONE);
-            recyclerView.setVisibility(ListView.VISIBLE);
+            billController.GetUserBillWait(id, checkactivity, new Bill_controller.ApiGetUserBillWait() {
+                @Override
+                public void onApiGetUserBillWait(List<BillDetailDTO> profileDTO) {
+                    list.clear();
+                    if (profileDTO != null && !profileDTO.isEmpty()) {
+                        for (BillDetailDTO billDetail : profileDTO) {
+                            list.add(billDetail);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                    if (list.isEmpty()) {
+                        noProductMessage.setVisibility(LinearLayout.VISIBLE);
+                        recyclerView.setVisibility(ListView.GONE);
+                    } else {
+                        noProductMessage.setVisibility(LinearLayout.GONE);
+                        recyclerView.setVisibility(ListView.VISIBLE);
+                    }
+                }
+            });
         }
         return viewok;
     }

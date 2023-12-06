@@ -56,6 +56,9 @@ public class Mualai_controller {
                     if (onAddBillCompleteListener != null) {
                         onAddBillCompleteListener.onAddBillComplete();
                     }
+                    String title = "Thông báo mua hàng";
+                    String msg = "Mua hàng thành công, hãy kiểm tra lại đơn hàng";
+                    Dialogthongbao.showSuccessDialog(context, title, msg);
                 } else {
                     Log.d(TAG, "nguyen1: " + response.message());
                 }

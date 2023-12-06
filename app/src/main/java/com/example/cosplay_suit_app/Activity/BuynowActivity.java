@@ -107,31 +107,29 @@ public class BuynowActivity extends AppCompatActivity{
                         if (checkphuongthuc.equals("thanhtoansau")) {
                             UUID uuid = UUID.randomUUID();
                             String vnp_TxnRef = uuid.toString().trim();
-                            // Lấy đối tượng Date hiện tại
-                            Date currentDate = new Date();
-                            // Định dạng ngày giờ theo yyyyMMddHHmmss
-                            String formattedDateTime = formatDateTime(currentDate, "yyyyMMddHHmmss");
-
                             DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
                             dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
                             dtovnpay.setVnp_Amount(String.valueOf(totalPriceManager.getTotalOrderPrice()));
-                            dtovnpay.setVnp_PayDate(formattedDateTime);
                             dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                             Bill_controller billController = new Bill_controller(BuynowActivity.this);
-                            billController.AddThanhtoan(dtovnpay);
-
-                            DTO_Address dtoAddress = new DTO_Address();
-                            dtoAddress.setAddress(diachi);
-                            dtoAddress.setFullname(hoten);
-                            dtoAddress.setPhone(sodienthoai);
-                            idaddress = "";
-                            billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                            billController.AddThanhtoan(dtovnpay, new Bill_controller.ApiAddThanhtoan() {
                                 @Override
-                                public void onApiAddress(DTO_Address profileDTO) {
-                                    idaddress = profileDTO.get_id();
-                                    arrayAdapter.performActionOnAllItems(vnp_TxnRef, idaddress);
+                                public void onApiAddThanhtoan(DTO_thanhtoan dtoThanhtoan) {
+                                    DTO_Address dtoAddress = new DTO_Address();
+                                    dtoAddress.setAddress(diachi);
+                                    dtoAddress.setFullname(hoten);
+                                    dtoAddress.setPhone(sodienthoai);
+                                    billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                                        @Override
+                                        public void onApiAddress(DTO_Address dto_address) {
+                                            idaddress = dto_address.get_id();
+                                            arrayAdapter.performActionOnAllItems(dtoThanhtoan.getIdthanhtoan(), idaddress);
+                                        }
+                                    });
                                 }
                             });
+
+
                             List<String> list1 = totalPriceManager.getListcart();
                             billController.Upsoluongproduct(list1);
                             new Handler().postDelayed(new Runnable() {
@@ -374,7 +372,7 @@ public class BuynowActivity extends AppCompatActivity{
 
                     DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
                     dtovnpay.setVnp_CardType(vnp_CardType);
-                    dtovnpay.setVnp_Amount(vnp_Amount);
+                    dtovnpay.setVnp_Amount(String.valueOf(Integer.parseInt(vnp_Amount) /100));
                     dtovnpay.setVnp_BankCode(vnp_BankCode);
                     dtovnpay.setVnp_BankTranNo(vnp_BankTranNo);
                     dtovnpay.setVnp_OrderInfo(vnp_OrderInfo);
@@ -386,20 +384,22 @@ public class BuynowActivity extends AppCompatActivity{
                     dtovnpay.setVnp_SecureHash(vnp_SecureHash);
                     dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                     Bill_controller billController = new Bill_controller(this);
-                    billController.AddThanhtoan(dtovnpay);
-
-                    List<String> list1 = totalPriceManager.getListcart();
-                    billController.Upsoluongproduct(list1);
-
-                    DTO_Address dtoAddress = new DTO_Address();
-                    dtoAddress.setAddress(diachi);
-                    dtoAddress.setFullname(hoten);
-                    dtoAddress.setPhone(sodienthoai);
-                    billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                    billController.AddThanhtoan(dtovnpay, new Bill_controller.ApiAddThanhtoan() {
                         @Override
-                        public void onApiAddress(DTO_Address profileDTO) {
-                            idaddress = profileDTO.get_id();
-                            arrayAdapter.performActionOnAllItems(vnp_TxnRef, idaddress);
+                        public void onApiAddThanhtoan(DTO_thanhtoan dtoThanhtoan) {
+                            DTO_Address dtoAddress = new DTO_Address();
+                            dtoAddress.setAddress(diachi);
+                            dtoAddress.setFullname(hoten);
+                            dtoAddress.setPhone(sodienthoai);
+                            billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
+                                @Override
+                                public void onApiAddress(DTO_Address dtoAddress) {
+                                    idaddress = dtoAddress.get_id();
+                                    arrayAdapter.performActionOnAllItems(dtoThanhtoan.getIdthanhtoan(), idaddress);
+                                }
+                            });
+                            List<String> list1 = totalPriceManager.getListcart();
+                            billController.Upsoluongproduct(list1);
                         }
                     });
                     new Handler().postDelayed(new Runnable() {

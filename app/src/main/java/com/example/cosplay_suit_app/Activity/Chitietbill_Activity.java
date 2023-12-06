@@ -98,16 +98,16 @@ public class Chitietbill_Activity extends AppCompatActivity {
             @Override
             public void onApigetidbill(BillDTO billDTO) {
                 tv_thoigiandat.setText(billDTO.getTimestart());
-                if (billDTO.getVnp_TxnRef().length() > 8){
-                    Log.d("cd", "billDTO.getVnp_TxnRef(): " + billDTO.getVnp_TxnRef());
+                if (billDTO.getThanhtoan().getVnp_TxnRef().length() > 8){
                     idchonphuongthuc.setText("Thanh toán khi nhận hàng");
+                    tv_thanhtoan.setText("Đơn hàng chưa giao đến");
                 }else {
                     idchonphuongthuc.setText("Thanh toán chuyển khoản");
+                    tv_thanhtoan.setText(billDTO.getThanhtoan().getVnp_PayDate());
                 }
                 if (billDTO.getTimeend().equals("")){
                     tv_thoigianhoanthanh.setText("Đơn hàng chưa giao đến");
                 }else {
-                    Log.d("cd", "billDTO.getTimeend(): " + billDTO.getTimeend());
                     tv_thoigianhoanthanh.setText(billDTO.getTimeend());
                 }
                 tv_hoten.setText(billDTO.getAddress().getFullname());
