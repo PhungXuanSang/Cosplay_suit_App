@@ -49,17 +49,25 @@ Button buttonAddProduct;
             @Override
             public void onClick(View v) {
                  DTO_voucher voucher = new DTO_voucher();
-                 int amount;
-                 amount= Integer.parseInt(ed_amount.getText().toString());
+                int discount;
+                try {
+                    discount = Integer.parseInt(ed_Discount.getText().toString());
+                } catch (NumberFormatException e) {
+                    // Handle the case where the input is not a valid integer
+                    Toast.makeText(AddVoucher_Activity.this, "Invalid amount", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                 if (amount<0){
-                     voucher.setAmount(String.valueOf(1));
-                 }else if (amount>99){
-                     voucher.setAmount(String.valueOf(99));
-                 }
+                if (discount < 0) {
+                    voucher.setDiscount(String.valueOf(1));
+                } else if (discount > 100) {
+                    voucher.setDiscount(String.valueOf(100));
+                } else {
+                    voucher.setDiscount(String.valueOf(discount));
+                }
 
-                 voucher.setContent(ed_content.getText().toString());
-                 voucher.setDiscount(ed_Discount.getText().toString());
+                voucher.setContent(ed_content.getText().toString());
+                 voucher.setAmount(ed_amount.getText().toString());
                  voucher.setId_shop(idshop);
                 callAddProduct(voucher);
             }
