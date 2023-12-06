@@ -174,8 +174,6 @@ public class Fragment_donhang extends Fragment {
         listmualaisp = new ArrayList<>();
         adapterMualai = new Adapter_mualai(listmualaisp, getActivity());
         rcv_mualai.setAdapter(adapterMualai);
-        rcv_mualai.setNestedScrollingEnabled(false);
-        billController.Getdsmualaisp(id,listmualaisp,adapterMualai);
         return viewok;
     }
 
@@ -191,6 +189,7 @@ public class Fragment_donhang extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         id = sharedPreferences.getString("id", "");
         if (id != null && !id.isEmpty()) {
+            billController.Getdsmualaisp(id,listmualaisp,adapterMualai);
             getsoluongdg();
         }
     }
