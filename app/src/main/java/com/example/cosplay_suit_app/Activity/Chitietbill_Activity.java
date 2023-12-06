@@ -22,8 +22,12 @@ import com.example.cosplay_suit_app.bill.controller.Cart_controller;
 import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Chitietbill_Activity extends AppCompatActivity {
     String idbill ="",stringstatus="",checkactivity="";
@@ -100,10 +104,29 @@ public class Chitietbill_Activity extends AppCompatActivity {
                 tv_thoigiandat.setText(billDTO.getTimestart());
                 if (billDTO.getThanhtoan().getVnp_TxnRef().length() > 8){
                     idchonphuongthuc.setText("Thanh toán khi nhận hàng");
-                    tv_thanhtoan.setText("Đơn hàng chưa giao đến");
+                    if (billDTO.getTimeend().equals("")){
+                        tv_thanhtoan.setText("Đơn hàng chưa giao đến");
+                    }else {
+                        tv_thanhtoan.setText(billDTO.getTimeend());
+                    }
                 }else {
                     idchonphuongthuc.setText("Thanh toán chuyển khoản");
-                    tv_thanhtoan.setText(billDTO.getThanhtoan().getVnp_PayDate());
+                    // Định dạng ban đầu của dữ liệu thời gian
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
+
+                    // Định dạng mới bạn muốn
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+                    // Chuyển đổi từ định dạng ban đầu sang Date
+                    Date date = null;
+                    try {
+                        date = inputFormat.parse(billDTO.getThanhtoan().getVnp_PayDate());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    // Chuyển đổi Date sang định dạng mới
+                    String outputTime = outputFormat.format(date);
+                    tv_thanhtoan.setText(outputTime);
                 }
                 if (billDTO.getTimeend().equals("")){
                     tv_thoigianhoanthanh.setText("Đơn hàng chưa giao đến");
