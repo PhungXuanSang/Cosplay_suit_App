@@ -136,6 +136,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 holder1.btnmualai.setVisibility(View.GONE);
             }else {
                 holder1.btn_upstatus.setVisibility(View.GONE);
+                holder1.btnmualai.setVisibility(View.GONE);
             }
         }else {
             if (billDetailDTO.getDtoBill().getStatus().equals("Done")){

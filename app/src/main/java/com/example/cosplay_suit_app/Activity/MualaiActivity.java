@@ -235,12 +235,14 @@ public class MualaiActivity extends AppCompatActivity {
         billController.Getidaddress(id, new Bill_controller.ApiResponseCallback() {
             @Override
             public void onApiGetidaddress(ProfileDTO profileDTO) {
-                hoten = profileDTO.getFullname();
-                sodienthoai =profileDTO.getPhone();
-                diachi = profileDTO.getDiachi();
-                tv_hoten.setText(hoten);
-                tv_sdt.setText(sodienthoai);
-                tv_diachi.setText(diachi);
+                if (profileDTO != null){
+                    hoten = profileDTO.getFullname();
+                    sodienthoai = profileDTO.getPhone();
+                    diachi = profileDTO.getDiachi();
+                    tv_hoten.setText(hoten);
+                    tv_sdt.setText(sodienthoai);
+                    tv_diachi.setText(diachi);
+                }
             }
         });
     }
