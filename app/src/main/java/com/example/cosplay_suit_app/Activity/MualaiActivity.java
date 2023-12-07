@@ -124,7 +124,7 @@ public class MualaiActivity extends AppCompatActivity {
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (hoten.equals("") || sodienthoai.equals("") || diachi.equals("")){
+               if (hoten.equals("") || sodienthoai.equals("") || diachi.equals("")){
                     String tile = "Thông báo mua hàng";
                     String msg = "Bạn phải chọn điền đầy đủ địa chỉ";
                     Dialogthongbao.showSuccessDialog(MualaiActivity.this,tile, msg);
@@ -241,6 +241,8 @@ public class MualaiActivity extends AppCompatActivity {
                 tv_hoten.setText(hoten);
                 tv_sdt.setText(sodienthoai);
                 tv_diachi.setText(diachi);
+
+                Log.d(TAG, "onApiGetidaddress: ");
             }
         });
     }

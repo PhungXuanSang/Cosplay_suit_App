@@ -1,16 +1,21 @@
 package com.example.cosplay_suit_app.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
 
 import java.util.List;
@@ -35,7 +40,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         ItemImageDTO itemImage = imageList.get(position);
 //        String base64Image = itemImage.getImage();
-
+        Log.d("DetailProductActivity", "Binding image at position: " + position);
 //        Glide.with(context).load(itemImage.getImage()).centerCrop().into(holder.imageView);
 
         if (itemImage.getImage() != null) {
@@ -48,6 +53,44 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         } else {
             // Xử lý khi imageDTO hoặc imageDTO.getImage() là null
         }
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Xác nhận xóa");
+                builder.setMessage("Bạn có muốn xóa ảnh này không?");
+
+                builder.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        int adapterPosition = holder.getAdapterPosition();
+
+                        if (adapterPosition != RecyclerView.NO_POSITION) {
+
+                            imageList.remove(adapterPosition);
+
+                            notifyItemRemoved(adapterPosition);
+
+                            Toast.makeText(context, "Ảnh đã được xóa", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(context, "Hủy xóa ảnh này", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                return false;
+            }
+        });
 //        // Giải mã chuỗi Base64 thành mảng byte
 //        byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
 //
