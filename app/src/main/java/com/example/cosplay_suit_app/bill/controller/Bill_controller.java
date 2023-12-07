@@ -145,7 +145,6 @@ public class Bill_controller {
             @Override
             public void onFailure(Call<DTO_billdetail> call, Throwable t) {
                 // Sử dụng mContext để hiển thị thông báo lỗi
-                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
             }
         });
@@ -172,7 +171,6 @@ public class Bill_controller {
             @Override
             public void onFailure(Call<DTO_thanhtoan> call, Throwable t) {
                 // Sử dụng mContext để hiển thị thông báo lỗi
-                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
             }
         });
@@ -206,7 +204,6 @@ public class Bill_controller {
             @Override
             public void onFailure(Call<DTO_Address> call, Throwable t) {
                 // Sử dụng mContext để hiển thị thông báo lỗi
-                Toast.makeText(mContext, "Lỗi: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "nguyen2: " + t.getLocalizedMessage());
             }
         });
@@ -555,8 +552,6 @@ public class Bill_controller {
 
                     }
                 } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -649,8 +644,7 @@ public class Bill_controller {
 
                     }
                 } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -707,8 +701,7 @@ public class Bill_controller {
 
                     }
                 } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -820,8 +813,6 @@ public class Bill_controller {
 
                     }
                 } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -959,8 +950,6 @@ public class Bill_controller {
 
                     }
                 } else {
-                    Toast.makeText(mContext,
-                            "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
