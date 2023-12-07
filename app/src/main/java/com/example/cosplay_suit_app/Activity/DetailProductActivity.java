@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -91,11 +93,12 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
     StorageReference storageReference;
     FirebaseStorage storage;
     PropAdapter propAdapter;
+
     SpinnerCategotyAdapter categotyAdapter;
     ArrayList<CategoryDTO> listLoai = new ArrayList<>();
     private CategoryDTO selectedCategory;
     Uri uri;
-
+    private ArrayList<Uri> uriList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +130,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         listProp = new Gson().fromJson(stringsize,
                 new TypeToken<List<DTO_properties>>() {}.getType());
 
+        selectedImageList = new ArrayList<>();
         adapterImageList = new ImageAdapter(listImage,this);
         binding.rclvImage.setAdapter(adapterImageList);
         binding.rclvImage.setLayoutManager(new LinearLayoutManager(DetailProductActivity.this, LinearLayoutManager.HORIZONTAL, false));
@@ -140,7 +144,9 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         categotyAdapter = new SpinnerCategotyAdapter(this, R.layout.item_spinner_category, listLoai);
         categotyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spnAddProductLoai.setAdapter(categotyAdapter);
-//        checkAndSetCategory(id_category);
+
+        callCategory();
+
 
         if (status == false) {
             binding.tvDetailProductStatus.setText("Không thể bán");
@@ -151,10 +157,11 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
             binding.lldetailProductStatus.setBackgroundColor(ContextCompat.getColor(this, R.color.material_green_400));
 
         }
+
         binding.ivAddProductAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                openImagePicker();
             }
         });
         binding.edtRudProductPrice.addTextChangedListener(new TextWatcher() {
@@ -205,17 +212,116 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
                 startActivity(new Intent(DetailProductActivity.this,QlspActivity.class));
             }
         });
+        selectedCategory = new CategoryDTO();
+        binding.spnAddProductLoai.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                selectedCategory = listLoai.get(i);
+                Log.d("TAG", "onItemSelected: " + selectedCategory.getId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(DetailProductActivity.this, "222222222", Toast.LENGTH_SHORT).show();
+            }
+        });
         onclick();
 //        getListCat();
         getInfoProduct();
         status();
-        callCategory();
+
+
     }
     private long parseLongSafely(String number) {
         try {
             return Long.parseLong(number);
         } catch (NumberFormatException e) {
             return 0;
+        }
+    }
+    private void openImagePicker() {
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(intent, REQUEST_IMAGE_PICK);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+            if (data.getData() != null) {
+                // Chọn một ảnh
+                Uri imageUri = data.getData();
+                uriList.add(imageUri);
+                Log.d("DetailProductActivity", "Single image selected. New size of uriList: " + uriList.size());
+            } else if (data.getClipData() != null) {
+                // Chọn nhiều ảnh
+                ClipData clipData = data.getClipData();
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    Uri imageUri = clipData.getItemAt(i).getUri();
+                    uriList.add(imageUri);
+                }
+
+                // Gọi phương thức uploadImage() hoặc xử lý các URI ở đây
+                uploadImages(uriList);
+
+                // Cập nhật RecyclerView hoặc Adapter của bạn nếu cần
+                adapterImageList.notifyDataSetChanged();
+
+                // Log để kiểm tra
+                Log.d("DetailProductActivity", "Multiple images selected. New size of uriList: " + uriList.size());
+            }
+        }
+    }
+
+
+    private void uploadImages(List<Uri> uriList) {
+        if (uriList != null && !uriList.isEmpty()) {
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Tạo đối tượng StorageReference để tham chiếu đến Firebase Storage
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+
+            // Duyệt qua từng URI và tải lên Firebase Storage
+            for (Uri uri : uriList) {
+                // Tạo đường dẫn lưu trữ file trong Firebase Storage
+                StorageReference imageRef = storageReference.child("images/" + UUID.randomUUID().toString() + ".jpg");
+
+                // Tải ảnh lên Firebase Storage
+                imageRef.putFile(uri)
+                        .addOnSuccessListener(taskSnapshot -> {
+                            // Lấy URL ảnh sau khi tải lên thành công
+                            imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                                // Tạo đối tượng ItemImageDTO với URL ảnh và thêm vào danh sách
+                                ItemImageDTO itemImage = new ItemImageDTO(downloadUri.toString());
+                                listImage.add(itemImage);
+
+                                // Cập nhật RecyclerView
+                                adapterImageList.notifyDataSetChanged();
+
+                                // Log để kiểm tra
+                                Log.d("DetailProductActivity", "Image uploaded successfully. New size of selectedImageList: " + selectedImageList.size());
+                            });
+                        })
+                        .addOnFailureListener(e -> {
+                            // Xử lý lỗi tải lên ảnh
+                            progressDialog.dismiss();
+
+                            // Log để kiểm tra
+                            Log.e("DetailProductActivity", "Image upload failed", e);
+                        })
+                        .addOnProgressListener(taskSnapshot -> {
+                            // Cập nhật tiến trình tải lên (nếu cần)
+                        });
+            }
+
+            // Ẩn progressDialog sau khi đã tải lên tất cả ảnh
+            progressDialog.dismiss();
         }
     }
 
@@ -269,6 +375,9 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
                 dtoSanPham.setNameproduct(String.valueOf(binding.edtDeltaProductName.getText()));
                 dtoSanPham.setPrice(price);
                 dtoSanPham.setDescription(binding.edtRudProductDescription.getText().toString());
+//                dtoSanPham.setId_category();
+                dtoSanPham.setId_category(selectedCategory.getId());
+                dtoSanPham.setListImage(listImage);
                 UpdateInfo(dtoSanPham);
 //                callapiRes();
                 Log.d("TAG", "onClicksssssssssssssss");
@@ -469,10 +578,10 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
                 if (response.body() != null) {
                     listLoai.addAll(response.body());
 
-                    // Tìm vị trí của item có id cụ thể (ví dụ: "your_specific_id")
-                    int specificItemPosition = findPositionById("your_specific_id");
 
-                    // Di chuyển item đó lên đầu danh sách nếu tìm thấy
+                    int specificItemPosition = findPositionById(id_category);
+
+
                     if (specificItemPosition != -1) {
                         CategoryDTO specificItem = listLoai.remove(specificItemPosition);
                         listLoai.add(0, specificItem);
