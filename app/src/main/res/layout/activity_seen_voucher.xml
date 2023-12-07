@@ -43,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <CheckBox
+            android:checked="false"
             android:id="@+id/id_checkAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

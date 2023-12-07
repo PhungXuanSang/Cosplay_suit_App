@@ -22,13 +22,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ManHinhChaoActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".Activity.SeenVoucherActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SearchResultActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activity.SearchvActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SearchActivity"
@@ -138,11 +144,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Activity.RegisterShopActivity"

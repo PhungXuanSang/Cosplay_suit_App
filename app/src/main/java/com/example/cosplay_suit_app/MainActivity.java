@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -23,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.Fragments.Fragment_chat;
@@ -34,12 +36,15 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
+
     Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkAndRequestNotificationPermission();
         setContentView(R.layout.activity_main);
+
+
         dialog = new Dialog(this);
         fragmentManager = getSupportFragmentManager();
         Fragment_trangchu fragmentTrangchu = new Fragment_trangchu();

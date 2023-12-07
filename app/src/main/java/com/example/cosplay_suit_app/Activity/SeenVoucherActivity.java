@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,8 @@ public class SeenVoucherActivity extends AppCompatActivity implements AdapterKha
     static final String BASE_URL_CARTORDER = url + "/bill/";
     ImageView id_back;
     RecyclerView recyclerView;
+
+    CheckBox id_checkAll;
     ArrayList<ProfileDTO> list;
     long startTime = System.currentTimeMillis();
     long duration,durationCall;
@@ -111,6 +114,13 @@ public class SeenVoucherActivity extends AppCompatActivity implements AdapterKha
                         id_btn_cannel.setVisibility(View.VISIBLE);
                         id_btn_gui.setVisibility(View.VISIBLE);
                         id_bg_load.setVisibility(View.GONE);
+                        id_checkAll.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                adapterKhachHang.updateCheckBoxes(id_checkAll.isChecked());
+                                Log.e("manh", "onClick: " + stringList );
+                            }
+                        });
                         findViewById(R.id.id_btn_gui).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -169,6 +179,7 @@ public class SeenVoucherActivity extends AppCompatActivity implements AdapterKha
         id_btn_cannel = findViewById(R.id.id_btn_cannel);
         id_btn_gui = findViewById(R.id.id_btn_gui);
         tv_listrong = findViewById(R.id.tv_listrong);
+        id_checkAll = findViewById(R.id.id_checkAll);
     }
 
     @Override
@@ -180,6 +191,7 @@ public class SeenVoucherActivity extends AppCompatActivity implements AdapterKha
     @Override
     public void Check_Delete_ID(String id_user) {
         stringList.remove(id_user);
+        Log.e("manh", "Check_ID: " + stringList );
     }
 
 
