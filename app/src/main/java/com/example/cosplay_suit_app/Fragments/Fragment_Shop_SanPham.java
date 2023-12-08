@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_Shop_SanPham1;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.ProByCatDTO;
 import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
@@ -52,7 +53,7 @@ public class Fragment_Shop_SanPham extends Fragment {
     static final String BASE_URL = url + "/product/";
     RecyclerView id_recyclerShop_SanPham;
 
-    List<DTO_SanPham> mlist;
+    List<ProByCatDTO> mlist;
 
     String id_shop;
 

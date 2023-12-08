@@ -3,15 +3,15 @@ package com.example.cosplay_suit_app.DTO;
 import java.util.List;
 
 public class Product_Page {
-    List<DTO_SanPham> dtoSanPham;
+    List<ProByCatDTO> dtoSanPham;
 
     int page_length;
 
-    public List<DTO_SanPham> getDtoSanPham() {
+    public List<ProByCatDTO> getDtoSanPham() {
         return dtoSanPham;
     }
 
-    public void setDtoSanPham(List<DTO_SanPham> dtoSanPham) {
+    public void setDtoSanPham(List<ProByCatDTO> dtoSanPham) {
         this.dtoSanPham = dtoSanPham;
     }
 

@@ -32,5 +32,11 @@ public class ManHinhChaoActivity extends AppCompatActivity {
                 });
             }
         },2000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                        startActivity(new Intent(ManHinhChaoActivity.this, MainActivity.class));
+            }
+        },5000);
     }
 }

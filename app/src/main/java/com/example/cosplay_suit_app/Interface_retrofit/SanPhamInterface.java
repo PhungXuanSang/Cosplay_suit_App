@@ -6,6 +6,7 @@ import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.Favorite;
 import com.example.cosplay_suit_app.DTO.NameProDTO;
+import com.example.cosplay_suit_app.DTO.ProByCatDTO;
 import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.DTO.User;
 
@@ -43,7 +44,7 @@ public interface SanPhamInterface {
     @GET("getlistsp/{id_shop}")
     Call<List<DTO_SanPham>> GetProduct (@Path("id_shop") String tb_user );
     @GET("getlistsplimit/{id_shop}")
-    Call<List<DTO_SanPham>> GetProductLimit (@Path("id_shop") String tb_user );
+    Call<List<ProByCatDTO>> GetProductLimit (@Path("id_shop") String tb_user );
     @POST("addSP")
     Call<DTO_SanPham> addProduct (@Body DTO_SanPham dtoSanPham );
     @GET("getCategoryApp")

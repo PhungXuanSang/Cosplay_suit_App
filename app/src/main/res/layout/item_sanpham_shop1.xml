@@ -7,7 +7,6 @@
     android:layout_gravity="center_horizontal"
     android:background="@drawable/my_background_sanpham"
     android:id="@+id/id_chitietsp"
-
     android:layout_margin="4dp"
     >
     <LinearLayout
@@ -84,8 +83,8 @@
                     android:layout_height="wrap_content"
                     android:numStars="5"
                     android:progressTint="@android:color/holo_orange_dark"
-                    android:rating="5"
-                    android:stepSize="1"
+                    android:rating="0"
+                    android:stepSize="0.5"
                     />
                 <TextView
                     android:textSize="10dp"
