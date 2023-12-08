@@ -3,9 +3,11 @@ package com.example.cosplay_suit_app.Activity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,9 +25,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
+import com.example.cosplay_suit_app.Adapter.Adapterchonvoucher;
+import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
+import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
@@ -55,7 +60,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MualaiActivity extends AppCompatActivity {
+public class MualaiActivity extends AppCompatActivity implements Adapterchonvoucher.Onclickchonvoucher{
     static String url = API.URL;
     static final String BASE_URL_VNPAY = url +"/payment/";
     String TAG = "buynowactivity";
@@ -68,6 +73,13 @@ public class MualaiActivity extends AppCompatActivity {
     int priceproduct, amount;
     List<ItemImageDTO> listImage;
     String hoten, sodienthoai, diachi,idaddress;
+    CardView cardmagiamgia;
+    List<GetVoucher_DTO> getVoucherDtoList;
+    Adapterchonvoucher adapterchonvoucher;
+    String magiamgia = "";
+    Dialog dialog;
+    int tongtienphaitra;
+    double dagiamgia;
 
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
@@ -105,6 +117,7 @@ public class MualaiActivity extends AppCompatActivity {
         tvsize_product.setText("Kích thước: "+selectedNameProperties);
         tv_soluong.setText("Số lượng: "+amount);
         tvprice_product.setText("Giá: "+decimalFormat.format(priceproduct));
+
         tv_tonggia.setText(decimalFormat.format(amount*priceproduct) + " VND");
         tv_tongtien.setText(decimalFormat.format(amount*priceproduct) + " VND");
         ItemImageDTO firstImage = listImage.get(0);
@@ -119,7 +132,6 @@ public class MualaiActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id","");
-        Log.d(TAG, "iduser: " + id);
 
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +148,14 @@ public class MualaiActivity extends AppCompatActivity {
                             //Thêm vào bảng thanh toán
                             DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
                             dtovnpay.setVnp_CardType("Thanh toán khi nhận hàng");
-                            dtovnpay.setVnp_Amount(String.valueOf(amount*priceproduct));
+                            if (magiamgia.equals("")){
+                                dtovnpay.setVnp_Amount(String.valueOf(amount*priceproduct));
+                            }else {
+                                double magiamgiaValue = Double.parseDouble(magiamgia);
+                                double result = magiamgiaValue / 100;
+                                double dagiamgia = (amount * priceproduct) * result;
+                                dtovnpay.setVnp_Amount(String.valueOf(dagiamgia));
+                            }
                             dtovnpay.setVnp_TxnRef(vnp_TxnRef);
                             Bill_controller billController = new Bill_controller(MualaiActivity.this);
                             billController.AddThanhtoan(dtovnpay, new Bill_controller.ApiAddThanhtoan() {
@@ -183,10 +202,6 @@ public class MualaiActivity extends AppCompatActivity {
                                     });
                                 }
                             });
-
-
-
-
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -211,13 +226,22 @@ public class MualaiActivity extends AppCompatActivity {
 
             }
         });
-
-
-
         idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialogchonthanhtoan();
+            }
+        });
+
+        //Chọn voucher nếu co
+        dialog = new Dialog(MualaiActivity.this);
+        getVoucherDtoList = new ArrayList<>();
+        adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, (Context) MualaiActivity.this
+                , (Adapterchonvoucher.Onclickchonvoucher) this, dialog);
+        cardmagiamgia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogchonvoucher();
             }
         });
         tv_sua.setOnClickListener(new View.OnClickListener() {
@@ -229,6 +253,7 @@ public class MualaiActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         diachi();
     }
     public void diachi(){
@@ -246,7 +271,6 @@ public class MualaiActivity extends AppCompatActivity {
             }
         });
     }
-
     public void Anhxa(){
         img_back = findViewById(R.id.id_back);
         btnbuynow = findViewById(R.id.btn_buynow);
@@ -262,6 +286,47 @@ public class MualaiActivity extends AppCompatActivity {
         tv_tonggia = findViewById(R.id.tv_tonggia);
         img_product = findViewById(R.id.img_product);
         tv_sua = findViewById(R.id.tv_sua);
+        cardmagiamgia = findViewById(R.id.cardmagiamgia);
+    }
+    public void dialogchonvoucher(){
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialogchonvoucher);
+
+        ImageView imageViewback = dialog.findViewById(R.id.id_back);
+        imageViewback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        RecyclerView recyclerView = dialog.findViewById(R.id.rcv_voucher);
+        recyclerView.setAdapter(adapterchonvoucher);
+        billController.getVoucher(id, new Bill_controller.ApiVouche() {
+            @Override
+            public void onApiVouche(List<GetVoucher_DTO> getVoucherDto) {
+                getVoucherDtoList.clear();
+                if (getVoucherDto != null && !getVoucherDto.isEmpty()) {
+                    for (GetVoucher_DTO voucherDto : getVoucherDto) {
+                        getVoucherDtoList.add(voucherDto);
+                    }
+                    adapterchonvoucher.notifyDataSetChanged();
+                }
+            }
+        });
+
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao full màn hình
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialog.show();
     }
 
     public void dialogchonthanhtoan(){
@@ -444,7 +509,10 @@ public class MualaiActivity extends AppCompatActivity {
                 }
             }
     );
-
+    @Override
+    public void onclickdungngay(String giamgiaont) {
+        magiamgia = giamgiaont;
+    }
     public static String formatDateTime(Date date, String format) {
         // Tạo đối tượng SimpleDateFormat với định dạng
         SimpleDateFormat sdf = new SimpleDateFormat(format);

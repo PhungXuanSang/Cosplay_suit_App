@@ -24,6 +24,7 @@ import com.example.cosplay_suit_app.DTO.DTO_billdetail;
 import com.example.cosplay_suit_app.DTO.DTO_idbill;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.DTOcheck_productshop;
+import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
@@ -976,4 +977,51 @@ public class Bill_controller {
     public interface ApiAddress {
         void onApiAddress(DTO_Address profileDTO);
     }
+
+    public void getVoucher(String id, ApiVouche apicheckshop) {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_CARTORDER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Bill_interface billInterface = retrofit.create(Bill_interface.class);
+
+        // tạo đối tượng
+        Call<List<GetVoucher_DTO>> objCall = billInterface.getVoucher(id);
+        objCall.enqueue(new Callback<List<GetVoucher_DTO>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GetVoucher_DTO>> call, @NonNull Response<List<GetVoucher_DTO>> response) {
+                if (apicheckshop != null) {
+                    if (response.isSuccessful()) {
+                        apicheckshop.onApiVouche(response.body());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GetVoucher_DTO>> call, Throwable t) {
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
+    }
+    public interface ApiVouche {
+        void onApiVouche(List<GetVoucher_DTO> getVoucherDto);
+    }
+
 }

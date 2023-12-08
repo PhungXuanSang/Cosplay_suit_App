@@ -4,6 +4,7 @@ import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.DTOcheck_productshop;
+import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.User;
 
@@ -29,4 +30,6 @@ public interface Bill_interface {
     Call<DTO_properties> updateProduct(@Path("id") String productId, @Body DTO_properties updateRequest);
     @GET("checkspuser/{id}")
     Call<DTOcheck_productshop> getcheckproduct(@Path("id") String id);
+    @GET("getvoucher/{id}")
+    Call<List<GetVoucher_DTO>> getVoucher(@Path("id") String id);
 }

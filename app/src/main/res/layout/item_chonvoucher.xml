@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/shop"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="2dp"/>
+    <TextView
+        android:id="@+id/nameshop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tên shop"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/img"/>
+
+    <RelativeLayout
+        android:id="@+id/rlma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bordermain"
+        android:layout_below="@+id/nameshop">
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giảm"
+                android:textSize="30dp" />
+            <TextView
+                android:id="@+id/giamgiaint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  20%  "
+                android:textSize="40dp"
+                android:textColor="#780D0D"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        <View
+            android:id="@+id/view"
+            android:layout_width="2dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#A89494"
+            android:layout_toRightOf="@+id/ll1"/>
+        <TextView
+            android:id="@+id/conten_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nội dung"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/view"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Có hiệu lực: vĩnh viễn"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/conten_id"
+            android:layout_toRightOf="@+id/view"/>
+        <TextView
+            android:id="@+id/iddungngay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dùng ngay"
+            android:textStyle="bold"
+            android:textColor="#881946"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_alignBottom="@+id/ll1"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/idthongbao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlma"
+        android:layout_marginLeft="5dp"
+        android:textColor="#7C0A0A"
+        android:visibility="gone"
+        android:text="Mã chỉ giảm cho sản phẩm của cửa hàng đấy"/>
+
+</RelativeLayout>
