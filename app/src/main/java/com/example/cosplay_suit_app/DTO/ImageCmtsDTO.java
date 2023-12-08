@@ -6,6 +6,7 @@ public class ImageCmtsDTO {
     @SerializedName("anhCmts")
     private String anhCmts;
 
+    // Thêm constructor với đường dẫn URL
     public ImageCmtsDTO(String anhCmts) {
         this.anhCmts = anhCmts;
     }

@@ -56,7 +56,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AddDanhGiaActivity extends AppCompatActivity {
 
     static String url = API.URL;
-    static final String BASE_URL = url +"/comments/";
+    static final String BASE_URL = url + "/comments/";
     RatingBar ratingBar;
     TextView tv_star, tv_nameCmts;
     int danhgia = 0;
@@ -72,6 +72,8 @@ public class AddDanhGiaActivity extends AppCompatActivity {
     private List<ImageCmtsDTO> selectedImageList;
     Uri uri;
     CmtsDTO cmtsDTO;
+    private List<String> imageUrlList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,11 +100,9 @@ public class AddDanhGiaActivity extends AppCompatActivity {
         tv_nameCmts.setText(nameSp);
         tv_star.setVisibility(View.GONE);
 
-
         selectedImageList = new ArrayList<>();
         imageAdapter = new ImageCmtsAdapter(selectedImageList, this);
         rcv_imgCmts.setAdapter(imageAdapter);
-
 
         img_addCmts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +113,6 @@ public class AddDanhGiaActivity extends AppCompatActivity {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                // Xử lý sự kiện khi đánh giá thay đổi
                 danhgia = (int) rating;
                 if (danhgia == 1) {
                     tv_star.setText("Rất tệ");
@@ -136,9 +135,9 @@ public class AddDanhGiaActivity extends AppCompatActivity {
                     tv_star.setVisibility(View.VISIBLE);
                     tv_star.setTextColor(Color.parseColor("#F86739"));
                 }
-
             }
         });
+
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,25 +145,26 @@ public class AddDanhGiaActivity extends AppCompatActivity {
             }
         });
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        String id = sharedPreferences.getString("id", "");
         User user = new User();
         user.setId(id);
-        user.setEmail(sharedPreferences.getString("email",""));
-        user.setRole(sharedPreferences.getString("role",""));
-        user.setPasswd(sharedPreferences.getString("passwd",""));
-        user.setPhone(sharedPreferences.getString("phone",""));
-        user.setFullname(sharedPreferences.getString("fullname",""));
+        user.setEmail(sharedPreferences.getString("email", ""));
+        user.setRole(sharedPreferences.getString("role", ""));
+        user.setPasswd(sharedPreferences.getString("passwd", ""));
+        user.setPhone(sharedPreferences.getString("phone", ""));
+        user.setFullname(sharedPreferences.getString("fullname", ""));
+        // ... (phần còn lại của phương thức onCreate)
+
         img_sendCmts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (danhgia == 0) {
                     tv_star.setText("Vui lòng chọn giá trị ");
                     tv_star.setVisibility(View.VISIBLE);
                     tv_star.setTextColor(Color.parseColor("#FF0000"));
-                } else if (ed_content.getText().toString().length()==0) {
+                } else if (ed_content.getText().toString().length() == 0) {
                     ed_content.setError("Vui lòng nhập đánh giá trước khi gửi!!");
-                } else{
+                } else {
                     cmtsDTO = new CmtsDTO();
                     cmtsDTO.setId_bill(idBill);
                     cmtsDTO.setIdPro(idSp);
@@ -176,9 +176,7 @@ public class AddDanhGiaActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
 
     private void initView() {
         ratingBar = findViewById(R.id.ratingBar);
@@ -190,10 +188,21 @@ public class AddDanhGiaActivity extends AppCompatActivity {
         rcv_imgCmts = findViewById(R.id.rcv_imgCmts);
         img_addCmts = findViewById(R.id.img_addCmts);
         ed_content = findViewById(R.id.ed_content);
-
     }
 
-    private  void  addCmts(CmtsDTO cmtsDTO){
+    private void addCmts(CmtsDTO cmtsDTO) {
+        // Tạo danh sách mới để lưu trữ các đối tượng ImageCmtsDTO với đường dẫn URL
+        List<ImageCmtsDTO> imageList = new ArrayList<>();
+
+        for (String imageUrl : imageUrlList) {
+            // Tạo mới ImageCmtsDTO và thêm vào danh sách
+            ImageCmtsDTO imageCmtsDTO = new ImageCmtsDTO(imageUrl);
+            imageList.add(imageCmtsDTO);
+        }
+
+        // Gán danh sách mới vào trường image của CmtsDTO
+        cmtsDTO.setImage(imageList);
+
         Gson gson = new GsonBuilder().setLenient().create();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -201,89 +210,102 @@ public class AddDanhGiaActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        // sử dụng interface
         CmtsInterface cmtsInterface = retrofit.create(CmtsInterface.class);
 
-        // tạo đối tượng
         Call<CmtsDTO> objCall = cmtsInterface.addCmts(cmtsDTO);
         objCall.enqueue(new Callback<CmtsDTO>() {
             @Override
             public void onResponse(@NonNull Call<CmtsDTO> call, Response<CmtsDTO> response) {
-
                 Toast.makeText(AddDanhGiaActivity.this, "Đã Đánh giá", Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
+
             @Override
             public void onFailure(@NonNull Call<CmtsDTO> call, Throwable t) {
-
+                // Xử lý khi gặp lỗi
             }
-
         });
     }
+
     private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, REQUEST_IMAGE_PICK);
-        Log.d("TAG", "openImagePicker: " + selectedImageList);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(Intent.createChooser(intent, "Chọn hình ảnh"), REQUEST_IMAGE_PICK);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
+            if (data.getClipData() != null) {
+                int count = data.getClipData().getItemCount();
+                for (int i = 0; i < count; i++) {
+                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
 
-            uri = imageUri;
+                    // Hiển thị ảnh đã chọn trên danh sách
+                    ImageCmtsDTO itemImage = new ImageCmtsDTO(imageUri.toString());
+                    selectedImageList.add(itemImage);
+                    imageAdapter.notifyDataSetChanged();
 
-            uploadImage();
+                    // Upload ảnh lên Firebase Storage và lấy đường dẫn URL
+                    uploadImage(imageUri);
+                }
+            } else if (data.getData() != null) {
+                Uri imageUri = data.getData();
 
-            imageAdapter.notifyDataSetChanged();
+                // Hiển thị ảnh đã chọn trên danh sách
+                ImageCmtsDTO itemImage = new ImageCmtsDTO(imageUri.toString());
+                selectedImageList.add(itemImage);
+                imageAdapter.notifyDataSetChanged();
+
+                // Upload ảnh lên Firebase Storage và lấy đường dẫn URL
+                uploadImage(imageUri);
+            }
         }
     }
 
-    private void uploadImage() {
-        if (uri != null) {
-            ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
 
-            // Tạo đường dẫn lưu trữ file trong Firebase Storage
-            StorageReference storageRef = storageReference.child("images/" + UUID.randomUUID().toString() + ".jpg");
+    private void uploadImage(Uri imageUri) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
 
-            // Tải ảnh lên Firebase Storage
-            storageRef.putFile(uri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
+        StorageReference storageRef = storageReference.child("images/" + UUID.randomUUID().toString() + ".jpg");
 
-                            // Lấy URL ảnh sau khi tải lên thành công
-                            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri downloadUri) {
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
 
-                                    ImageCmtsDTO itemImage = new ImageCmtsDTO(downloadUri.toString());
-                                    selectedImageList.add(itemImage);
-                                    imageAdapter.notifyDataSetChanged();
-                                }
-                            });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            // Xử lý lỗi tải lên ảnh
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            // Cập nhật tiến trình tải lên (nếu cần)
-                        }
-                    });
-        }
+                        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri downloadUri) {
+                                // Thêm đường dẫn URL vào mảng
+                                imageUrlList.add(downloadUri.toString());
+
+                                // Hiển thị ảnh đã tải lên (nếu cần)
+                                ImageCmtsDTO itemImage = new ImageCmtsDTO(downloadUri.toString());
+                                selectedImageList.add(itemImage);
+                                imageAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        // Xử lý lỗi tải lên ảnh
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Cập nhật tiến trình tải lên
+                    }
+                });
     }
-
 
 }
