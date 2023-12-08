@@ -27,6 +27,7 @@ import com.example.cosplay_suit_app.Adapter.Adapter_Shop_SanPham1;
 import com.example.cosplay_suit_app.Adapter.Adapter_TopProduct;
 import com.example.cosplay_suit_app.Class.PaginationSrollListener;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.ProByCatDTO;
 import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.R;
@@ -58,8 +59,8 @@ public class Fragment_Shop_Shop extends Fragment {
     RecyclerView id_recyclerShop1, id_recyclerShop2, id_recyclerShop3;
 
     ProgressBar progressBar;
-    List<DTO_SanPham> mlist1;
-    List<DTO_SanPham> mlist3;
+    List<ProByCatDTO> mlist1;
+    List<ProByCatDTO> mlist3;
     List<DTO_SanPham> mlist2;
     Adapter_Shop_SanPham adapterShopSanPham1;
 
@@ -119,7 +120,7 @@ public class Fragment_Shop_Shop extends Fragment {
                 id_recyclerShop1 = view.findViewById(R.id.id_recyclerShop1);
                 id_recyclerShop2 = view.findViewById(R.id.id_recyclerShop2);
                 id_recyclerShop3 = view.findViewById(R.id.id_recyclerShop3);
-                mlist1 = new ArrayList<DTO_SanPham>();
+                mlist1 = new ArrayList<ProByCatDTO>();
                 mlist3 = new ArrayList<>();
                 mlist2 = new ArrayList<>();
                 adapterShopSanPham1 = new Adapter_Shop_SanPham(getContext());
@@ -264,10 +265,10 @@ public class Fragment_Shop_Shop extends Fragment {
         SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
 
         // tạo đối tượng
-        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProductLimit(id_shop);
-        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+        Call<List<ProByCatDTO>> objCall = sanPhamInterface.GetProductLimit(id_shop);
+        objCall.enqueue(new Callback<List<ProByCatDTO>>() {
             @Override
-            public void onResponse(Call<List<DTO_SanPham>> call, Response<List<DTO_SanPham>> response) {
+            public void onResponse(Call<List<ProByCatDTO>> call, Response<List<ProByCatDTO>> response) {
                 if (response.isSuccessful()) {
 
                     mlist1.clear();
@@ -284,7 +285,7 @@ public class Fragment_Shop_Shop extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+            public void onFailure(Call<List<ProByCatDTO>> call, Throwable t) {
 
             }
         });

@@ -74,7 +74,6 @@ public class ProByCatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             viewHolder.tv_avgStar.setText(sanPham.getAvgStars() + "/5");
             viewHolder.ratingBar.setRating(sanPham.getAvgStars());
         } else {
-
             viewHolder.tv_avgStar.setText("5/5");
             viewHolder.ratingBar.setRating(5);
         }

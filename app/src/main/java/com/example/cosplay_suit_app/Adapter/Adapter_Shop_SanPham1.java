@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.example.cosplay_suit_app.Activity.Chitietsanpham;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.Favorite;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.DTO.ProByCatDTO;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 
@@ -35,14 +37,14 @@ public class Adapter_Shop_SanPham1 extends RecyclerView.Adapter<RecyclerView.Vie
     boolean isMyFavorite = false;
     String id;
 
-    private List<DTO_SanPham> mlist;
+    private List<ProByCatDTO> mlist;
     Context context;
 
     public Adapter_Shop_SanPham1( Context context) {
 
         this.context = context;
     }
-    public void updateData(List<DTO_SanPham> mlist){
+    public void updateData(List<ProByCatDTO> mlist){
         this.mlist = mlist;
         notifyDataSetChanged();
     }
@@ -58,7 +60,7 @@ public class Adapter_Shop_SanPham1 extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        DTO_SanPham sanPham = mlist.get(position);
+        ProByCatDTO sanPham = mlist.get(position);
 
         Adapter_Shop_SanPham1.ItemViewHolder viewHolder = (Adapter_Shop_SanPham1.ItemViewHolder) holder;
         viewHolder.tv_nameSp.setText(sanPham.getNameproduct());
@@ -66,6 +68,11 @@ public class Adapter_Shop_SanPham1 extends RecyclerView.Adapter<RecyclerView.Vie
         viewHolder.tv_gia.setText(decimalFormat.format(sanPham.getPrice())+"vnđ");
         viewHolder.tv_gia_gachchan.setText(sanPham.getPrice()*2 +"vnđ");
         viewHolder.tv_gia_gachchan.setPaintFlags(viewHolder.tv_gia_gachchan.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        if (sanPham.getAvgStars() != -1) {
+            viewHolder.ratingBar.setRating(sanPham.getAvgStars());
+        } else {
+            viewHolder.ratingBar.setRating(0);
+        }
         if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
             ItemImageDTO firstImage = sanPham.getListImage().get(0);
             String imageUrl = firstImage.getImage();
@@ -116,7 +123,7 @@ public class Adapter_Shop_SanPham1 extends RecyclerView.Adapter<RecyclerView.Vie
         TextView tv_nameSp,tv_gia,tv_soluong,tv_gia_gachchan,id_slsp_da_ban;
         ImageView anh_sp, img_favorite;
         FrameLayout ll_chitietsp;
-
+        RatingBar ratingBar;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -126,6 +133,7 @@ public class Adapter_Shop_SanPham1 extends RecyclerView.Adapter<RecyclerView.Vie
             ll_chitietsp = view.findViewById(R.id.id_chitietsp);
             tv_gia = view.findViewById(R.id.tv_gia);
             tv_gia_gachchan = view.findViewById(R.id.tv_gia_gachchan);
+            ratingBar = view.findViewById(R.id.ratingBarForDeltails);
 
         }
 
