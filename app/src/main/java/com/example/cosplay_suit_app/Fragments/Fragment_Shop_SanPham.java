@@ -1,5 +1,6 @@
 package com.example.cosplay_suit_app.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
@@ -61,6 +63,9 @@ public class Fragment_Shop_SanPham extends Fragment {
     long startTime = System.currentTimeMillis();
 
     ProgressBar id_progressBar;
+    TextView tv_load;
+
+    ProgressDialog dialog;
 
     private int currentPage = 1;
     private boolean isLoading = false;
@@ -100,6 +105,7 @@ public class Fragment_Shop_SanPham extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Intent intent = getActivity().getIntent();
         id_shop = intent.getStringExtra("id_shop");
+        dialog = new ProgressDialog(getContext());
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
@@ -107,6 +113,7 @@ public class Fragment_Shop_SanPham extends Fragment {
             @Override
             public void run() {
                 //cong viec background viet o day
+//                tv_load = view.findViewById(R.id.tv_load);
                 id_bg_load = view.findViewById(R.id.id_bg_load);
                 id_recyclerShop_SanPham = view.findViewById(R.id.id_recyclerShop_SanPham);
                 mlist = new ArrayList<>();
@@ -128,8 +135,14 @@ public class Fragment_Shop_SanPham extends Fragment {
                         id_recyclerShop_SanPham.setAdapter(shopSanPham1);
                         id_bg_load.setVisibility(View.GONE);
                         id_recyclerShop_SanPham.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                            private boolean lanDauTien = true;
                             @Override
                             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+
+                                if (lanDauTien) {
+                                    lanDauTien = false;
+                                    return;
+                                }
                                 GridLayoutManager layoutManager = (GridLayoutManager) id_recyclerShop_SanPham.getLayoutManager();
                                 int visibleItemCount = layoutManager.getChildCount();
                                 int totalItemCount = layoutManager.getItemCount();
@@ -141,10 +154,9 @@ public class Fragment_Shop_SanPham extends Fragment {
                                         if (totalPage>1){
                                             currentPage += 1;
                                             isLoading = true;
-//                        id_progressBar.setVisibility(View.VISIBLE);
+//                                            tv_load.setVisibility(View.VISIBLE);
                                             GetListSanPhamNext(id_shop);
                                         }
-
                                     }
                                 }
                             }
@@ -201,7 +213,7 @@ public class Fragment_Shop_SanPham extends Fragment {
 //                        totalPage = response.headers().get("X-Total-Pages") != null ?
 //                                Integer.parseInt(response.headers().get("X-Total-Pages")) : totalPage;
                         isLoading = false;
-//                        id_progressBar.setVisibility(View.GONE);
+//                        tv_load.setVisibility(View.GONE);
                         if (currentPage == totalPage){
                             isLoading = false;
                             isLastPage = true;

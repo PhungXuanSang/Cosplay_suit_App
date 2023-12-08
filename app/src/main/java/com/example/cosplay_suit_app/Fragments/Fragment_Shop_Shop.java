@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -77,6 +79,8 @@ public class Fragment_Shop_Shop extends Fragment {
     private boolean isLastPage = false;
 
     private int totalPage;
+    boolean userScrolled = false;
+    NestedScrollView id_nested;
 
     long duration ,duration1, duration2;
 
@@ -116,6 +120,7 @@ public class Fragment_Shop_Shop extends Fragment {
             @Override
             public void run() {
                 //cong viec background viet o day
+                id_nested = view.findViewById(R.id.id_nested);
                 id_bg_load = view.findViewById(R.id.id_bg_load);
                 id_recyclerShop1 = view.findViewById(R.id.id_recyclerShop1);
                 id_recyclerShop2 = view.findViewById(R.id.id_recyclerShop2);
@@ -151,24 +156,31 @@ public class Fragment_Shop_Shop extends Fragment {
                         id_recyclerShop3.setAdapter(adapterShopSanPham3);
                         id_recyclerShop2.setAdapter(adapterShopSanPham2);
                         id_bg_load.setVisibility(View.GONE);
-                        id_recyclerShop3.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+
+                        id_recyclerShop3.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                            private boolean lanDauTien = true;
+
                             @Override
-                            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                            public void onScrollChanged() {
+                                Log.e("manh", "onScrollChanged: " + 1 );
+                                if (lanDauTien) {
+                                    lanDauTien = false;
+                                    return;
+                                }
+
                                 GridLayoutManager layoutManager = (GridLayoutManager) id_recyclerShop3.getLayoutManager();
                                 int visibleItemCount = layoutManager.getChildCount();
                                 int totalItemCount = layoutManager.getItemCount();
                                 int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
 
-                                if (!isLoading && !isLastPage) {
+                                if (!isLoading && !isLastPage && userScrolled) {
                                     if ((visibleItemCount + firstVisibleItem) >= totalItemCount && firstVisibleItem >= 0) {
                                         // RecyclerView đã cuộn đến cuối trang, thực hiện "load more"
-                                        if (totalPage>1){
+                                        if (totalPage > 1) {
                                             currentPage += 1;
                                             isLoading = true;
-//                        id_progressBar.setVisibility(View.VISIBLE);
                                             GetListSanPhamNext(id_shop);
                                         }
-
                                     }
                                 }
                             }
