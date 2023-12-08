@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -101,6 +102,7 @@ public class ProductsByCatActivity extends AppCompatActivity {
                     list.clear();
                     list.addAll(response.body());
                     adapter.notifyDataSetChanged();
+                    Log.d("ProCat", "onResponse: "+list.size());
                 } else {
                     Toast.makeText(ProductsByCatActivity.this,
                             "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
@@ -110,7 +112,7 @@ public class ProductsByCatActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<ProByCatDTO>> call, Throwable t) {
-
+                Log.d("ProCat", "onFailure: "+t.getLocalizedMessage());
             }
         });
 
