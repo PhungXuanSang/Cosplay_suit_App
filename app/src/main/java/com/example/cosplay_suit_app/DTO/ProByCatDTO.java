@@ -16,7 +16,8 @@ public class ProByCatDTO {
 
     List<DTO_properties> listProp;
 
-    int starCount,avgStars,totalStars;
+    int starCount,totalStars;
+    float avgStars;
 
     public ProByCatDTO() {
     }
@@ -29,11 +30,11 @@ public class ProByCatDTO {
         this.starCount = starCount;
     }
 
-    public int getAvgStars() {
+    public float getAvgStars() {
         return avgStars;
     }
 
-    public void setAvgStars(int avgStars) {
+    public void setAvgStars(float avgStars) {
         this.avgStars = avgStars;
     }
 
