@@ -31,6 +31,7 @@ import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.LoginUser;
+import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.Fragments.Fragment_profile;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
@@ -60,6 +61,7 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
 
     static final String BASE_URL_SHOP = url + "/shop/";
     static final String BASE_URL_CAT = url +"/category/api/";
+
     ImageView iv_back, iv_add;
     RecyclerView rclvList;
     List<DTO_SanPham> mlist;
@@ -74,6 +76,11 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
     String idshop;
     String id;
     GridLayoutManager layoutManager;
+    private int currentPage = 1;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+
+    private int totalPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +107,8 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         adapter = new QlspAdapter(mlist, this);
         rclvList.setAdapter(adapter);
 
-
         onClick();
         refresh();
-        callApiShop();
         callApiProduct();
 
 
@@ -167,6 +172,7 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
             }
         });
     }
+
     private void getListCat() {
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -184,15 +190,22 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
                 .client(client)
                 .build();
 
-
         CategoryInterface categoryInterface = retrofit.create(CategoryInterface.class);
-
 
         Call<List<CategoryDTO>> objCall = categoryInterface.getListCat();
         objCall.enqueue(new Callback<List<CategoryDTO>>() {
             @Override
             public void onResponse(Call<List<CategoryDTO>> call, Response<List<CategoryDTO>> response) {
                 if (response.isSuccessful()) {
+                    // Tạo đối tượng đặc biệt "Hiển thị Tất cả"
+                    CategoryDTO categoryDTO = new CategoryDTO();
+                    categoryDTO.setName("Hiển thị Tất cả"); // Đặt tên cho item đặc biệt
+                    categoryDTO.setId(String.valueOf(-1));
+                    categoryDTO.setImageCategory("https://png.pngtree.com/png-vector/20221114/ourmid/pngtree-atom-model-connection-sign-vector-png-image_34645666.png");
+                    // Thêm item đặc biệt vào đầu danh sách
+                    response.body().add(0, categoryDTO);
+
+                    // Cập nhật Adapter
                     listCat.clear();
                     listCat.addAll(response.body());
                     categoryAdapter.hideLoading();
@@ -202,17 +215,15 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
                     Toast.makeText(QlspActivity.this,
                             "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
             public void onFailure(Call<List<CategoryDTO>> call, Throwable t) {
-
+                // Xử lý lỗi khi gọi API không thành công
             }
         });
-
-
     }
+
     private void searchProduct() {
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -369,6 +380,7 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
                 if (response.isSuccessful()) {
                     List<DTO_SanPham> productList = response.body();
                     if (productList != null) {
+
                         mlist.clear();
                         mlist.addAll(productList);
                         tvQuantity.setText(mlist.size() + " Sản phẩm");
@@ -387,69 +399,6 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         });
     }
 
-    private void callApiShop() {
-
-        // tạo gson
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        // Create a new object from HttpLoggingInterceptor
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        // Add Interceptor to HttpClient
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_SHOP)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client) // Set HttpClient to be used by Retrofit
-                .build();
-
-        // sử dụng interface
-        ShopInterface shopInterface = retrofit.create(ShopInterface.class);
-
-        // tạo đối tượng
-        Call<List<Shop>> objCall = shopInterface.listShop(id);
-        objCall.enqueue(new Callback<List<Shop>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Shop>> call, @NonNull Response<List<Shop>> response) {
-                List<Shop> shopList = response.body();
-
-                if (response.isSuccessful()) {
-
-                    if (shopList != null && !shopList.isEmpty()) {
-                        remenber(shopList.get(0).getId());
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("id", shopList.get(0).getId());
-//                        idshop = String.valueOf(shopList.get(0).getId());
-
-                        Log.d("TAG", "onResponse: " + idshop);// Lưu giá trị vào biến instance
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Shop>> call, Throwable t) {
-                Log.d("TAG", t.getLocalizedMessage());
-            }
-        });
-
-    }
-
-
-    public void remenber(String id) {
-        SharedPreferences preferences = getSharedPreferences("shops", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("id", id);
-
-        editor.apply();
-    }
-
-
     private void refresh() {
 
         srlQlsp.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -465,13 +414,25 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         });
 
     }
-
     @Override
     public void onClickItem(CategoryDTO categoryDTO) {
-        adapter.clearlistProduct();
-        callApiProductCategory(categoryDTO.getId());
-        tvQlspCategory.setText(categoryDTO.getName());
-        Log.d("TAG", "onClickItem: "+categoryDTO.getId());
+//
+//        adapter.clearlistProduct();
+//        callApiProductCategory(categoryDTO.getId());
+//        tvQlspCategory.setText(categoryDTO.getName());
+//        Log.d("TAG", "onClickItem: "+categoryDTO.getId());
+                // Nếu là một Category khác
+        if (categoryDTO.getId().equals("-1")){
+            adapter.clearlistProduct();
+            callApiProduct();
+            tvQlspCategory.setText(categoryDTO.getName());
+        }else {
+            adapter.clearlistProduct();
+            callApiProductCategory(categoryDTO.getId());
+            tvQlspCategory.setText(categoryDTO.getName());
+            Log.d("TAG", "onClickItem: " + categoryDTO.getId());
+
+        }
 
     }
 

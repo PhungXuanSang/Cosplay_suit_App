@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bogoc1"
     android:orientation="vertical"
+
     android:layout_gravity="center">
 
     <TextView

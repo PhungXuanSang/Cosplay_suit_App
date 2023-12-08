@@ -581,14 +581,12 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     private void openImagePicker() {
-//        Intent intent = new Intent(Intent.ACTION_PICK);
-//        intent.setType("image/*");
-//        startActivityForResult(intent, REQUEST_IMAGE_PICK);
-//
-//        Log.d("TAG1", "openImagePicker: " + selectedImageList);
+        // Trước khi bắt đầu chọn ảnh mới, làm mới uriList
+        uriList.clear();
+
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Cho phép chọn nhiều ảnh
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
     }
 
@@ -605,21 +603,26 @@ public class AddProductActivity extends AppCompatActivity {
 //        }
 //    }
 
-@Override
-protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
-        if (data.getData() != null) {
-            // Chọn một ảnh
-            Uri imageUri = data.getData();
-            uriList.add(imageUri);
-        } else if (data.getClipData() != null) {
-            // Chọn nhiều ảnh
-            ClipData clipData = data.getClipData();
-            for (int i = 0; i < clipData.getItemCount(); i++) {
-                Uri imageUri = clipData.getItemAt(i).getUri();
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+            if (data.getClipData() != null) {
+                // Chọn nhiều ảnh
+                ClipData clipData = data.getClipData();
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    Uri imageUri = clipData.getItemAt(i).getUri();
+                    Log.d("ImagePicker", "Multiple Images Selected: " + imageUri);
+                    uriList.add(imageUri);
+                }
+            } else if (data.getData() != null) {
+                // Chọn một ảnh
+                Uri imageUri = data.getData();
+                Log.d("ImagePicker", "Single Image Selected: " + imageUri);
                 uriList.add(imageUri);
+            } else {
+                Log.e("ImagePicker", "No data or data.getData() is null");
             }
 
             // Gọi phương thức uploadImage() hoặc xử lý các URI ở đây
@@ -628,7 +631,7 @@ protected void onActivityResult(int requestCode, int resultCode, @Nullable Inten
             imageAdapter.notifyDataSetChanged();
         }
     }
-}
+
 
 
 

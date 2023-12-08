@@ -159,7 +159,6 @@ public class SearchActivity extends AppCompatActivity {
             performSearch(selectedSuggestion);
         });
     }
-
     private void performSearch(String query) {
 
         Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
