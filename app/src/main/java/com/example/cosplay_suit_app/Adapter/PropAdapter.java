@@ -1,7 +1,9 @@
 package com.example.cosplay_suit_app.Adapter;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -85,6 +87,42 @@ public class PropAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         });
 
+        viewHolder.ivDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Xác nhận xóa");
+                        builder.setMessage("Bạn có muốn xóa size này không?");
+
+                        builder.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                int adapterPosition = holder.getAdapterPosition();
+
+                                if (adapterPosition != RecyclerView.NO_POSITION) {
+
+                                    mlist.remove(adapterPosition);
+
+                                    notifyItemRemoved(adapterPosition);
+
+                                    Toast.makeText(context, "Size đã được xóa", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(context, "Hủy xóa Size này", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+            }
+        });
 
     }
 
@@ -113,5 +151,6 @@ public class PropAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public interface  Onclick{
         void onclikSize(DTO_properties dtoProperties);
     }
+
 
 }

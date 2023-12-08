@@ -1,5 +1,7 @@
 package com.example.cosplay_suit_app.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -41,6 +43,7 @@ import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
 import com.example.cosplay_suit_app.DTO.Shop;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.CmtsInterface;
+import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.Package_bill.Activity.Danhgia_Activity;
@@ -56,6 +59,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -87,6 +91,8 @@ public class Fragment_profile extends Fragment {
     RelativeLayout rlRole, relative_newpass, rll_shopcuatoi;
     View idview5;
     SharedPreferences sharedPreferences;
+    String idshop;
+    static final String BASE_URL_SHOP = url + "/shop/";
 
     public Fragment_profile() {
     }
@@ -104,7 +110,7 @@ public class Fragment_profile extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
         id = sharedPreferences.getString("id", "");
-
+        callApiShop();
         // Set an OnClickListener for the ImageView
         imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,12 +218,16 @@ public class Fragment_profile extends Fragment {
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
+                    SharedPreferences sharedPreferences1 = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
 
-                    String userUID =  sharedPreferences.getString("id", "");
+                    String userUID =  sharedPreferences1.getString("id", "");
                     DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("userTokens").child(userUID);
                     tokenRef.removeValue();
                     sharedPreferences.edit().clear().commit();
+
+                    SharedPreferences sharedPreferences2 = getContext().getSharedPreferences("shops", getContext().MODE_PRIVATE);
+                    sharedPreferences2.edit().clear().commit();
+
                     startActivity(new Intent(getContext(), MainActivity.class));
                 }
             });
@@ -401,4 +411,66 @@ public class Fragment_profile extends Fragment {
         });
 
     }
+    private void callApiShop() {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_SHOP)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        ShopInterface shopInterface = retrofit.create(ShopInterface.class);
+
+        // tạo đối tượng
+        Call<List<Shop>> objCall = shopInterface.listShop(id);
+        objCall.enqueue(new Callback<List<Shop>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Shop>> call, @NonNull Response<List<Shop>> response) {
+                List<Shop> shopList = response.body();
+
+                if (response.isSuccessful()) {
+
+                    if (shopList != null && !shopList.isEmpty()) {
+                        remenber(shopList.get(0).getId());
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("id", shopList.get(0).getId());
+//                        idshop = String.valueOf(shopList.get(0).getId());
+
+                        Log.d("TAG", "onResponse: " + idshop);// Lưu giá trị vào biến instance
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Shop>> call, Throwable t) {
+                Log.d("TAG", t.getLocalizedMessage());
+            }
+        });
+
+    }
+
+
+    public void remenber(String id) {
+        SharedPreferences preferences = getContext().getSharedPreferences("shops", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("id", id);
+
+        editor.apply();
+    }
+
 }
