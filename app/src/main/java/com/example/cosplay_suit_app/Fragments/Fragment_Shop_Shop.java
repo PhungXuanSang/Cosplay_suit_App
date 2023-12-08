@@ -156,31 +156,34 @@ public class Fragment_Shop_Shop extends Fragment {
                         id_recyclerShop3.setAdapter(adapterShopSanPham3);
                         id_recyclerShop2.setAdapter(adapterShopSanPham2);
                         id_bg_load.setVisibility(View.GONE);
+                        id_recyclerShop3.setOnScrollChangeListener(new View.OnScrollChangeListener() {
 
-                        id_recyclerShop3.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-                            private boolean lanDauTien = true;
-
+                            private int lastVisibleItem = 0;
                             @Override
-                            public void onScrollChanged() {
-                                Log.e("manh", "onScrollChanged: " + 1 );
-                                if (lanDauTien) {
-                                    lanDauTien = false;
-                                    return;
-                                }
+                            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
 
                                 GridLayoutManager layoutManager = (GridLayoutManager) id_recyclerShop3.getLayoutManager();
                                 int visibleItemCount = layoutManager.getChildCount();
                                 int totalItemCount = layoutManager.getItemCount();
-                                int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                                int currentFirstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                                int currentLastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-                                if (!isLoading && !isLastPage && userScrolled) {
-                                    if ((visibleItemCount + firstVisibleItem) >= totalItemCount && firstVisibleItem >= 0) {
-                                        // RecyclerView đã cuộn đến cuối trang, thực hiện "load more"
-                                        if (totalPage > 1) {
-                                            currentPage += 1;
-                                            isLoading = true;
-                                            GetListSanPhamNext(id_shop);
+                                if (!isLoading && !isLastPage) {
+                                    if (currentLastVisibleItem > lastVisibleItem) {
+                                        // RecyclerView đang cuộn xuống
+                                        lastVisibleItem = currentLastVisibleItem;
+
+                                        if ((visibleItemCount + currentLastVisibleItem) >= totalItemCount && currentLastVisibleItem >= 0) {
+                                            // RecyclerView đã cuộn đến cuối trang, thực hiện "load more"
+                                            if (totalPage > 1) {
+                                                currentPage += 1;
+                                                isLoading = true;
+                                                // tv_load.setVisibility(View.VISIBLE);
+                                                GetListSanPhamNext(id_shop);
+                                            }
                                         }
+                                    } else if (currentFirstVisibleItem < lastVisibleItem) {
+                                        // RecyclerView đang cuộn lên, bạn có thể thực hiện xử lý nếu cần
                                     }
                                 }
                             }
@@ -393,6 +396,7 @@ public class Fragment_Shop_Shop extends Fragment {
 
                         Product_Page productPage = (Product_Page) response.body();
                         totalPage = productPage.getPage_length();
+                        Log.e("manh", "onResponse Total :" + totalPage);
                         mlist3.addAll(productPage.getDtoSanPham());
                         adapterShopSanPham3.notifyDataSetChanged();
                         Log.d("list", "onResponse3: " + mlist3.size());
