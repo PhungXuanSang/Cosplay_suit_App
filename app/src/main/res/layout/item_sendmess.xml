@@ -35,7 +35,7 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/avatar_sender"
         app:layout_constraintTop_toBottomOf="@+id/tv_message_sender"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/timestamp_sender"
