@@ -78,6 +78,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
     Adapterchonvoucher adapterchonvoucher;
     String magiamgia = "";
     Dialog dialog;
+    Context context;
 
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
@@ -242,7 +243,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
         dialog = new Dialog(MualaiActivity.this);
         getVoucherDtoList = new ArrayList<>();
         adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, (Context) MualaiActivity.this
-                , (Adapterchonvoucher.Onclickchonvoucher) this, (Adapterchonvoucher.Onclickchonvoucheractivity) this, dialog);
+                , (Adapterchonvoucher.Onclickchonvoucher) this, (Adapterchonvoucher.Onclickchonvoucheractivity) context, dialog, "mualai");
         cardmagiamgia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -519,12 +520,14 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
     public void onclickdungngay(GetVoucher_DTO getVoucherDto) {
         magiamgia = getVoucherDto.getDtoVoucher().getDiscount();
         if (magiamgia.equals("")){
-            tv_tongtien.setText(""+amount*priceproduct);
+            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+            tv_tongtien.setText(""+decimalFormat.format(amount*priceproduct) + " VND");
         }else {
             double magiamgiaValue = Double.parseDouble(magiamgia);
             double result = magiamgiaValue / 100;
             double dagiamgia = (amount * priceproduct) - ((amount * priceproduct) * result);
-            tv_tongtien.setText(""+dagiamgia);
+            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+            tv_tongtien.setText(""+decimalFormat.format(dagiamgia) + " VND");
             sogiamgia.setText("giảm " + getVoucherDto.getDtoVoucher().getDiscount() +"%");
         }
     }

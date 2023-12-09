@@ -129,7 +129,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         getVoucherDtoList = new ArrayList<>();
         dialog = new Dialog(context);
         adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, context, (Adapterchonvoucher.Onclickchonvoucher) this
-                , (Adapterchonvoucher.Onclickchonvoucheractivity) context, dialog);
+                , (Adapterchonvoucher.Onclickchonvoucheractivity) context, dialog, "buynow");
         chonvoucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

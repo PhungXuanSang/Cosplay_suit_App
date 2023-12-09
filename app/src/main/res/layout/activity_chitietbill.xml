@@ -205,8 +205,25 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="10dp"
                             android:text="VND"
-                            android:textSize="14dp"
-                            android:textColor="#631313"/>
+                            android:textSize="14dp" />
+                        <TextView
+                            android:id="@+id/idgiagiam"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="VND"
+                            android:textSize="14dp" />
+                        <TextView
+                            android:id="@+id/idtienthanhtoan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="VND"
+                            android:textSize="14dp" />
                     </LinearLayout>
 
                 </RelativeLayout>

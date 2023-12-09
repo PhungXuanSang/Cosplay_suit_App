@@ -35,7 +35,8 @@ public class Chitietbill_Activity extends AppCompatActivity {
     List<BillDetailDTO> list;
     Adapter_chitietbill chitietbill;
     RecyclerView recyclerView;
-    TextView tvstatusbill,idsotienthanhtoan, idchonphuongthuc,tv_thoigianhoanthanh,tv_thanhtoan,tv_thoigiandat, tv_hoten, tv_sdt, tv_diachi;
+    TextView tvstatusbill,idsotienthanhtoan, idchonphuongthuc,tv_thoigianhoanthanh,tv_thanhtoan,tv_thoigiandat, tv_hoten
+            , tv_sdt, tv_diachi, idtienthanhtoan, idgiagiam;
     ImageView imgdonhang, id_back;
     Button btnmualai;
     int tongbill;
@@ -66,7 +67,7 @@ public class Chitietbill_Activity extends AppCompatActivity {
 
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
-        idsotienthanhtoan.setText("Tổng tiền: "+decimalFormat.format(tongbill) + " VND");
+        idsotienthanhtoan.setText("Giá trị đơn hàng: "+decimalFormat.format(tongbill) + " VND");
 
         if ("shop".equals(checkactivity)){
             btnmualai.setVisibility(Button.GONE);
@@ -97,11 +98,13 @@ public class Chitietbill_Activity extends AppCompatActivity {
                 imgdonhang.setImageResource(R.drawable.returnsbill);
             }
         }
-
         cartController.getidbill(idbill, new Cart_controller.Apigetidbill() {
             @Override
             public void onApigetidbill(BillDTO billDTO) {
                 tv_thoigiandat.setText(billDTO.getTimestart());
+                double duocgiam = Integer.parseInt(String.valueOf(billDTO.getTotalPayment())) - Integer.parseInt(billDTO.getThanhtoan().getVnp_Amount());
+                idgiagiam.setText("Được giảm: " +  decimalFormat.format(duocgiam) + " VND");
+                idtienthanhtoan.setText("Số tiền thanh toán: " + decimalFormat.format(billDTO.getThanhtoan().getVnp_Amount()) + " VND");
                 if (billDTO.getThanhtoan().getVnp_TxnRef().length() > 8){
                     idchonphuongthuc.setText("Thanh toán khi nhận hàng");
                     if (billDTO.getTimeend().equals("")){
@@ -110,7 +113,7 @@ public class Chitietbill_Activity extends AppCompatActivity {
                         tv_thanhtoan.setText(billDTO.getTimeend());
                     }
                 }else {
-                    idchonphuongthuc.setText("Thanh toán chuyển khoản");
+                    idchonphuongthuc.setText("Thanh toán chuyển khoản ( Đã Thanh toán )");
                     // Định dạng ban đầu của dữ liệu thời gian
                     SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
 
@@ -155,5 +158,7 @@ public class Chitietbill_Activity extends AppCompatActivity {
         tv_hoten = findViewById(R.id.tv_hoten);
         tv_sdt = findViewById(R.id.tv_sdt);
         tv_diachi = findViewById(R.id.tv_diachi);
+        idtienthanhtoan = findViewById(R.id.idtienthanhtoan);
+        idgiagiam = findViewById(R.id.idgiagiam);
     }
 }

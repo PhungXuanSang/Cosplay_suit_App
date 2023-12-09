@@ -24,13 +24,15 @@ public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHo
     Onclickchonvoucher onclickchonvoucher;
     Onclickchonvoucheractivity onclickchonvoucheractivity;
     Dialog dialog;
+    String checkacti;
     public Adapterchonvoucher(List<GetVoucher_DTO> list, Context context, Onclickchonvoucher onclickchonvoucher
-            ,Onclickchonvoucheractivity onclickchonvoucheractivity, Dialog dialog) {
+            ,Onclickchonvoucheractivity onclickchonvoucheractivity, Dialog dialog, String checkacti) {
         this.list = list;
         this.context = context;
         this.onclickchonvoucher = onclickchonvoucher;
         this.onclickchonvoucheractivity = onclickchonvoucheractivity;
         this.dialog = dialog;
+        this.checkacti = checkacti;
     }
 
     @NonNull
@@ -51,8 +53,13 @@ public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                onclickchonvoucher.onclickdungngay(getVoucherDto);
-                onclickchonvoucheractivity.onclickchonvoucheractivity(getVoucherDto);
+                if ("buynow".equals(checkacti)){
+                    onclickchonvoucher.onclickdungngay(getVoucherDto);
+                    onclickchonvoucheractivity.onclickchonvoucheractivity(getVoucherDto);
+                }if ("mualai".equals(checkacti)){
+                    onclickchonvoucher.onclickdungngay(getVoucherDto);
+                }
+
             }
         });
     }
