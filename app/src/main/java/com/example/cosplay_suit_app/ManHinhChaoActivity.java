@@ -12,6 +12,7 @@ import android.widget.TextView;
 public class ManHinhChaoActivity extends AppCompatActivity {
     ConstraintLayout id_constraint;
     TextView tv_batdau;
+    int checkintent = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +28,7 @@ public class ManHinhChaoActivity extends AppCompatActivity {
                 tv_batdau.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        checkintent = 1;
                         startActivity(new Intent(ManHinhChaoActivity.this, MainActivity.class));
                     }
                 });
@@ -35,7 +37,9 @@ public class ManHinhChaoActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                        startActivity(new Intent(ManHinhChaoActivity.this, MainActivity.class));
+                if (checkintent == 0){
+                    startActivity(new Intent(ManHinhChaoActivity.this, MainActivity.class));
+                }
             }
         },5000);
     }

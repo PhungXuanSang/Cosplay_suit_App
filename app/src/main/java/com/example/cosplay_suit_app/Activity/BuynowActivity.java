@@ -24,9 +24,11 @@ import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
+import com.example.cosplay_suit_app.Adapter.Adapterchonvoucher;
 import com.example.cosplay_suit_app.DTO.CartShopManager;
 import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
+import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
@@ -58,7 +60,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BuynowActivity extends AppCompatActivity{
+public class BuynowActivity extends AppCompatActivity implements Adapterchonvoucher.Onclickchonvoucheractivity {
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     static final String BASE_URL_VNPAY = url +"/payment/";
@@ -73,7 +75,7 @@ public class BuynowActivity extends AppCompatActivity{
     Bill_controller billController = new Bill_controller(this);
     Set<String> idShopSet = CartShopManager.getInstance().getListidshop();
     List<String> idShopList;
-    String id, hoten, sodienthoai, diachi,checkphuongthuc, idaddress;
+    String id, hoten, sodienthoai, diachi,checkphuongthuc, idaddress, magiamgia="";
     ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +160,6 @@ public class BuynowActivity extends AppCompatActivity{
         totalPriceManager = TotalPriceManager.getInstance();
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         tv_tongtien.setText(decimalFormat.format(totalPriceManager.getTotalOrderPrice()) + " VND");
-
         getShopBuynow(id);
         idchonphuongthuc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,6 +435,12 @@ public class BuynowActivity extends AppCompatActivity{
                 tv_diachi.setText(diachi);
             }
         });
+    }
+    @Override
+    public void onclickchonvoucheractivity(GetVoucher_DTO getVoucherDto) {
+        double dagiamgia = totalPriceManager.getTotalOrderPrice();
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        tv_tongtien.setText(decimalFormat.format(dagiamgia) + " VND");
     }
     @Override
     protected void onResume() {

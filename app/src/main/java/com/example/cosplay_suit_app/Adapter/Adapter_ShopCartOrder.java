@@ -112,25 +112,15 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
         });
 
         List<CartOrderDTO> ordersForShop = orderMap.get(shop.getId());
-        arrayAdapter = new AdapterCartorder(ordersForShop, context, (AdapterCartorder.OnclickCheck) context
-                , new AdapterCartorder.OnclickCheckbox() {
-            @Override
-            public void onUpdateParentCheckbox(boolean allChecked) {
-                // Cập nhật trạng thái của checkbox cha dựa trên trạng thái của checkbox con
-                updateParentCheckboxStatus(allChecked);
-            }
-        });
+        arrayAdapter = new AdapterCartorder(ordersForShop, context, (AdapterCartorder.OnclickCheck) context);
         viewHolder.rcvcart.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
 
         cbkcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isChecked = cbkcart.isChecked();
-                // Cập nhật trạng thái của CheckBox trong Adapter cha
-                ordersForShop.get(position).setChecked(isChecked);
-                // Gọi method để cập nhật tất cả các CheckBox trong Adapter con
-                updateAllChildCheckBoxes(isChecked, ordersForShop.get(position));
+                boolean checkershop = cbkcart.isChecked();
+                checkboxtrueshop(ordersForShop, checkershop);
             }
         });
     }
@@ -176,7 +166,6 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
         Call<List<CartOrderDTO>> call = service.getusercartorder(userId);
         call.enqueue(callback);
     }
-
     private void handleOrders(String idShop, CartOrderDTO order) {
         if (orderMap.containsKey(idShop)) {
             orderMap.get(idShop).add(order);
@@ -186,20 +175,8 @@ public class Adapter_ShopCartOrder extends RecyclerView.Adapter<RecyclerView.Vie
             orderMap.put(idShop, orders);
         }
     }
-    public void updateAllChildCheckBoxes(boolean isChecked, CartOrderDTO ordera) {
-        for (Map.Entry<String, List<CartOrderDTO>> entry : orderMap.entrySet()) {
-            for (CartOrderDTO order : entry.getValue()) {
-                order.setChecked(isChecked);
-                // Thông báo cho Adapter con khi CheckBox cha không được chọn nữa và truyền order
-                if (!isChecked) {
-                    arrayAdapter.onParentCheckboxUnchecked(order);
-                }
-            }
-        }
-        notifyDataSetChanged();
-    }
-    // Cập nhật trạng thái của checkbox cha dựa trên trạng thái của checkbox con
-    private void updateParentCheckboxStatus(boolean allChecked) {
-        cbkcart.setChecked(allChecked);
+
+    public void checkboxtrueshop(List<CartOrderDTO> cartOrderDTOS, boolean ischeck){
+
     }
 }

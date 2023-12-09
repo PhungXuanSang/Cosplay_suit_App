@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class TotalPriceManager {
     private static TotalPriceManager instance;
-    private int totalOrderPrice;
+    private double totalOrderPrice;
     private ArrayList<String> listcart = new ArrayList<>();
     private TotalPriceManager() {
         // Private constructor to prevent instantiation
@@ -18,14 +18,18 @@ public class TotalPriceManager {
         return instance;
     }
 
-    public int getTotalOrderPrice() {
+    public double getTotalOrderPrice() {
         return totalOrderPrice;
     }
 
-    public void updateTotalPriceTrue(int totalPrice) {
+    public void setTotalOrderPrice(double totalOrderPrice) {
+        this.totalOrderPrice = totalOrderPrice;
+    }
+
+    public void updateTotalPriceTrue(double totalPrice) {
         totalOrderPrice += totalPrice;
     }
-    public void updateTotalPriceFalse(int totalPrice) {
+    public void updateTotalPriceFalse(double totalPrice) {
         totalOrderPrice -= totalPrice;
     }
 

@@ -66,7 +66,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
     String TAG = "buynowactivity";
     ImageView img_back, img_product;
     TextView tv_tongtien,idchonphuongthuc,tv_hoten,tv_sdt,tv_diachi,tvname_product,tvsize_product,tv_soluong, tvprice_product
-            , tv_tonggia, tv_sua;
+            , tv_tonggia, tv_sua,sogiamgia;
     Button btnbuynow;
     Bill_controller billController = new Bill_controller(this);
     String idproduct, selectedNameProperties, id_shop, id, nameproduct, listImageJson, checkphuongthuc;
@@ -78,8 +78,6 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
     Adapterchonvoucher adapterchonvoucher;
     String magiamgia = "";
     Dialog dialog;
-    int tongtienphaitra;
-    double dagiamgia;
 
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
@@ -153,7 +151,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                             }else {
                                 double magiamgiaValue = Double.parseDouble(magiamgia);
                                 double result = magiamgiaValue / 100;
-                                double dagiamgia = (amount * priceproduct) * result;
+                                double dagiamgia = (amount * priceproduct) - ((amount * priceproduct) * result);
                                 dtovnpay.setVnp_Amount(String.valueOf(dagiamgia));
                             }
                             dtovnpay.setVnp_TxnRef(vnp_TxnRef);
@@ -213,7 +211,14 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                         }
                         if (checkphuongthuc.equals("thanhtoanvnpay")) {
                             DTO_vnpay dtovnpay = new DTO_vnpay();
-                            dtovnpay.setAmount((amount*priceproduct));
+                            if (magiamgia.equals("")){
+                                dtovnpay.setAmount(Double.parseDouble(String.valueOf(amount*priceproduct)));
+                            }else {
+                                double magiamgiaValue = Double.parseDouble(magiamgia);
+                                double result = magiamgiaValue / 100;
+                                double dagiamgia = (amount * priceproduct) - ((amount * priceproduct) * result);
+                                dtovnpay.setAmount(Double.parseDouble(String.valueOf(dagiamgia)));
+                            }
                             dtovnpay.setBankCode("NCB");
                             postthamso(dtovnpay);
                         }
@@ -237,7 +242,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
         dialog = new Dialog(MualaiActivity.this);
         getVoucherDtoList = new ArrayList<>();
         adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, (Context) MualaiActivity.this
-                , (Adapterchonvoucher.Onclickchonvoucher) this, dialog);
+                , (Adapterchonvoucher.Onclickchonvoucher) this, (Adapterchonvoucher.Onclickchonvoucheractivity) this, dialog);
         cardmagiamgia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -287,6 +292,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
         img_product = findViewById(R.id.img_product);
         tv_sua = findViewById(R.id.tv_sua);
         cardmagiamgia = findViewById(R.id.cardmagiamgia);
+        sogiamgia = findViewById(R.id.sogiamgia);
     }
     public void dialogchonvoucher(){
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -510,15 +516,17 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
             }
     );
     @Override
-    public void onclickdungngay(String giamgiaont) {
-        magiamgia = giamgiaont;
-    }
-    public static String formatDateTime(Date date, String format) {
-        // Tạo đối tượng SimpleDateFormat với định dạng
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-
-        // Chuyển đổi Date thành chuỗi định dạng
-        return sdf.format(date);
+    public void onclickdungngay(GetVoucher_DTO getVoucherDto) {
+        magiamgia = getVoucherDto.getDtoVoucher().getDiscount();
+        if (magiamgia.equals("")){
+            tv_tongtien.setText(""+amount*priceproduct);
+        }else {
+            double magiamgiaValue = Double.parseDouble(magiamgia);
+            double result = magiamgiaValue / 100;
+            double dagiamgia = (amount * priceproduct) - ((amount * priceproduct) * result);
+            tv_tongtien.setText(""+dagiamgia);
+            sogiamgia.setText("giảm " + getVoucherDto.getDtoVoucher().getDiscount() +"%");
+        }
     }
     private String getCurrentDateTime() {
         Date currentDate = Calendar.getInstance().getTime();

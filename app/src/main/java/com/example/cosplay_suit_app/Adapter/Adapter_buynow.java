@@ -20,10 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.Activity.BuynowActivity;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.DTO.DTO_inbuynow;
+import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
@@ -48,7 +50,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Adapterchonvoucher.Onclickchonvoucher{
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     List<DTO_buynow> list;
@@ -56,10 +58,14 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Map<String, List<DTO_inbuynow>> orderMap; // Map lưu trữ danh sách đơn hàng theo idshop
     private List<DTO_inbuynow> allOrders;
     Adapter_inbuynow arrayAdapter;
-    String TAG = "adaptershopcartorder";
+    String TAG = "Adapter_buynow";
     private TotalPriceManager totalPriceManager;
     int totalForShop;
-    String id;
+    String id, magiamgia = "";
+    Dialog dialog;
+    List<GetVoucher_DTO> getVoucherDtoList;
+    Adapterchonvoucher adapterchonvoucher;
+    TextView chonvoucher;
 
     public Adapter_buynow(List<DTO_buynow> list, Context context) {
         this.list = list;
@@ -119,13 +125,24 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         totalForShop = calculateTotalForShop(ordersForShop);
         viewHolder.tv_tonggia.setText( decimalFormat.format(totalForShop) + " VND");
         shopCartorderDTO.setTongbill(totalForShop);
-        //Chọn phương thức thanh toán
+        //Chọn voucher
+        getVoucherDtoList = new ArrayList<>();
+        dialog = new Dialog(context);
+        adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, context, (Adapterchonvoucher.Onclickchonvoucher) this
+                , (Adapterchonvoucher.Onclickchonvoucheractivity) context, dialog);
+        chonvoucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogchonvoucher();
+            }
+        });
 
     }
     @Override
     public int getItemCount() {
         return list.size();
     }
+
     public class ItemViewHoldel extends RecyclerView.ViewHolder{
         RecyclerView recyclerView;
         TextView tv_tonggia;
@@ -133,8 +150,60 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             recyclerView = itemView.findViewById(R.id.rcv_buynow);
             tv_tonggia = itemView.findViewById(R.id.tv_tonggia);
+            chonvoucher = itemView.findViewById(R.id.chonvoucher);
         }
     }
+    @Override
+    public void onclickdungngay(GetVoucher_DTO getVoucherDto) {
+        magiamgia = getVoucherDto.getDtoVoucher().getDiscount();
+        chonvoucher.setText("giảm "+getVoucherDto.getDtoVoucher().getDiscount() + "%");
+        double magiamgiaValue = Double.parseDouble(magiamgia);
+        double result = magiamgiaValue / 100;
+        double dagiamgia = totalPriceManager.getTotalOrderPrice() - (totalPriceManager.getTotalOrderPrice() * result);
+        TotalPriceManager.getInstance().setTotalOrderPrice(dagiamgia);
+    }
+    public void dialogchonvoucher(){
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialogchonvoucher);
+
+        ImageView imageViewback = dialog.findViewById(R.id.id_back);
+        imageViewback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        RecyclerView recyclerView = dialog.findViewById(R.id.rcv_voucher);
+        recyclerView.setAdapter(adapterchonvoucher);
+        Bill_controller billController = new Bill_controller(context);
+        billController.getVoucher(id, new Bill_controller.ApiVouche() {
+            @Override
+            public void onApiVouche(List<GetVoucher_DTO> getVoucherDto) {
+                getVoucherDtoList.clear();
+                if (getVoucherDto != null && !getVoucherDto.isEmpty()) {
+                    for (GetVoucher_DTO voucherDto : getVoucherDto) {
+                        getVoucherDtoList.add(voucherDto);
+                    }
+                    adapterchonvoucher.notifyDataSetChanged();
+                }
+            }
+        });
+
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+        // Chiều rộng full màn hình
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // Chiều cao full màn hình
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        window.setAttributes(layoutParams);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+
+        dialog.show();
+    }
+
     public void getOrdersByUserId(String userId, Callback<List<DTO_inbuynow>> callback) {
         // Tạo một OkHttpClient với interceptor để ghi log (nếu cần)
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();

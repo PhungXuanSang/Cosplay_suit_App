@@ -176,13 +176,13 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     @Override
     public void onCheckboxTrue() {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        int tt = totalPriceManager.getTotalOrderPrice();
+        double tt = totalPriceManager.getTotalOrderPrice();
         tvtongtien.setText(decimalFormat.format(tt) + " VND");
     }
     @Override
     public void onCheckboxFalse() {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        int tt = totalPriceManager.getTotalOrderPrice();
+        double tt = totalPriceManager.getTotalOrderPrice();
         tvtongtien.setText(decimalFormat.format(tt) + " VND");
     }
     @Override

@@ -45,16 +45,15 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     int tonggia = 0, soluong = 1;
     String TAG = "adaptercartorder";
     OnclickCheck onclickCheck;
-    OnclickCheckbox onclickCheckbox;
     String idcart, idshop;
     TextView tvsoluong;
     List<DTO_properties> listproper;
+    CheckBox cbkcart;
 
-    public AdapterCartorder(List<CartOrderDTO> list, Context context, OnclickCheck onclickCheck, OnclickCheckbox onclickCheckbox) {
+    public AdapterCartorder(List<CartOrderDTO> list, Context context, OnclickCheck onclickCheck) {
         this.list = list;
         this.context = context;
         this.onclickCheck = onclickCheck;
-        this.onclickCheckbox = onclickCheckbox;
     }
 
     @NonNull
@@ -87,16 +86,6 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.tvsize.setText("Size: "+order.getId_properties());
             viewHolder.tvprice.setText(decimalFormat.format(order.getDtoSanPham().getPrice()) + " VND");
             tvsoluong.setText(""+order.getAmount());
-            viewHolder.cbkcart.setChecked(order.isChecked());
-            if (order.isChecked()) {
-                idcart = order.get_id();
-                idshop = order.getDtoSanPham().getId_shop();
-                tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(tvsoluong.getText().toString().trim());
-                TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
-                TotalPriceManager.getInstance().updateIdcartTrue(idcart);
-                onclickCheck.onCheckboxTrue();
-                CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(),order.get_id());
-            }
             viewHolder.imgcong.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -104,7 +93,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if (soluong < 101){
                         String slmoi = String.valueOf(soluong);
                         tvsoluong.setText(slmoi);
-                        if (viewHolder.cbkcart.isChecked()){
+                        if (cbkcart.isChecked()){
                             tonggia = order.getDtoSanPham().getPrice();
                             TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
                             onclickCheck.onCheckboxTrue();
@@ -124,7 +113,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if (soluong > 0){
                         String slmoi = String.valueOf(soluong);
                         tvsoluong.setText(slmoi);
-                        if (viewHolder.cbkcart.isChecked()){
+                        if (cbkcart.isChecked()){
                             tonggia = order.getDtoSanPham().getPrice();
                             TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
                             onclickCheck.onCheckboxTrue();
@@ -137,10 +126,10 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                 }
             });
-            viewHolder.cbkcart.setOnClickListener(new View.OnClickListener() {
+            cbkcart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    boolean isChecked = viewHolder.cbkcart.isChecked();
+                    boolean isChecked = cbkcart.isChecked();
                     order.setChecked(isChecked);
 
                     idcart = order.get_id();
@@ -150,16 +139,15 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if (isChecked) {
                         TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
                         TotalPriceManager.getInstance().updateIdcartTrue(idcart);
-                        onclickCheck.onCheckboxTrue();
                         CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(), idcart);
+                        onclickCheck.onCheckboxTrue();
                     } else {
                         TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
                         TotalPriceManager.getInstance().updateIdcartFalse(idcart);
                         CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(), idcart);
                         onclickCheck.onCheckboxFalse();
                     }
-                    // Kiểm tra và cập nhật trạng thái của checkbox cha
-                    updateParentCheckboxStatus();
+
                 }
             });
             viewHolder.tv_xoa.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +191,6 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView imgproduct, imgcong, imgtru;
         TextView tvnamepro, tvsize, tvprice, tv_xoa;
-        CheckBox cbkcart;
         Spinner spinnerproper;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -261,29 +248,14 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         });
     }
-    public void onParentCheckboxUnchecked(CartOrderDTO order) {
+
+    public void onParenCheckboxTrue(CartOrderDTO order){
         idcart = order.get_id();
         idshop = order.getDtoSanPham().getId_shop();
         tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(tvsoluong.getText().toString().trim());
-        TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
-        TotalPriceManager.getInstance().updateIdcartFalse(idcart);
-        CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(),order.get_id());
-        onclickCheck.onCheckboxFalse();
-    }
-    public interface OnclickCheckbox {
-        // ... (các phương thức khác)
-        void onUpdateParentCheckbox(boolean allChecked);
-    }
-    // Cập nhật trạng thái của checkbox cha dựa trên trạng thái của checkbox con
-    private void updateParentCheckboxStatus() {
-        boolean allChecked = true;
-        for (CartOrderDTO order : list) {
-            if (!order.isChecked()) {
-                allChecked = false;
-                break;
-            }
-        }
-        // Gọi phương thức của interface để cập nhật trạng thái của checkbox cha
-        onclickCheckbox.onUpdateParentCheckbox(allChecked);
+        TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
+        TotalPriceManager.getInstance().updateIdcartTrue(idcart);
+        CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(), idcart);
+        onclickCheck.onCheckboxTrue();
     }
 }

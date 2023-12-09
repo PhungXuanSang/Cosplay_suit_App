@@ -1,7 +1,9 @@
 package com.example.cosplay_suit_app.Adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +22,14 @@ public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHo
     List<GetVoucher_DTO> list;
     Context context;
     Onclickchonvoucher onclickchonvoucher;
+    Onclickchonvoucheractivity onclickchonvoucheractivity;
     Dialog dialog;
-    public Adapterchonvoucher(List<GetVoucher_DTO> list, Context context, Onclickchonvoucher onclickchonvoucher, Dialog dialog) {
+    public Adapterchonvoucher(List<GetVoucher_DTO> list, Context context, Onclickchonvoucher onclickchonvoucher
+            ,Onclickchonvoucheractivity onclickchonvoucheractivity, Dialog dialog) {
         this.list = list;
         this.context = context;
         this.onclickchonvoucher = onclickchonvoucher;
+        this.onclickchonvoucheractivity = onclickchonvoucheractivity;
         this.dialog = dialog;
     }
 
@@ -45,8 +50,9 @@ public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHo
         viewHoldel.iddungngay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onclickchonvoucher.onclickdungngay(getVoucherDto.getDtoVoucher().getDiscount());
                 dialog.dismiss();
+                onclickchonvoucher.onclickdungngay(getVoucherDto);
+                onclickchonvoucheractivity.onclickchonvoucheractivity(getVoucherDto);
             }
         });
     }
@@ -65,7 +71,15 @@ public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHo
             iddungngay = itemView.findViewById(R.id.iddungngay);
         }
     }
+    private void reloadActivity() {
+        Intent intent = ((Activity) context).getIntent();
+        ((Activity) context).finish();
+        context.startActivity(intent);
+    }
     public interface Onclickchonvoucher{
-        void onclickdungngay(String giamgiaont);
+        void onclickdungngay(GetVoucher_DTO getVoucherDto);
+    }
+    public interface Onclickchonvoucheractivity{
+        void onclickchonvoucheractivity(GetVoucher_DTO getVoucherDto);
     }
 }
