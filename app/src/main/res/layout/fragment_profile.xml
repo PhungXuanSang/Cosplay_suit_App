@@ -82,15 +82,14 @@
         android:id="@+id/rll_shopcuatoi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/img_bi"
             android:layout_width="26dp"
             android:layout_height="26dp"
-            android:src="@drawable/call_to_action_24" />
+            android:src="@drawable/shop" />
 
         <TextView
             android:id="@+id/tvshopcuatoi"
@@ -120,14 +119,11 @@
         android:layout_marginRight="15dp"
         android:background="#A89494" />
 
-
-
     <RelativeLayout
         android:id="@+id/rlRole"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp">
 
         <ImageView
@@ -181,7 +177,7 @@
         android:id="@+id/relative_favorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp">
 
         <ImageView
@@ -209,6 +205,48 @@
             android:layout_marginRight="20dp"
             android:src="@drawable/ic_daulonhon" />
     </RelativeLayout>
+    <View
+        android:id="@+id/idview6"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="#A89494" />
+    <RelativeLayout
+        android:id="@+id/relative_voucher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/imgvoucher"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/voucher" />
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imgvoucher"
+            android:text="Mã giảm giá"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_daulonhon" />
+    </RelativeLayout>
+
 
     <View
         android:id="@+id/idview4"
@@ -224,9 +262,14 @@
         android:id="@+id/relative_newpass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp">
-
+        <ImageView
+            android:id="@+id/imgdoimk"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/doimatkhau" />
         <TextView
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
@@ -234,7 +277,9 @@
             android:layout_height="wrap_content"
             android:text="Đổi Mật Khẩu"
             android:textSize="18dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/imgdoimk"
+            />
 
         <ImageView
             android:layout_width="30dp"
