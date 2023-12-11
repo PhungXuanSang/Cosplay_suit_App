@@ -9,12 +9,14 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.DTO.Profile1_DTO;
@@ -31,6 +33,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -205,6 +209,7 @@ public class ProfileActivity extends AppCompatActivity {
         editDialog.show();
 
     }
+
     private void updateUserProfile(Profile1_DTO dto) {
         // Tạo đối tượng Gson
         Gson gson = new GsonBuilder().setLenient().create();
@@ -234,20 +239,12 @@ public class ProfileActivity extends AppCompatActivity {
         String currentAddress = tv_andress.getText().toString();
         String currentPhone = tv_sdt.getText().toString();
 
-        // Gán giá trị mới cho các trường nếu chúng không được cập nhật
-        if (dto.getEmail() == null) {
-            dto.setEmail(currentEmail);
-        }
-        if (dto.getFullname() == null) {
-            dto.setFullname(currentName);
-        }
-        if (dto.getDiachi() == null) {
-            dto.setDiachi(currentAddress);
-        }
-        if (dto.getPhone() == null) {
-            dto.setPhone(currentPhone);
-        }
 
+
+        validateAndUpdateEmail(dto, currentEmail);
+        validateAndUpdateFullName(dto, currentName);
+        validateAndUpdateAddress(dto, currentAddress);
+        validateAndUpdatePhone(dto, currentPhone);
         // Gửi yêu cầu cập nhật thông tin người dùng
         Call<Profile1_DTO> updateProfileCall = userInterface.updateUserField(dto.getId(), dto);
         updateProfileCall.enqueue(new Callback<Profile1_DTO>() {
@@ -286,6 +283,43 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure: " + t.getMessage(), t);
             }
         });
+    }
+    // Hàm kiểm tra và cập nhật email
+    private void validateAndUpdateEmail(Profile1_DTO dto, String currentEmail) {
+        if (TextUtils.isEmpty(dto.getEmail())) {
+            dto.setEmail(currentEmail);
+        }
+    }
+
+    // Hàm kiểm tra và cập nhật họ và tên
+    private void validateAndUpdateFullName(Profile1_DTO dto, String currentName) {
+        if (TextUtils.isEmpty(dto.getFullname())) {
+            dto.setFullname(currentName);
+        }
+    }
+
+    // Hàm kiểm tra và cập nhật địa chỉ
+    private void validateAndUpdateAddress(Profile1_DTO dto, String currentAddress) {
+        if (TextUtils.isEmpty(dto.getDiachi())) {
+            dto.setDiachi(currentAddress);
+        }
+    }
+
+    // Hàm kiểm tra và cập nhật số điện thoại
+    private void validateAndUpdatePhone(Profile1_DTO dto, String currentPhone) {
+        if (TextUtils.isEmpty(dto.getPhone()) || !isValidPhoneNumber(dto.getPhone())) {
+            dto.setPhone(currentPhone);
+
+        }
+    }
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        // Sử dụng regex để kiểm tra số điện thoại
+        String phoneRegex = "^[0-9]{10}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+
+        // Trả về true nếu số điện thoại hợp lệ, ngược lại trả về false
+        return matcher.matches();
     }
 
 

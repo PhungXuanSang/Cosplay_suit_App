@@ -58,7 +58,7 @@ public class SeenVoucherActivity extends AppCompatActivity implements AdapterKha
     static String url = API.URL;
     static final String BASE_URL = url + "/Voucher/";
     static final String BASE_URL_CARTORDER = url + "/bill/";
-    ImageView id_back;
+    ImageView id_back,send_voucher;
     RecyclerView recyclerView;
 
     CheckBox id_checkAll;

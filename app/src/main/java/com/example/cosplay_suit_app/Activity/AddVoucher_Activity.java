@@ -50,6 +50,8 @@ Button buttonAddProduct;
             public void onClick(View v) {
                  DTO_voucher voucher = new DTO_voucher();
                 int discount;
+                int amount;
+
                 try {
                     discount = Integer.parseInt(ed_Discount.getText().toString());
                 } catch (NumberFormatException e) {
@@ -57,7 +59,6 @@ Button buttonAddProduct;
                     Toast.makeText(AddVoucher_Activity.this, "Invalid amount", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (discount < 0) {
                     voucher.setDiscount(String.valueOf(1));
                 } else if (discount > 100) {
@@ -66,8 +67,24 @@ Button buttonAddProduct;
                     voucher.setDiscount(String.valueOf(discount));
                 }
 
+
+
+
+                try {
+                    amount = Integer.parseInt(ed_amount.getText().toString());
+                } catch (NumberFormatException e) {
+                    // Handle the case where the input is not a valid integer
+                    Toast.makeText(AddVoucher_Activity.this, "Invalid amount", Toast.LENGTH_SHORT).show();
+                    return; // Add this line to exit the method in case of invalid input
+                }
+
+                if (amount < 1) {
+                    voucher.setAmount(String.valueOf(1));
+                } else {
+                    voucher.setAmount(String.valueOf(amount));
+                }
                 voucher.setContent(ed_content.getText().toString());
-                 voucher.setAmount(ed_amount.getText().toString());
+//                 voucher.setAmount(ed_amount.getText().toString());
                  voucher.setId_shop(idshop);
                 callAddProduct(voucher);
             }

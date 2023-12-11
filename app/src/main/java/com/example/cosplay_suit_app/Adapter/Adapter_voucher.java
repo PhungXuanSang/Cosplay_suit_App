@@ -72,18 +72,21 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Adapter_voucher.ItemViewHolder viewHolder = (Adapter_voucher.ItemViewHolder) holder;
         voucher.getId();
         DTO_voucher dtoVoucher = new DTO_voucher();
+
+        if (Integer.parseInt(voucher.getAmount()) > 0) {
+
         viewHolder.content.setText(voucher.getContent());
         viewHolder.discount.setText("Giảm giá: " + voucher.getDiscount() + "%");
         viewHolder.amount.setText("Số lượng:" + voucher.getAmount());
         viewHolder.id_gui.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (voucher.getAmount().equalsIgnoreCase("0")){
+                if (voucher.getAmount().equalsIgnoreCase("0")) {
                     Toast.makeText(context, "Bạn đã hết voucher!", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Intent intent = new Intent(context, SeenVoucherActivity.class);
-                    intent.putExtra("id_voucher",voucher.getId());
-                    intent.putExtra("amount",voucher.getAmount());
+                    intent.putExtra("id_voucher", voucher.getId());
+                    intent.putExtra("amount", voucher.getAmount());
                     context.startActivity(intent);
                 }
 
@@ -93,8 +96,8 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View v) {
                 // Handle item click to show edit and delete buttons
-                ((ItemViewHolder) holder).edit.setVisibility(View.VISIBLE);
-                ((ItemViewHolder) holder).delete.setVisibility(View.VISIBLE);
+                viewHolder.edit.setVisibility(View.VISIBLE);
+                viewHolder.id_gui.setVisibility(View.VISIBLE);
             }
         });
 
@@ -111,6 +114,10 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 AppCompatButton btnSua = dialogView.findViewById(R.id.btn_sua);
                 AppCompatButton btnHuy = dialogView.findViewById(R.id.btn_huy);
 
+
+                edContent.setText(voucher.getContent());
+                edAmount.setText(voucher.getAmount());
+                edDiscount.setText(voucher.getDiscount());
                 // Tạo AlertDialog.Builder với layout đã inflate
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setView(dialogView);
@@ -131,10 +138,43 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         String discount = edDiscount.getText().toString();
 
                         if (!TextUtils.isEmpty(content) && !TextUtils.isEmpty(amount) && !TextUtils.isEmpty(discount)) {
+                            // Parse the input for amount and discount
+                            int parsedAmount, parsedDiscount;
+
+                            try {
+                                parsedAmount = Integer.parseInt(amount);
+                            } catch (NumberFormatException e) {
+                                // Handle the case where the input is not a valid integer
+                                Toast.makeText(context, "Invalid amount", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            try {
+                                parsedDiscount = Integer.parseInt(discount);
+                            } catch (NumberFormatException e) {
+                                // Handle the case where the input is not a valid integer
+                                Toast.makeText(context, "Invalid discount", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            // Apply conditions for amount
+                            if (parsedAmount < 1) {
+                                dtoVoucher.setAmount(String.valueOf(1));
+                            } else {
+                                dtoVoucher.setAmount(String.valueOf(parsedAmount));
+                            }
+
+                            // Apply conditions for discount
+                            if (parsedDiscount < 0) {
+                                dtoVoucher.setDiscount(String.valueOf(1));
+                            } else if (parsedDiscount > 100) {
+                                dtoVoucher.setDiscount(String.valueOf(100));
+                            } else {
+                                dtoVoucher.setDiscount(String.valueOf(parsedDiscount));
+                            }
+
                             // Gọi phương thức để cập nhật voucher
-                            dtoVoucher.setAmount(amount);
                             dtoVoucher.setContent(content);
-                            dtoVoucher.setDiscount(discount);
                             callUpdateProduct(dtoVoucher);
 
                             // Đóng hộp thoại sau khi "Sửa"
@@ -159,24 +199,19 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 dialog.show();
             }
         });
-        ((ItemViewHolder) holder).delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(context)
-                        .setTitle("Xác nhận xóa")
-                        .setMessage("Bạn có chắc chắn muốn xóa không?")
-                        .setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                callDeleteProduct(voucher.getId());
-                            }
-                        })
-                        .setNegativeButton("Không", null)
-                        .show();
-            }
-        });
+            viewHolder.itemView.setVisibility(View.VISIBLE);
+            ViewGroup.LayoutParams layoutParams = viewHolder.itemView.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT; // Set the height to WRAP_CONTENT or your desired height
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT; // Set the width to MATCH_PARENT or your desired width
+            viewHolder.itemView.setLayoutParams(layoutParams);
 
-
+        } else {
+            viewHolder.itemView.setVisibility(View.GONE);
+            ViewGroup.LayoutParams layoutParams = viewHolder.itemView.getLayoutParams();
+            layoutParams.height = 0;
+            layoutParams.width = 0;
+            viewHolder.itemView.setLayoutParams(layoutParams);
+    }
     }
 
     @Override
@@ -187,8 +222,8 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         TextView amount, content, discount;
-        ImageView edit, delete;
-        ConstraintLayout id_gui;
+        ImageView edit;
+        ImageView id_gui;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -196,7 +231,7 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
             content = itemView.findViewById(R.id.content);
             discount = itemView.findViewById(R.id.discount);
             edit = itemView.findViewById(R.id.editButton);
-            delete = itemView.findViewById(R.id.deleteButton);
+//            delete = itemView.findViewById(R.id.deleteButton);
             id_gui = itemView.findViewById(R.id.id_gui);
         }
     }
@@ -220,31 +255,6 @@ public class Adapter_voucher extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             @Override
             public void onFailure(@NonNull Call<DTO_voucher> call, Throwable t) {
-                Log.d("cc", "onFailure: " + t.getLocalizedMessage());
-            }
-        });
-    }
-
-    public void callDeleteProduct(String id) {
-        Gson gson = new GsonBuilder().setLenient().create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        voucherInterface = retrofit.create(VoucherInterface.class);
-        Call<DTO_voucher> objCall = voucherInterface.deleteVoucherByShop(id);
-
-        objCall.enqueue(new Callback<DTO_voucher>() {
-            @Override
-            public void onResponse(@NonNull Call<DTO_voucher> call, Response<DTO_voucher> response) {
-                // Xử lý sau khi xóa thành công
-                Log.d("cc", "onResponse: " + response.message());
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<DTO_voucher> call, Throwable t) {
-                // Xử lý khi có lỗi xảy ra
                 Log.d("cc", "onFailure: " + t.getLocalizedMessage());
             }
         });
