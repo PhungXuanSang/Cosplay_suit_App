@@ -43,6 +43,7 @@ import com.example.cosplay_suit_app.ThanhtoanVNpay.WebViewThanhtoan;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.example.cosplay_suit_app.bill.controller.Mualai_controller;
+import com.example.cosplay_suit_app.bill.controller.Voucher_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -76,9 +77,11 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
     CardView cardmagiamgia;
     List<GetVoucher_DTO> getVoucherDtoList;
     Adapterchonvoucher adapterchonvoucher;
-    String magiamgia = "";
+    String magiamgia = "", idvoucher ;
     Dialog dialog;
     Context context;
+    Voucher_controller voucherController;
+
 
     public interface OnAddBillCompleteListener {
         void onAddBillComplete();
@@ -150,6 +153,8 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                             if (magiamgia.equals("")){
                                 dtovnpay.setVnp_Amount(String.valueOf(amount*priceproduct));
                             }else {
+                                voucherController = new Voucher_controller(MualaiActivity.this);
+                                voucherController.Deleteseenvoucher(idvoucher);
                                 double magiamgiaValue = Double.parseDouble(magiamgia);
                                 double result = magiamgiaValue / 100;
                                 double dagiamgia = (amount * priceproduct) - ((amount * priceproduct) * result);
@@ -179,7 +184,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                                             dtoBill.setId_thanhtoan(dtoThanhtoan.getIdthanhtoan());
                                             dtoBill.setStatus("Wait");
                                             dtoBill.setTotalPayment(amount*priceproduct);
-                                            dtoBill.setMa_voucher("");
+                                            dtoBill.setMa_voucher(idvoucher);
                                             dtoBill.setTimestart(currentDateTime);
                                             dtoBill.setTimeend("");
                                             mualaiController.Addbill(dtoBill);
@@ -242,8 +247,9 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
         //Chọn voucher nếu co
         dialog = new Dialog(MualaiActivity.this);
         getVoucherDtoList = new ArrayList<>();
-        adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, (Context) MualaiActivity.this
-                , (Adapterchonvoucher.Onclickchonvoucher) this, (Adapterchonvoucher.Onclickchonvoucheractivity) context, dialog, "mualai");
+        adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, (Context) MualaiActivity.this,
+                (Adapterchonvoucher.Onclickchonvoucher) this, (Adapterchonvoucher.Onclickchonvoucheractivity) context,
+                dialog, "mualai", id_shop);
         cardmagiamgia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -474,6 +480,11 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                             dtoAddress.setAddress(diachi);
                             dtoAddress.setFullname(hoten);
                             dtoAddress.setPhone(sodienthoai);
+                            //Xóa voucher
+                            if (idvoucher != null){
+                                voucherController = new Voucher_controller(MualaiActivity.this);
+                                voucherController.Deleteseenvoucher(idvoucher);
+                            }
                             billController.Add_address(dtoAddress, new Bill_controller.ApiAddress() {
                                 @Override
                                 public void onApiAddress(DTO_Address dto_address) {
@@ -488,7 +499,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                                     dtoBill.setId_thanhtoan(dtoThanhtoan.getIdthanhtoan());
                                     dtoBill.setStatus("Wait");
                                     dtoBill.setTotalPayment(amount*priceproduct);
-                                    dtoBill.setMa_voucher("");
+                                    dtoBill.setMa_voucher(idvoucher);
                                     dtoBill.setTimestart(currentDateTime);
                                     dtoBill.setTimeend("");
                                     mualaiController.Addbill(dtoBill);
@@ -519,6 +530,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
     @Override
     public void onclickdungngay(GetVoucher_DTO getVoucherDto) {
         magiamgia = getVoucherDto.getDtoVoucher().getDiscount();
+        idvoucher = getVoucherDto.get_id();
         if (magiamgia.equals("")){
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
             tv_tongtien.setText(""+decimalFormat.format(amount*priceproduct) + " VND");

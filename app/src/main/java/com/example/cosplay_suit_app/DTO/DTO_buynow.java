@@ -6,17 +6,27 @@ public class DTO_buynow {
     String _id, nameshop, address, id_user;
     int tongbill;
     List<CartOrderDTO> list;
+    private GetVoucher_DTO selectedVoucher;
 
     public DTO_buynow() {
     }
 
-    public DTO_buynow(String _id, String nameshop, String address, String id_user, List<CartOrderDTO> list, int tongbill) {
+    public DTO_buynow(String _id, String nameshop, String address, String id_user, List<CartOrderDTO> list, int tongbill, GetVoucher_DTO selectedVoucher) {
         this._id = _id;
         this.nameshop = nameshop;
         this.address = address;
         this.id_user = id_user;
         this.list = list;
         this.tongbill = tongbill;
+        this.selectedVoucher = selectedVoucher;
+    }
+
+    public GetVoucher_DTO getSelectedVoucher() {
+        return selectedVoucher;
+    }
+
+    public void setSelectedVoucher(GetVoucher_DTO selectedVoucher) {
+        this.selectedVoucher = selectedVoucher;
     }
 
     public int getTongbill() {

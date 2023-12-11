@@ -46,9 +46,7 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
     String TAG = "adaptercartorder";
     OnclickCheck onclickCheck;
     String idcart, idshop;
-    TextView tvsoluong;
     List<DTO_properties> listproper;
-    CheckBox cbkcart;
 
     public AdapterCartorder(List<CartOrderDTO> list, Context context, OnclickCheck onclickCheck) {
         this.list = list;
@@ -85,15 +83,15 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.tvnamepro.setText(order.getDtoSanPham().getNameproduct());
             viewHolder.tvsize.setText("Size: "+order.getId_properties());
             viewHolder.tvprice.setText(decimalFormat.format(order.getDtoSanPham().getPrice()) + " VND");
-            tvsoluong.setText(""+order.getAmount());
+            viewHolder.tvsoluong.setText(""+order.getAmount());
             viewHolder.imgcong.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) + 1;
+                    soluong = Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim()) + 1;
                     if (soluong < 101){
                         String slmoi = String.valueOf(soluong);
-                        tvsoluong.setText(slmoi);
-                        if (cbkcart.isChecked()){
+                        viewHolder.tvsoluong.setText(slmoi);
+                        if (viewHolder.cbkcart.isChecked()){
                             tonggia = order.getDtoSanPham().getPrice();
                             TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
                             onclickCheck.onCheckboxTrue();
@@ -109,11 +107,11 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.imgtru.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    soluong = Integer.parseInt(tvsoluong.getText().toString().trim()) - 1;
+                    soluong = Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim()) - 1;
                     if (soluong > 0){
                         String slmoi = String.valueOf(soluong);
-                        tvsoluong.setText(slmoi);
-                        if (cbkcart.isChecked()){
+                        viewHolder.tvsoluong.setText(slmoi);
+                        if (viewHolder.cbkcart.isChecked()){
                             tonggia = order.getDtoSanPham().getPrice();
                             TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
                             onclickCheck.onCheckboxTrue();
@@ -126,25 +124,24 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                 }
             });
-            cbkcart.setOnClickListener(new View.OnClickListener() {
+            viewHolder.cbkcart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    boolean isChecked = cbkcart.isChecked();
-                    order.setChecked(isChecked);
-
-                    idcart = order.get_id();
-                    idshop = order.getDtoSanPham().getId_shop();
-                    tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(tvsoluong.getText().toString().trim());
-
-                    if (isChecked) {
+                    if (viewHolder.cbkcart.isChecked()) {
+                        idcart = order.get_id();
+                        idshop = order.getDtoSanPham().getId_shop();
+                        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                         TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
                         TotalPriceManager.getInstance().updateIdcartTrue(idcart);
-                        CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(), idcart);
                         onclickCheck.onCheckboxTrue();
+                        CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(),order.get_id());
                     } else {
+                        idcart = order.get_id();
+                        idshop = order.getDtoSanPham().getId_shop();
+                        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(viewHolder.tvsoluong.getText().toString().trim());
                         TotalPriceManager.getInstance().updateTotalPriceFalse(tonggia);
                         TotalPriceManager.getInstance().updateIdcartFalse(idcart);
-                        CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(), idcart);
+                        CartShopManager.getInstance().removeCartFromShop(order.getDtoSanPham().getId_shop(),order.get_id());
                         onclickCheck.onCheckboxFalse();
                     }
 
@@ -192,6 +189,8 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
         ImageView imgproduct, imgcong, imgtru;
         TextView tvnamepro, tvsize, tvprice, tv_xoa;
         Spinner spinnerproper;
+        CheckBox cbkcart;
+        TextView tvsoluong;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -247,15 +246,5 @@ public class AdapterCartorder extends RecyclerView.Adapter<RecyclerView.ViewHold
                 Log.e(TAG, t.getLocalizedMessage());
             }
         });
-    }
-
-    public void onParenCheckboxTrue(CartOrderDTO order){
-        idcart = order.get_id();
-        idshop = order.getDtoSanPham().getId_shop();
-        tonggia = (order.getDtoSanPham().getPrice()) * Integer.parseInt(tvsoluong.getText().toString().trim());
-        TotalPriceManager.getInstance().updateTotalPriceTrue(tonggia);
-        TotalPriceManager.getInstance().updateIdcartTrue(idcart);
-        CartShopManager.getInstance().addCartToShop(order.getDtoSanPham().getId_shop(), idcart);
-        onclickCheck.onCheckboxTrue();
     }
 }

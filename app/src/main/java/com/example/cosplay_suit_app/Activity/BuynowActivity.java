@@ -60,7 +60,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BuynowActivity extends AppCompatActivity implements Adapterchonvoucher.Onclickchonvoucheractivity {
+public class BuynowActivity extends AppCompatActivity{
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     static final String BASE_URL_VNPAY = url +"/payment/";
@@ -435,12 +435,6 @@ public class BuynowActivity extends AppCompatActivity implements Adapterchonvouc
                 tv_diachi.setText(diachi);
             }
         });
-    }
-    @Override
-    public void onclickchonvoucheractivity(GetVoucher_DTO getVoucherDto) {
-        double dagiamgia = totalPriceManager.getTotalOrderPrice();
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        tv_tongtien.setText(decimalFormat.format(dagiamgia) + " VND");
     }
     @Override
     protected void onResume() {

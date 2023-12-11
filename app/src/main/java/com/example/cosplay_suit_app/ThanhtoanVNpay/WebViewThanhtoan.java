@@ -102,7 +102,12 @@ public class WebViewThanhtoan extends AppCompatActivity {
                     resultIntent.putExtra("vnp_SecureHash", vnp_SecureHash);
 
                     setResult(RESULT_OK, resultIntent);
-                    finish();// Kết thúc WebViewThanhtoan
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();// Kết thúc WebViewThanhtoan
+                        }
+                    }, 5000);
                 }
             }
         });

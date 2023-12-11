@@ -50,7 +50,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Adapterchonvoucher.Onclickchonvoucher{
+public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     List<DTO_buynow> list;
@@ -65,7 +65,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     Dialog dialog;
     List<GetVoucher_DTO> getVoucherDtoList;
     Adapterchonvoucher adapterchonvoucher;
-    TextView chonvoucher;
+
 
     public Adapter_buynow(List<DTO_buynow> list, Context context) {
         this.list = list;
@@ -114,6 +114,15 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         Adapter_buynow.ItemViewHoldel viewHolder = (Adapter_buynow.ItemViewHoldel) holder;
 
+        // Hiển thị thông tin về voucher
+        GetVoucher_DTO selectedVoucher = shopCartorderDTO.getSelectedVoucher();
+        if (selectedVoucher != null) {
+            viewHolder.chonvoucher.setText("Giảm " + selectedVoucher.getDtoVoucher().getDiscount() + "%");
+            Log.d(TAG, "idshpp: " + shopCartorderDTO.get_id() + " voucher"+ selectedVoucher.getDtoVoucher().getDiscount());
+        } else {
+            viewHolder.chonvoucher.setText("Chọn >>");
+        }
+
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
 
         List<DTO_inbuynow> ordersForShop = orderMap.get(shopCartorderDTO.get_id());
@@ -125,18 +134,6 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         totalForShop = calculateTotalForShop(ordersForShop);
         viewHolder.tv_tonggia.setText( decimalFormat.format(totalForShop) + " VND");
         shopCartorderDTO.setTongbill(totalForShop);
-        //Chọn voucher
-        getVoucherDtoList = new ArrayList<>();
-        dialog = new Dialog(context);
-        adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, context, (Adapterchonvoucher.Onclickchonvoucher) this
-                , (Adapterchonvoucher.Onclickchonvoucheractivity) context, dialog, "buynow");
-        chonvoucher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogchonvoucher();
-            }
-        });
-
     }
     @Override
     public int getItemCount() {
@@ -146,6 +143,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public class ItemViewHoldel extends RecyclerView.ViewHolder{
         RecyclerView recyclerView;
         TextView tv_tonggia;
+        TextView chonvoucher;
         public ItemViewHoldel(@NonNull View itemView) {
             super(itemView);
             recyclerView = itemView.findViewById(R.id.rcv_buynow);
@@ -153,57 +151,6 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             chonvoucher = itemView.findViewById(R.id.chonvoucher);
         }
     }
-    @Override
-    public void onclickdungngay(GetVoucher_DTO getVoucherDto) {
-        magiamgia = getVoucherDto.getDtoVoucher().getDiscount();
-        chonvoucher.setText("giảm "+getVoucherDto.getDtoVoucher().getDiscount() + "%");
-        double magiamgiaValue = Double.parseDouble(magiamgia);
-        double result = magiamgiaValue / 100;
-        double dagiamgia = totalPriceManager.getTotalOrderPrice() - (totalPriceManager.getTotalOrderPrice() * result);
-        TotalPriceManager.getInstance().setTotalOrderPrice(dagiamgia);
-    }
-    public void dialogchonvoucher(){
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialogchonvoucher);
-
-        ImageView imageViewback = dialog.findViewById(R.id.id_back);
-        imageViewback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        RecyclerView recyclerView = dialog.findViewById(R.id.rcv_voucher);
-        recyclerView.setAdapter(adapterchonvoucher);
-        Bill_controller billController = new Bill_controller(context);
-        billController.getVoucher(id, new Bill_controller.ApiVouche() {
-            @Override
-            public void onApiVouche(List<GetVoucher_DTO> getVoucherDto) {
-                getVoucherDtoList.clear();
-                if (getVoucherDto != null && !getVoucherDto.isEmpty()) {
-                    for (GetVoucher_DTO voucherDto : getVoucherDto) {
-                        getVoucherDtoList.add(voucherDto);
-                    }
-                    adapterchonvoucher.notifyDataSetChanged();
-                }
-            }
-        });
-
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-
-        // Chiều rộng full màn hình
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        // Chiều cao full màn hình
-        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-
-        window.setAttributes(layoutParams);
-        window.setBackgroundDrawableResource(android.R.color.transparent);
-
-        dialog.show();
-    }
-
     public void getOrdersByUserId(String userId, Callback<List<DTO_inbuynow>> callback) {
         // Tạo một OkHttpClient với interceptor để ghi log (nếu cần)
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -294,7 +241,12 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             dtoBill.setTimestart(currentDateTime);
             dtoBill.setTimeend("");
             dtoBill.setStatus("Wait");
-            dtoBill.setMa_voucher("");
+            // Kiểm tra xem item có chọn voucher hay không
+            if (item.getSelectedVoucher().getDtoVoucher().getDiscount() != null && !item.getSelectedVoucher().getDtoVoucher().getDiscount().isEmpty()) {
+                dtoBill.setMa_voucher(item.getSelectedVoucher().getDtoVoucher().getDiscount());
+            } else {
+                dtoBill.setMa_voucher("");
+            }
             dtoBill.setId_thanhtoan(idthanhtoan);
             dtoBill.setTotalPayment(item.getTongbill());
             Bill_controller billController = new Bill_controller(context);
@@ -325,5 +277,4 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dateFormat.format(currentDate);
     }
-
 }

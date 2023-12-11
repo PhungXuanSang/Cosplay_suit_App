@@ -1,9 +1,6 @@
 package com.example.cosplay_suit_app.Adapter;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,30 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cosplay_suit_app.Activity.MualaiActivity;
 import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.R;
 
 import java.util.List;
 
-public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class Adapter_vouchercuatoi extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     List<GetVoucher_DTO> list;
     Context context;
-    Onclickchonvoucher onclickchonvoucher;
-    Onclickchonvoucheractivity onclickchonvoucheractivity;
-    Dialog dialog;
-    String checkacti;
-    String idshop;
 
-    public Adapterchonvoucher(List<GetVoucher_DTO> list, Context context, Onclickchonvoucher onclickchonvoucher
-            ,Onclickchonvoucheractivity onclickchonvoucheractivity, Dialog dialog, String checkacti, String idshop) {
+    public Adapter_vouchercuatoi(List<GetVoucher_DTO> list, Context context) {
         this.list = list;
         this.context = context;
-        this.onclickchonvoucher = onclickchonvoucher;
-        this.onclickchonvoucheractivity = onclickchonvoucheractivity;
-        this.dialog = dialog;
-        this.checkacti = checkacti;
-        this.idshop = idshop;
     }
 
     @NonNull
@@ -52,18 +37,6 @@ public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHo
         viewHoldel.giamgiaint.setText(getVoucherDto.getDtoVoucher().getDiscount() + "%");
         viewHoldel.conten_id.setText(getVoucherDto.getDtoVoucher().getContent());
         viewHoldel.nameshop.setText(getVoucherDto.getDtoVoucher().getShop().getNameshop());
-        viewHoldel.iddungngay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                if ("buynow".equals(checkacti)){
-                    onclickchonvoucher.onclickdungngay(getVoucherDto);
-                    onclickchonvoucheractivity.onclickchonvoucheractivity(getVoucherDto);
-                }if ("mualai".equals(checkacti)){
-                    onclickchonvoucher.onclickdungngay(getVoucherDto);
-                }
-            }
-        });
     }
 
     @Override
@@ -79,17 +52,6 @@ public class Adapterchonvoucher extends RecyclerView.Adapter<RecyclerView.ViewHo
             giamgiaint = itemView.findViewById(R.id.giamgiaint);
             iddungngay = itemView.findViewById(R.id.iddungngay);
         }
-    }
-    private void reloadActivity() {
-        Intent intent = ((Activity) context).getIntent();
-        ((Activity) context).finish();
-        context.startActivity(intent);
-    }
-    public interface Onclickchonvoucher{
-        void onclickdungngay(GetVoucher_DTO getVoucherDto);
-    }
-    public interface Onclickchonvoucheractivity{
-        void onclickchonvoucheractivity(GetVoucher_DTO getVoucherDto);
     }
 
 }

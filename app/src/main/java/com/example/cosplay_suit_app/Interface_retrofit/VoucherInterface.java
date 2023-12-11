@@ -6,6 +6,7 @@ import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SeenVoucher;
 import com.example.cosplay_suit_app.DTO.DTO_SeenVoucher_Check;
 import com.example.cosplay_suit_app.DTO.DTO_voucher;
+import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
 
 import java.util.List;
@@ -36,4 +37,8 @@ public interface VoucherInterface {
 
     @GET("listvoucher/{id_voucher}")
     Call<List<DTO_SeenVoucher>> getlistSeen(@Path("id_voucher") String id_voucher);
+    @DELETE("deleteseenvoucher/{id}")
+    Call<DTO_SeenVoucher> deleteseenvoucher(@Path("id") String id);
+    @GET("getlistseenvoucheruser/{id_user}")
+    Call<List<GetVoucher_DTO>> getlistseenvoucheruser(@Path("id_user") String id_user);
 }

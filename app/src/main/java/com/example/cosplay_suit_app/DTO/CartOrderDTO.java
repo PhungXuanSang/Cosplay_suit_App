@@ -9,15 +9,6 @@ public class CartOrderDTO {
     int amount, totalPayment;
 
     String id_properties;
-    private boolean isChecked; // Thuộc tính để lưu trạng thái của CheckBox
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
     public CartOrderDTO() {
     }
 
