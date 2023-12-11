@@ -128,7 +128,7 @@ public class NewPasswordActivity extends AppCompatActivity {
 
     void validate(){
 
-        String olpass = OlPasss.getText().toString();
+//        String olpass = OlPasss.getText().toString();
         String pass = NewPass.getText().toString();
         String passnew = CheckNewPass.getText().toString();
 //        if (OlPasss.getText().length()==0){
