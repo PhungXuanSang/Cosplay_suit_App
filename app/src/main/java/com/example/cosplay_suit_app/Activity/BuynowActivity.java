@@ -41,6 +41,7 @@ import com.example.cosplay_suit_app.ThanhtoanVNpay.Vnpay_Retrofit;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.WebViewThanhtoan;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
+import com.example.cosplay_suit_app.bill.controller.Voucher_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.text.DecimalFormat;
@@ -60,7 +61,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BuynowActivity extends AppCompatActivity{
+public class BuynowActivity extends AppCompatActivity implements Adapter_buynow.UpdatetotalPriceManager{
     static String url = API.URL;
     static final String BASE_URL = url +"/bill/";
     static final String BASE_URL_VNPAY = url +"/payment/";
@@ -75,8 +76,8 @@ public class BuynowActivity extends AppCompatActivity{
     Bill_controller billController = new Bill_controller(this);
     Set<String> idShopSet = CartShopManager.getInstance().getListidshop();
     List<String> idShopList;
-    String id, hoten, sodienthoai, diachi,checkphuongthuc, idaddress, magiamgia="";
-    ;
+    String id, hoten, sodienthoai, diachi,checkphuongthuc, idaddress;
+    List<String> idvoucherlist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,13 +91,13 @@ public class BuynowActivity extends AppCompatActivity{
         });
 
         list = new ArrayList<>();
-        arrayAdapter = new Adapter_buynow(list, (Context) BuynowActivity.this);
+        arrayAdapter = new Adapter_buynow(list, (Context) BuynowActivity.this, (Adapter_buynow.UpdatetotalPriceManager) this);
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
         id = sharedPreferences.getString("id","");
-
+        idvoucherlist = new ArrayList<>();
         btnbuynow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,6 +127,10 @@ public class BuynowActivity extends AppCompatActivity{
                                         public void onApiAddress(DTO_Address dto_address) {
                                             idaddress = dto_address.get_id();
                                             arrayAdapter.performActionOnAllItems(dtoThanhtoan.getIdthanhtoan(), idaddress);
+                                            Voucher_controller voucherController = new Voucher_controller(BuynowActivity.this);
+                                            for (int i= 0;idvoucherlist.size() <i;i++){
+                                                voucherController.Deleteseenvoucher(idvoucherlist.get(i));
+                                            }
                                         }
                                     });
                                 }
@@ -168,17 +173,6 @@ public class BuynowActivity extends AppCompatActivity{
             }
         });
         idShopList = new ArrayList<>(idShopSet);
-
-        for (int i = 0; i < idShopList.size(); i++) {
-            Log.d(TAG, "idShop: " + idShopList.get(i));
-            Set<String> idCartSet = CartShopManager.getInstance().getCartListForShop(idShopList.get(i));
-            List<String> idCartList = new ArrayList<>(idCartSet);
-
-            for (int j = 0; j < idCartList.size(); j++) {
-                Log.d(TAG, "idCart: " + idCartList.get(j));
-            }
-        }
-
     }
     public void Anhxa(){
         img_back = findViewById(R.id.id_back);
@@ -440,5 +434,12 @@ public class BuynowActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         diachi();
+    }
+
+    @Override
+    public void updatetext(double giamoi, String idseenvoucherlist) {
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        tv_tongtien.setText(decimalFormat.format(giamoi) + " VND");
+        idvoucherlist.add(idseenvoucherlist);
     }
 }
