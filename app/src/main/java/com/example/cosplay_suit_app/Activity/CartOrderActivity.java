@@ -62,6 +62,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     ArrayList<String> totalPriceManagerListcart = new ArrayList<>();
     LinearLayout noProductMessage;
     CheckBox cbkSelectAll;
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +86,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
         arrayAdapter.notifyDataSetChanged();
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
 
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,9 +195,18 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                     public void onClick(DialogInterface dialog, int which) {
                         Cart_controller cartController = new Cart_controller(CartOrderActivity.this);
                         cartController.chonDeleteCartorder(idcart);
+                        // Thông báo về sự thay đổi trong danh sách
+                        if (CartOrderActivity.this instanceof CartOrderActivity) {
+                            ((CartOrderActivity) CartOrderActivity.this).onResume();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)
                 .show();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getShop(id);
     }
 }

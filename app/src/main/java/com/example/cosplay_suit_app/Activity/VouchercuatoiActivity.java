@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.cosplay_suit_app.Adapter.Adapter_vouchercuatoi;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
@@ -21,6 +23,7 @@ public class VouchercuatoiActivity extends AppCompatActivity {
     Adapter_vouchercuatoi adapterVouchercuatoi;
     RecyclerView recyclerView;
     Voucher_controller voucherController;
+    ImageView id_back;
     String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,15 @@ public class VouchercuatoiActivity extends AppCompatActivity {
                 }
             }
         });
+        id_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
     public void Anhxa(){
         recyclerView = findViewById(R.id.rcv_voucherme);
+        id_back = findViewById(R.id.id_back);
     }
 }

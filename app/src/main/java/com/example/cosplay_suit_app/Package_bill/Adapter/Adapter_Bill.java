@@ -21,6 +21,7 @@ import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
+import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 
@@ -124,6 +125,8 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dtoBill.setStatus("Cancelled");
                         dtoBill.setTimeend(currentDateTime);
                         billController.UpdateStatusBill(billDetailDTO.getDtoBill().get_id(),dtoBill);
+                        // Gọi lại phương thức để tải lại danh sách đơn hàng
+                        ((xannhandon_Activity) context).reloadBillList();
                     }
                 });
             } else if (billDetailDTO.getDtoBill().getStatus().equals("Pack")) {

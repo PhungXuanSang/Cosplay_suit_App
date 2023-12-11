@@ -310,7 +310,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             dtoBill.setTimeend("");
             dtoBill.setStatus("Wait");
             // Kiểm tra xem item có chọn voucher hay không
-            if (item.getSelectedVoucher().getDtoVoucher().getDiscount() != null && !item.getSelectedVoucher().getDtoVoucher().getDiscount().isEmpty()) {
+            if (item.getSelectedVoucher() != null) {
                 dtoBill.setMa_voucher(item.getSelectedVoucher().getDtoVoucher().getId());
             } else {
                 dtoBill.setMa_voucher("");

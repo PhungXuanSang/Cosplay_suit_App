@@ -41,7 +41,7 @@ public class xannhandon_Activity extends AppCompatActivity {
     ImageView img_back;
     String checkactivity = "user" , checkstatus = "";
     LinearLayout noProductMessage;
-
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,7 @@ public class xannhandon_Activity extends AppCompatActivity {
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
 
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +61,15 @@ public class xannhandon_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        reloadBillList();
+    }
+
+    public void Anhxa(){
+        recyclerView = findViewById(R.id.rcv_danhgia);
+        img_back = findViewById(R.id.id_back);
+        noProductMessage = findViewById(R.id.noProductMessage);
+    }
+    public void reloadBillList() {
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(this);
             billController.GetUserBillWait(id, checkactivity, new Bill_controller.ApiGetUserBillWait() {
@@ -83,12 +92,12 @@ public class xannhandon_Activity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
-    public void Anhxa(){
-        recyclerView = findViewById(R.id.rcv_danhgia);
-        img_back = findViewById(R.id.id_back);
-        noProductMessage = findViewById(R.id.noProductMessage);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadBillList();
     }
+
 }
