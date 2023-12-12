@@ -147,8 +147,7 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Bill_controller billController = new Bill_controller(context);
         dialog = new Dialog(context);
         getVoucherDtoList = new ArrayList<>();
-        adapterchonvoucher = new Adapterchonvoucherbuynow(getVoucherDtoList, context,
-                 dialog, shopCartorderDTO.get_id());
+
 
         viewHolder.chonvoucher.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +165,8 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 });
 
+                adapterchonvoucher = new Adapterchonvoucherbuynow(getVoucherDtoList, context,
+                        dialog, shopCartorderDTO.get_id());
                 RecyclerView recyclerView = dialog.findViewById(R.id.rcv_voucher);
                 recyclerView.setAdapter(adapterchonvoucher);
                 adapterchonvoucher.setOnVoucherSelectedListener(new Adapterchonvoucherbuynow.OnVoucherSelectedListener() {
@@ -316,8 +317,8 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 dtoBill.setMa_voucher(item.getSelectedVoucher().getDtoVoucher().getId());
                 dtoBill.setDiscount(item.getSelectedVoucher().getDtoVoucher().getDiscount());
 
-//                Voucher_controller voucherController = new Voucher_controller(context);
-//                voucherController.Deleteseenvoucher(item.getSelectedVoucher().getDtoVoucher().getId());
+                Voucher_controller voucherController = new Voucher_controller(context);
+                voucherController.Deleteseenvoucher(item.getSelectedVoucher().getDtoVoucher().getId());
             }
             dtoBill.setId_thanhtoan(idthanhtoan);
             dtoBill.setTotalPayment(item.getTongbill());

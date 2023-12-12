@@ -51,14 +51,19 @@ public class Adapterchonvoucherbuynow extends RecyclerView.Adapter<RecyclerView.
         viewHoldel.giamgiaint.setText(getVoucherDto.getDtoVoucher().getDiscount() + "%");
         viewHoldel.conten_id.setText(getVoucherDto.getDtoVoucher().getContent());
         viewHoldel.nameshop.setText(getVoucherDto.getDtoVoucher().getShop().getNameshop());
-        viewHoldel.iddungngay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                onVoucherSelectedListener.onVoucherSelected(getVoucherDto);
-            }
-        });
-        Log.d("idshopvoucher", "idshop: " + idshop);
+        if (getVoucherDto.getDtoVoucher().getShop().getId().equals(idshop)){
+            viewHoldel.iddungngay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onVoucherSelectedListener.onVoucherSelected(getVoucherDto);
+                    dialog.dismiss();
+                }
+            });
+        }else {
+            viewHoldel.idthongbao.setVisibility(View.VISIBLE);
+            viewHoldel.iddungngay.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

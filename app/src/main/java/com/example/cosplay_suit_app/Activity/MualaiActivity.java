@@ -250,7 +250,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
         getVoucherDtoList = new ArrayList<>();
         adapterchonvoucher = new Adapterchonvoucher(getVoucherDtoList, (Context) MualaiActivity.this,
                 (Adapterchonvoucher.Onclickchonvoucher) this,
-                dialog);
+                dialog, id_shop);
         cardmagiamgia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -108,7 +108,7 @@ public class Chitietbill_Activity extends AppCompatActivity {
                     double result = Double.parseDouble(billDTO.getDiscount()) / 100;
                     double dagiamgia = (Double.parseDouble(String.valueOf(billDTO.getTotalPayment())) * result);
                     idgiagiam.setText("Được giảm: " +  decimalFormat.format(dagiamgia) + " VND");
-                    idtienthanhtoan.setText("Số tiền thanh toán: " + decimalFormat.format(Integer.parseInt(billDTO.getThanhtoan().getVnp_Amount())) + " VND");
+                    idtienthanhtoan.setText("Số tiền thanh toán: " + decimalFormat.format(Double.parseDouble(billDTO.getThanhtoan().getVnp_Amount())) + " VND");
                 }
                 tv_thoigiandat.setText(billDTO.getTimestart());
                 if (billDTO.getThanhtoan().getVnp_TxnRef().length() > 8){
