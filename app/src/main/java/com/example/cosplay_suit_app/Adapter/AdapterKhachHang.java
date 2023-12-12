@@ -127,22 +127,22 @@ public class AdapterKhachHang extends RecyclerView.Adapter<RecyclerView.ViewHold
             public void onClick(View view) {
 
                 if (viewHoldel.box.isChecked()){
-                    onlickCheck.Check_ID(user.getId());
+                    onlickCheck.Check_ID(user.getId_user().getId());
                 }else {
-                    onlickCheck.Check_Delete_ID(user.getId());
+                    onlickCheck.Check_Delete_ID(user.getId_user().getId());
                 }
             }
         });
         viewHoldel.box.setChecked(user.isCheck());
         if(user.isCheck() == true){
             if (viewHoldel.box.isEnabled() == true){
-                onlickCheck.Check_ID(user.getId());
+                onlickCheck.Check_ID(user.getId_user().getId());
                 Log.e("manh", "onBindViewHolder 1: " + user.isCheck() );
             }
 
         }
         if(user.isCheck() == false){
-            onlickCheck.Check_Delete_ID(user.getId());
+            onlickCheck.Check_Delete_ID(user.getId_user().getId());
             Log.e("manh", "onBindViewHolder 2: " + user.isCheck() );
         }
     }
