@@ -121,6 +121,12 @@ public class SeenVoucherActivity extends AppCompatActivity implements AdapterKha
                                 Log.e("manh", "onClick: " + stringList );
                             }
                         });
+                        findViewById(R.id.id_btn_cannel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                onBackPressed();
+                            }
+                        });
                         findViewById(R.id.id_btn_gui).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
