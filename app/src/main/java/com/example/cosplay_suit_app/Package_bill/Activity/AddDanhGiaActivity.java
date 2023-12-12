@@ -244,9 +244,9 @@ public class AddDanhGiaActivity extends AppCompatActivity {
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
 
                     // Hiển thị ảnh đã chọn trên danh sách
-                    ImageCmtsDTO itemImage = new ImageCmtsDTO(imageUri.toString());
-                    selectedImageList.add(itemImage);
-                    imageAdapter.notifyDataSetChanged();
+//                    ImageCmtsDTO itemImage = new ImageCmtsDTO(imageUri.toString());
+//                    selectedImageList.add(itemImage);
+//                    imageAdapter.notifyDataSetChanged();
 
                     // Upload ảnh lên Firebase Storage và lấy đường dẫn URL
                     uploadImage(imageUri);
@@ -255,9 +255,9 @@ public class AddDanhGiaActivity extends AppCompatActivity {
                 Uri imageUri = data.getData();
 
                 // Hiển thị ảnh đã chọn trên danh sách
-                ImageCmtsDTO itemImage = new ImageCmtsDTO(imageUri.toString());
-                selectedImageList.add(itemImage);
-                imageAdapter.notifyDataSetChanged();
+//                ImageCmtsDTO itemImage = new ImageCmtsDTO(imageUri.toString());
+//                selectedImageList.add(itemImage);
+//                imageAdapter.notifyDataSetChanged();
 
                 // Upload ảnh lên Firebase Storage và lấy đường dẫn URL
                 uploadImage(imageUri);
