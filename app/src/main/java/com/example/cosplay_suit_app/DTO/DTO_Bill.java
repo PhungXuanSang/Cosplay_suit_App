@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName;
 public class DTO_Bill {
     @SerializedName("_id")
     String _id;
-    String id_user, id_shop,id_thanhtoan, timestart, timeend, status, ma_voucher, id_address;
+    String id_user, id_shop,id_thanhtoan, timestart, timeend, status, ma_voucher, id_address, discount;
     int totalPayment;
 
     public DTO_Bill() {
     }
 
-    public DTO_Bill(String _id, String id_user, String id_shop, String id_thanhtoan, String timestart, String timeend, String status, String ma_voucher, String id_address, int totalPayment) {
+    public DTO_Bill(String _id, String id_user, String id_shop, String id_thanhtoan, String timestart, String timeend, String status, String ma_voucher, String id_address, String discount, int totalPayment) {
         this._id = _id;
         this.id_user = id_user;
         this.id_shop = id_shop;
@@ -21,7 +21,16 @@ public class DTO_Bill {
         this.status = status;
         this.ma_voucher = ma_voucher;
         this.id_address = id_address;
+        this.discount = discount;
         this.totalPayment = totalPayment;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 
     public String getId_thanhtoan() {

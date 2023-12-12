@@ -101,10 +101,16 @@ public class Chitietbill_Activity extends AppCompatActivity {
         cartController.getidbill(idbill, new Cart_controller.Apigetidbill() {
             @Override
             public void onApigetidbill(BillDTO billDTO) {
+                if (billDTO.getMa_voucher() == null){
+                    idgiagiam.setText("Được giảm: 0" + " VND");
+                    idtienthanhtoan.setText("Số tiền thanh toán: " + decimalFormat.format(billDTO.getTotalPayment()) + " VND");
+                }else {
+                    double result = Double.parseDouble(billDTO.getDiscount()) / 100;
+                    double dagiamgia = (Double.parseDouble(String.valueOf(billDTO.getTotalPayment())) * result);
+                    idgiagiam.setText("Được giảm: " +  decimalFormat.format(dagiamgia) + " VND");
+                    idtienthanhtoan.setText("Số tiền thanh toán: " + decimalFormat.format(Integer.parseInt(billDTO.getThanhtoan().getVnp_Amount())) + " VND");
+                }
                 tv_thoigiandat.setText(billDTO.getTimestart());
-                double duocgiam = Integer.parseInt(String.valueOf(billDTO.getTotalPayment())) - Integer.parseInt(billDTO.getThanhtoan().getVnp_Amount());
-                idgiagiam.setText("Được giảm: " +  decimalFormat.format(duocgiam) + " VND");
-                idtienthanhtoan.setText("Số tiền thanh toán: " + decimalFormat.format(Integer.parseInt(billDTO.getThanhtoan().getVnp_Amount())) + " VND");
                 if (billDTO.getThanhtoan().getVnp_TxnRef().length() > 8){
                     idchonphuongthuc.setText("Thanh toán khi nhận hàng");
                     if (billDTO.getTimeend().equals("")){

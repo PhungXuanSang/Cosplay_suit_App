@@ -30,7 +30,7 @@ import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.Billdentail_Interfece;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.Thanhtoan_interface;
-import com.example.cosplay_suit_app.Package_bill.Adapter.Adapter_Bill;
+import com.example.cosplay_suit_app.Package_bill.DTO.BillDTO;
 import com.example.cosplay_suit_app.ThanhtoanVNpay.DTO_thanhtoan;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -977,7 +977,6 @@ public class Bill_controller {
     public interface ApiAddress {
         void onApiAddress(DTO_Address profileDTO);
     }
-
     public void getVoucher(String id, ApiVouche apicheckshop) {
 
         // tạo gson
@@ -1023,5 +1022,4 @@ public class Bill_controller {
     public interface ApiVouche {
         void onApiVouche(List<GetVoucher_DTO> getVoucherDto);
     }
-
 }

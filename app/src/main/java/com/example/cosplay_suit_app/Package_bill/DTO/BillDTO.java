@@ -18,13 +18,13 @@ public class BillDTO {
     @SerializedName("id_thanhtoan")
 
     DTO_thanhtoan thanhtoan;
-    String timestart, timeend, status, ma_voucher;
+    String timestart, timeend, status, ma_voucher, discount;
     int totalPayment;
 
     public BillDTO() {
     }
 
-    public BillDTO(String _id, User user, Shop shop, DTO_Address address, DTO_thanhtoan thanhtoan, String timestart, String timeend, String status, String ma_voucher, int totalPayment) {
+    public BillDTO(String _id, User user, Shop shop, DTO_Address address, DTO_thanhtoan thanhtoan, String timestart, String timeend, String status, String ma_voucher, String discount, int totalPayment) {
         this._id = _id;
         this.user = user;
         this.shop = shop;
@@ -34,7 +34,16 @@ public class BillDTO {
         this.timeend = timeend;
         this.status = status;
         this.ma_voucher = ma_voucher;
+        this.discount = discount;
         this.totalPayment = totalPayment;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 
     public DTO_thanhtoan getThanhtoan() {

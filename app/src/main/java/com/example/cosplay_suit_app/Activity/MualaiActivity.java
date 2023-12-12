@@ -185,6 +185,7 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                                             dtoBill.setStatus("Wait");
                                             dtoBill.setTotalPayment(amount*priceproduct);
                                             dtoBill.setMa_voucher(idvoucher);
+                                            dtoBill.setDiscount(magiamgia);
                                             dtoBill.setTimestart(currentDateTime);
                                             dtoBill.setTimeend("");
                                             mualaiController.Addbill(dtoBill);

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cosplay_suit_app.API;
 import com.example.cosplay_suit_app.Activity.BuynowActivity;
+import com.example.cosplay_suit_app.Activity.MualaiActivity;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
@@ -30,6 +31,7 @@ import com.example.cosplay_suit_app.DTO.TotalPriceManager;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
+import com.example.cosplay_suit_app.bill.controller.Voucher_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -312,8 +314,10 @@ public class Adapter_buynow extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // Kiểm tra xem item có chọn voucher hay không
             if (item.getSelectedVoucher() != null) {
                 dtoBill.setMa_voucher(item.getSelectedVoucher().getDtoVoucher().getId());
-            } else {
-                dtoBill.setMa_voucher("");
+                dtoBill.setDiscount(item.getSelectedVoucher().getDtoVoucher().getDiscount());
+
+//                Voucher_controller voucherController = new Voucher_controller(context);
+//                voucherController.Deleteseenvoucher(item.getSelectedVoucher().getDtoVoucher().getId());
             }
             dtoBill.setId_thanhtoan(idthanhtoan);
             dtoBill.setTotalPayment(item.getTongbill());
