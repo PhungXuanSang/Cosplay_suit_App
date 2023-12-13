@@ -55,6 +55,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         }
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
+            private AlertDialog alertDialog; // Tham chiếu đến AlertDialog
+
             @Override
             public void onClick(View view) {
                 LayoutInflater inflater = LayoutInflater.from(context);
@@ -67,6 +69,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 // Thiết lập các thành phần trong layout tùy chỉnh
                 ImageView ivImage = view1.findViewById(R.id.ivdialogImage);
                 ImageView ivDelete = view1.findViewById(R.id.ivImageDetele);
+                ImageView ivImageBack = view1.findViewById(R.id.ivImageBack);
                 int adapterPosition = holder.getAdapterPosition();
 
                 Glide.with(context).load(imageList.get(adapterPosition).getImage()).centerCrop().into(ivImage);
@@ -87,7 +90,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                                     Toast.makeText(context, "Ảnh đã được xóa", Toast.LENGTH_SHORT).show();
 
                                     // Đóng cả hai AlertDialog
-                                    builderImage.create().dismiss();
+                                    alertDialog.dismiss();
                                     dialog.dismiss();
                                 }
                             }
@@ -106,10 +109,22 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                     }
                 });
 
+                ivImageBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Đóng AlertDialog khi nút back được bấm
+                        if (alertDialog != null && alertDialog.isShowing()) {
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
                 // Hiển thị AlertDialog
-                builderImage.create().show();
+                alertDialog = builderImage.create();
+                alertDialog.show();
             }
         });
+
     }
 
     @Override

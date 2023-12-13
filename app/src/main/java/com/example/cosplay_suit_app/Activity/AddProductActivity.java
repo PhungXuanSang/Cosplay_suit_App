@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cosplay_suit_app.API;
@@ -56,7 +57,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,8 +93,9 @@ public class AddProductActivity extends AppCompatActivity {
 
     PropAdapter propAdapter;
     boolean chklist = false;
-   int sold = 0,price=0;
+   int sold = 0,price=0,amuont =0;
     private ArrayList<Uri> uriList = new ArrayList<>();
+    List<String> tenSanPhamList = new ArrayList<>();
 
     ItemImageDTO imageDTO = new ItemImageDTO();
 
@@ -124,6 +129,8 @@ public class AddProductActivity extends AppCompatActivity {
         propAdapter = new PropAdapter(selectedProp,this);
         binding.rclvSize.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         binding.rclvSize.setAdapter(propAdapter);
+        DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        binding.rclvSize.addItemDecoration(dividerItemDecoration);
         //
 
         binding.ivAddProductAddImage.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +142,7 @@ public class AddProductActivity extends AppCompatActivity {
         binding.ivProductToolbarCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+            onBackPressed();
             }
         });
         binding.spnAddProductLoai.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -214,13 +221,46 @@ public class AddProductActivity extends AppCompatActivity {
                 Button btn_them = dialogView.findViewById(R.id.btn_them);
 
 
+
                 // Thiết lập các thành phần trong dialog
                 // Ví dụ: Lấy tham chiếu tới các nút hoặc thành phần trong layout và xử lý sự kiện tương ứng
 
                 // Tạo dialog
                 AlertDialog dialog = builder.create();
 
+                ed_MountProp.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        String priceStr = editable.toString();
+
+                        if (!priceStr.isEmpty()) {
+                            amuont = Integer.parseInt(priceStr);
+
+                            if (amuont < 1) {
+                                amuont = 1;
+                            } else if (amuont > 99999999) {
+                                amuont = 99999999;
+                            }
+
+                            if (amuont != parseLongSafely(priceStr)) {
+                                ed_MountProp.setText(String.valueOf(amuont));
+                                ed_MountProp.setSelection(ed_MountProp.getText().length());
+                            }
+                        }
+
+
+                    }
+                });
                 btn_thoat.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -231,38 +271,38 @@ public class AddProductActivity extends AppCompatActivity {
                 btn_them.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        String enteredName = ed_nameProp.getText().toString().trim();
 
-                        DTO_properties propertiesDTO = new DTO_properties();
-                        propertiesDTO.setNameproperties(ed_nameProp.getText().toString());
-                        propertiesDTO.setAmount(Integer.parseInt(ed_MountProp.getText().toString()));
+                        if (!isNameExists(enteredName)) {
+                            // Tên không trùng, thêm vào danh sách và kiểm tra tổng số lượng
+                            DTO_properties propertiesDTO = new DTO_properties();
+                            propertiesDTO.setAmount(Integer.parseInt(String.valueOf(amuont)));
+                            propertiesDTO.setNameproperties(enteredName);
 
-                        selectedProp.add(propertiesDTO);
-//                        propertiesDTO.setId_product(idProduct);
-//                        startActivity(new Intent(AddProductActivity.this,AddProductActivity.class));
-//                        callAddProp(propertiesDTO);
-                        int i =0;
+                            selectedProp.add(propertiesDTO);
 
-                        for (DTO_properties item : selectedProp) {
+                            int totalAmount = 0;
+                            for (DTO_properties item : selectedProp) {
+                                totalAmount += item.getAmount();
+                            }
 
-                            i += item.getAmount();
+                            if (selectedProp.size() != 0) {
+                                binding.edtRudProductAmount.setText(String.valueOf(totalAmount));
+                                binding.edtRudProductAmount.setEnabled(false);
+                            }
+
+                            binding.rclvSize.setAdapter(propAdapter);
+                            propAdapter.notifyDataSetChanged();
+
+                            dialog.dismiss();
+                        } else {
+                            // Hiển thị thông báo khi tên trùng
+                            Toast.makeText(AddProductActivity.this, "Tên kích thước không được phép trùng lặp", Toast.LENGTH_SHORT).show();
                         }
-                        if (selectedProp.size() != 0) {
-                            binding.edtRudProductAmount.setText(String.valueOf(i));
-                            binding.edtRudProductAmount.setEnabled(false);
-                        }
-
-
-
-
-
-                        binding.rclvSize.setAdapter(propAdapter);
-                        propAdapter.notifyDataSetChanged();
-
-
-                        dialog.dismiss();
                     }
-
                 });
+
+
 
 
                 dialog.show();
@@ -270,6 +310,15 @@ public class AddProductActivity extends AppCompatActivity {
         });
 
 
+    }
+    // Hàm kiểm tra xem tên đã tồn tại trong danh sách chưa
+    private boolean isNameExists(String name) {
+        for (DTO_properties item : selectedProp) {
+            if (item.getNameproperties().equalsIgnoreCase(name)) {
+                return true; // Tên đã tồn tại
+            }
+        }
+        return false; // Tên không tồn tại
     }
 
     public void addProduct() {
@@ -434,9 +483,11 @@ public class AddProductActivity extends AppCompatActivity {
     private void check() {
 
 
+
         if (binding.edtRudProductName.getText().toString().trim().isEmpty() || binding.edtRudProductAmount.getText().toString().trim().isEmpty()
                 || binding.edtRudProductPrice.getText().toString().trim().isEmpty() || binding.edtRudProductDescription.getText().toString().trim().isEmpty()) {
             binding.tvNote.setVisibility(View.VISIBLE);
+
             binding.btnRudProductAdd.setEnabled(false);
             binding.btnRudProductAdd.setAlpha(0.3f);
             binding.ivProductToolbarAdd.setEnabled(false);
@@ -451,7 +502,6 @@ public class AddProductActivity extends AppCompatActivity {
             binding.edtRudProductAmount.setEnabled(false);
         }
     }
-    // Phương thức hỗ trợ để chuyển đổi InputStream thành mảng byte
 
     void callAddProduct(DTO_SanPham dtoSanPham) {
 
@@ -729,6 +779,54 @@ private void uploadImages(List<Uri> uriList) {
         progressDialog.dismiss();
     }
 }
+    private void callApiProduct() {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+
+        // tạo đối tượng
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(idshop);
+        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
+                if (response.isSuccessful()) {
+                    List<DTO_SanPham> productList = response.body();
+
+
+                    for (DTO_SanPham sanPham : productList) {
+                        String tenSanPham = sanPham.getNameproduct(); // Thay "getTenSanPham()" bằng phương thức thực tế để lấy tên sản phẩm
+                        tenSanPhamList.add(tenSanPham);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+                Log.d("TAG", "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
 
 
 
