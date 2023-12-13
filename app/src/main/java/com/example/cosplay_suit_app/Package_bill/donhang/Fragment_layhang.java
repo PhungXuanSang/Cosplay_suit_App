@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.Package_bill.Adapter.Adapter_Bill;
@@ -30,7 +31,8 @@ public class Fragment_layhang extends Fragment {
     RecyclerView recyclerView;
     String checkactivity,checkstatus= "Pack";
     LinearLayout noProductMessage;
-
+    String id;
+    SwipeRefreshLayout setOnRefreshListener;
     public Fragment_layhang(String checkactivity) {
         this.checkactivity = checkactivity;
     }
@@ -41,13 +43,30 @@ public class Fragment_layhang extends Fragment {
         View viewok = inflater.inflate(R.layout.fragment_layhang, container, false);
         recyclerView = viewok.findViewById(R.id.rcv_danhgia);
         noProductMessage = viewok.findViewById(R.id.noProductMessage);
+        setOnRefreshListener = viewok.findViewById(R.id.restartbill);
         //danh sách sản phẩm
         list = new ArrayList<>();
         arrayAdapter = new Adapter_Bill(list, getContext(), checkactivity, checkstatus);
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
+        getlist();
+        setOnRefreshListener.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
+
+        return viewok;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+    public void getlist(){
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(getContext());
             billController.GetUserBillPack(id, checkactivity, new Bill_controller.ApiGetUserBillPack() {
@@ -70,12 +89,10 @@ public class Fragment_layhang extends Fragment {
                 }
             });
         }
-
-        return viewok;
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void fetchData() {
+        getlist();
+        // Kết thúc quá trình làm mới
+        setOnRefreshListener.setRefreshing(false);
     }
 }

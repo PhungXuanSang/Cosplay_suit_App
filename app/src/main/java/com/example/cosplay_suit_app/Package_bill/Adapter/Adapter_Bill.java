@@ -22,6 +22,7 @@ import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
 import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
+import com.example.cosplay_suit_app.Package_bill.donhang.Fragment_xacnhan;
 import com.example.cosplay_suit_app.R;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 
@@ -36,8 +37,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     List<BillDetailDTO> list;
     Context context;
     String checkactivity="", checkstatus ="", stringstatus ="";
-
-
+    Fragment_xacnhan fragmentXacnhan = new Fragment_xacnhan("Wait");
     public Adapter_Bill(List<BillDetailDTO> list, Context context, String checkactivity, String checkstatus) {
         this.list = list;
         this.context = context;
@@ -112,6 +112,13 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     billController.UpdateStatusBill(billDetailDTO.getDtoBill().get_id(),dtoBill);
+                    if ("Wait".equals(checkstatus)){
+                        loadlistxacnhan();
+                    } else if ("Pack".equals(checkstatus)) {
+
+                    }else if ("Delivery".equals(checkstatus)) {
+
+                    }
                 }
             });
             if (billDetailDTO.getDtoBill().getStatus().equals("Wait")){
@@ -126,7 +133,7 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dtoBill.setTimeend(currentDateTime);
                         billController.UpdateStatusBill(billDetailDTO.getDtoBill().get_id(),dtoBill);
                         // Gọi lại phương thức để tải lại danh sách đơn hàng
-                        ((xannhandon_Activity) context).reloadBillList();
+
                     }
                 });
             } else if (billDetailDTO.getDtoBill().getStatus().equals("Pack")) {
@@ -217,6 +224,13 @@ public class Adapter_Bill extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         Date currentDate = Calendar.getInstance().getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dateFormat.format(currentDate);
+    }
+    public void loadlistxacnhan() {
+        notifyDataSetChanged();
+
+        if (fragmentXacnhan != null) {
+            fragmentXacnhan.onResume();
+        }
     }
 
 }
