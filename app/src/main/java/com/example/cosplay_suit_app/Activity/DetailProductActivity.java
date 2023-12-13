@@ -78,12 +78,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailProductActivity extends AppCompatActivity implements PropAdapter.Onclick {
     static String url = API.URL;
-    static final String BASE_URL_CAT = url +"/category/api/";
+    static final String BASE_URL_CAT = url + "/category/api/";
     static final String BASE_URL = url + "/product/";
     private ActivityDetailProductBinding binding;
-    String idProduct,nameCategory;
-    String id_shop,id_category,nameproduct,image,description,time_product,listImageJson,stringsize;
-    int price,amount,sold;
+    String idProduct, nameCategory;
+    String id_shop, id_category, nameproduct, image, description, time_product, listImageJson, stringsize;
+    int price, amount, sold;
     private static final int REQUEST_IMAGE_PICK = 1;
     private List<ItemImageDTO> selectedImageList;
     boolean status;
@@ -97,8 +97,10 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
     SpinnerCategotyAdapter categotyAdapter;
     ArrayList<CategoryDTO> listLoai = new ArrayList<>();
     private CategoryDTO selectedCategory;
+    int suaamount;
     Uri uri;
     private ArrayList<Uri> uriList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,34 +118,36 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         id_shop = intent.getStringExtra("id_shop");
         time_product = intent.getStringExtra("time_product");
         id_category = intent.getStringExtra("id_category");
-        status = intent.getBooleanExtra("status",true);
+        status = intent.getBooleanExtra("status", true);
 //        status = Boolean.parseBoolean(intent.getStringExtra("status"));
-        sold = intent.getIntExtra("sold",0);
+        sold = intent.getIntExtra("sold", 0);
         // Lấy chuỗi JSON từ Intent
         listImageJson = intent.getStringExtra("listImage");
         // Chuyển chuỗi JSON thành danh sách đối tượng
         listImage = new Gson().fromJson(listImageJson,
-                new TypeToken<List<ItemImageDTO>>() {}.getType());
+                new TypeToken<List<ItemImageDTO>>() {
+                }.getType());
         // Lấy chuỗi JSON từ Intent
         stringsize = intent.getStringExtra("listsize");
 // Khởi tạo và thiết lập RecyclerView
         listProp = new Gson().fromJson(stringsize,
-                new TypeToken<List<DTO_properties>>() {}.getType());
+                new TypeToken<List<DTO_properties>>() {
+                }.getType());
 
         selectedImageList = new ArrayList<>();
-        adapterImageList = new ImageAdapter(listImage,this);
+        adapterImageList = new ImageAdapter(listImage, this);
         binding.rclvImage.setAdapter(adapterImageList);
         binding.rclvImage.setLayoutManager(new LinearLayoutManager(DetailProductActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
-        propAdapter = new PropAdapter(listProp,this,this::onclikSize);
+        propAdapter = new PropAdapter(listProp, this, this::onclikSize);
         binding.rclvSize.setAdapter(propAdapter);
         binding.rclvSize.setLayoutManager(new LinearLayoutManager(DetailProductActivity.this, LinearLayoutManager.VERTICAL, false));
-        DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         binding.rclvSize.addItemDecoration(dividerItemDecoration);
-
         categotyAdapter = new SpinnerCategotyAdapter(this, R.layout.item_spinner_category, listLoai);
         categotyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spnAddProductLoai.setAdapter(categotyAdapter);
+
 
         callCategory();
 
@@ -208,8 +212,8 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         binding.ivProductToolbarCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                onBackPressed();
-                startActivity(new Intent(DetailProductActivity.this,QlspActivity.class));
+                onBackPressed();
+//                startActivity(new Intent(DetailProductActivity.this,QlspActivity.class));
             }
         });
         selectedCategory = new CategoryDTO();
@@ -231,8 +235,8 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         getInfoProduct();
         status();
 
-
     }
+
     private long parseLongSafely(String number) {
         try {
             return Long.parseLong(number);
@@ -240,12 +244,14 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
             return 0;
         }
     }
+
     private void openImagePicker() {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -343,6 +349,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
                         binding.tvDeltaProductMount.setEnabled(true);
                         binding.edtRudProductPrice.setEnabled(true);
                         binding.tvDetailProductStatus.setEnabled(true);
+                        binding.ivdetailProductAddSize.setEnabled(true);
                         binding.llbtnLuu.setVisibility(View.VISIBLE);
                         // Xử lý sự kiện khi người dùng nhấn Đồng ý
                     }
@@ -371,6 +378,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
                 binding.tvDeltaProductMount.setEnabled(false);
                 binding.edtRudProductPrice.setEnabled(false);
                 binding.tvDetailProductStatus.setEnabled(false);
+                binding.ivdetailProductAddSize.setEnabled(false);
                 binding.llbtnLuu.setVisibility(View.GONE);
                 dtoSanPham.setNameproduct(String.valueOf(binding.edtDeltaProductName.getText()));
                 dtoSanPham.setPrice(price);
@@ -378,13 +386,126 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
 //                dtoSanPham.setId_category();
                 dtoSanPham.setId_category(selectedCategory.getId());
                 dtoSanPham.setListImage(listImage);
+                dtoSanPham.setListProp(listProp);
+                //
                 UpdateInfo(dtoSanPham);
 //                callapiRes();
                 Log.d("TAG", "onClicksssssssssssssss");
             }
         });
 
+        binding.ivdetailProductAddSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetailProductActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+
+                // Gắn layout tùy chỉnh vào dialog
+                View dialogView = inflater.inflate(R.layout.dialog_addsize, null);
+                builder.setView(dialogView);
+                EditText ed_nameProp = dialogView.findViewById(R.id.ed_name);
+                EditText ed_MountProp = dialogView.findViewById(R.id.ed_mount);
+                Button btn_thoat = dialogView.findViewById(R.id.btn_thoat);
+                Button btn_them = dialogView.findViewById(R.id.btn_them);
+
+
+                // Thiết lập các thành phần trong dialog
+                // Ví dụ: Lấy tham chiếu tới các nút hoặc thành phần trong layout và xử lý sự kiện tương ứng
+
+                // Tạo dialog
+                AlertDialog dialog = builder.create();
+
+                ed_MountProp.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        String priceStr = editable.toString();
+
+                        if (!priceStr.isEmpty()) {
+                            amount = Integer.parseInt(priceStr);
+
+                            if (amount < 1) {
+                                amount = 1;
+                            } else if (amount > 99999999) {
+                                amount = 99999999;
+                            }
+
+                            if (amount != parseLongSafely(priceStr)) {
+                                ed_MountProp.setText(String.valueOf(amount));
+                                ed_MountProp.setSelection(ed_MountProp.getText().length());
+                            }
+                        }
+
+
+                    }
+                });
+                btn_thoat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                btn_them.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String enteredName = ed_nameProp.getText().toString().trim();
+
+                        if (!isNameExists(enteredName)) {
+                            // Tên không trùng, thêm vào danh sách và kiểm tra tổng số lượng
+                            DTO_properties propertiesDTO = new DTO_properties();
+                            propertiesDTO.setAmount(Integer.parseInt(String.valueOf(amount)));
+                            propertiesDTO.setNameproperties(enteredName);
+
+                            listProp.add(propertiesDTO);
+
+                            int totalAmount = 0;
+                            for (DTO_properties item : listProp) {
+                                totalAmount += item.getAmount();
+                            }
+
+                            if (listProp.size() != 0) {
+                                binding.tvDeltaProductMount.setText(String.valueOf(totalAmount));
+                                binding.tvDeltaProductMount.setEnabled(false);
+                            }
+
+                            binding.rclvSize.setAdapter(propAdapter);
+                            propAdapter.notifyDataSetChanged();
+
+                            dialog.dismiss();
+                        } else {
+                            // Hiển thị thông báo khi tên trùng
+                            Toast.makeText(DetailProductActivity.this, "Tên kích thước không được phép trùng lặp", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+                dialog.show();
+            }
+        });
+
+
     }
+
+    private boolean isNameExists(String name) {
+        for (DTO_properties item : listProp) {
+            if (item.getNameproperties().equalsIgnoreCase(name)) {
+                return true; // Tên đã tồn tại
+            }
+        }
+        return false; // Tên không tồn tại
+    }
+
     private void getInfoProduct() {
         binding.edtDeltaProductName.setText(nameproduct);
         binding.edtRudProductDescription.setText(description);
@@ -395,7 +516,9 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
 //        binding.tvDeltaProductLoai.setText(nameCategory);
     }
 
+
     private void status() {
+
         DTO_SanPham dtoSanPham = new DTO_SanPham();
 
         binding.tvDetailProductStatus.setOnClickListener(new View.OnClickListener() {
@@ -416,8 +539,11 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
 
             }
         });
+
+
     }
-    private void UpdateStatus(DTO_SanPham dtoSanPham){
+
+    private void UpdateStatus(DTO_SanPham dtoSanPham) {
         Gson gson = new GsonBuilder().setLenient().create();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -438,7 +564,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
 
 
-        Call<DTO_SanPham> objCall = sanPhamInterface.updateStatus(idProduct,dtoSanPham);
+        Call<DTO_SanPham> objCall = sanPhamInterface.updateStatus(idProduct, dtoSanPham);
         objCall.enqueue(new Callback<DTO_SanPham>() {
             @Override
             public void onResponse(Call<DTO_SanPham> call, Response<DTO_SanPham> response) {
@@ -454,14 +580,14 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
 
             @Override
             public void onFailure(Call<DTO_SanPham> call, Throwable t) {
-                Log.d("TAG", "ôppopopopop: "+t.getMessage());
+                Log.d("TAG", "ôppopopopop: " + t.getMessage());
             }
         });
 
 
     }
 
-    private void UpdateInfo(DTO_SanPham dtoSanPham){
+    private void UpdateInfo(DTO_SanPham dtoSanPham) {
         Gson gson = new GsonBuilder().setLenient().create();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -482,7 +608,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
 
 
-        Call<DTO_SanPham> objCall = sanPhamInterface.updateProductNamePriceDec(idProduct,dtoSanPham);
+        Call<DTO_SanPham> objCall = sanPhamInterface.updateProductNamePriceDec(idProduct, dtoSanPham);
         objCall.enqueue(new Callback<DTO_SanPham>() {
             @Override
             public void onResponse(Call<DTO_SanPham> call, Response<DTO_SanPham> response) {
@@ -497,7 +623,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
 
             @Override
             public void onFailure(Call<DTO_SanPham> call, Throwable t) {
-                Log.d("TAG", "ôppopopopop: "+t.getMessage());
+                Log.d("TAG", "ôppopopopop: " + t.getMessage());
             }
         });
 
@@ -559,7 +685,6 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
     }
 
 
-
     void callCategory() {
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -609,11 +734,12 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
     }
 
 
-
     @Override
     public void onclikSize(DTO_properties dtoProperties) {
+
         UpdateSize(dtoProperties);
     }
+
     void UpdateSize(DTO_properties dtoProperties) {
 
         final Dialog dialog1 = new Dialog(this);
@@ -635,6 +761,38 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
         ed_name.setText(dtoProperties.getNameproperties());
         String soluong = String.valueOf(dtoProperties.getAmount());
         ed_Amount.setText(soluong);
+        ed_Amount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String priceStr = editable.toString();
+
+                if (!priceStr.isEmpty()) {
+                    amount = Integer.parseInt(priceStr);
+
+                    if (amount < 1) {
+                        amount = 1;
+                    } else if (amount > 99999999) {
+                        amount = 99999999;
+                    }
+
+                    if (amount != parseLongSafely(priceStr)) {
+                        ed_Amount.setText(String.valueOf(amount));
+                        ed_Amount.setSelection(ed_Amount.getText().length());
+                    }
+                }
+
+            }
+        });
 
         btn_sua.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -655,7 +813,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
 
                     SanPhamInterface truyenInterface = retrofit.create(SanPhamInterface.class);
 
-                    Call<List<DTO_properties>> objCall = truyenInterface.updateSize(idProduct,dtoProperties.getNameproperties(),dtoProperties);
+                    Call<List<DTO_properties>> objCall = truyenInterface.updateSize(idProduct, dtoProperties.getNameproperties(), dtoProperties);
 
                     objCall.enqueue(new Callback<List<DTO_properties>>() {
                         @Override
@@ -675,7 +833,7 @@ public class DetailProductActivity extends AppCompatActivity implements PropAdap
 
                         @Override
                         public void onFailure(Call<List<DTO_properties>> call, Throwable t) {
-                            Log.e("TAG", "zzzzzzzzzzzzzzzzzzzzzzzzzz"+t.getLocalizedMessage());
+                            Log.e("TAG", "zzzzzzzzzzzzzzzzzzzzzzzzzz" + t.getLocalizedMessage());
                         }
                     });
 

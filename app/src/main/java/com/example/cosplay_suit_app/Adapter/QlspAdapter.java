@@ -27,7 +27,11 @@ import com.google.gson.Gson;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class QlspAdapter extends RecyclerView.Adapter<QlspAdapter.ItemViewHolder> {
+public class QlspAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_LOADING = 1;
+
     private List<DTO_SanPham> mlist;
     private Context context;
 
@@ -46,59 +50,63 @@ public class QlspAdapter extends RecyclerView.Adapter<QlspAdapter.ItemViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        DTO_SanPham sanPham = mlist.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ItemViewHolder) {
+            DTO_SanPham sanPham = mlist.get(position);
+            ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
-        if (sanPham.getSize() == null) {
-            holder.tvName.setText(sanPham.getNameproduct());
-        } else {
-            holder.tvName.setText(sanPham.getNameproduct() + "--" + sanPham.getSize());
-        }
-
-        holder.tvAmount.setText(String.valueOf(sanPham.getAmount()));
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        holder.tvPrice.setText(decimalFormat.format(sanPham.getPrice())+" vnđ");
-        if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
-            ItemImageDTO firstImage = sanPham.getListImage().get(0);
-            String imageUrl = firstImage.getImage();
-
-            Glide.with(context)
-                    .load(imageUrl)
-                    .error(R.drawable.image)
-                    .placeholder(R.drawable.image)
-                    .centerCrop()
-                    .into(holder.img_AnhSp);
-        }
-
-        holder.lllayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_click_animation);
-                holder.itemView.startAnimation(animation);
-
-                Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("id_product", sanPham.getId());
-                intent.putExtra("name", sanPham.getNameproduct());
-                intent.putExtra("price", sanPham.getPrice());
-                intent.putExtra("about", sanPham.getDescription());
-                intent.putExtra("slkho", sanPham.getAmount());
-                intent.putExtra("id_shop",sanPham.getId_shop());
-                intent.putExtra("time_product",sanPham.getTime_product());
-                intent.putExtra("id_category",sanPham.getId_category());
-                intent.putExtra("status",sanPham.isStatus());
-                intent.putExtra("sold",sanPham.getSold());
-                intent.putExtra("dtoSanpham",sanPham);
-                // Chuyển danh sách thành JSON
-                String listImageJson = new Gson().toJson(sanPham.getListImage());
-                // Đặt chuỗi JSON vào Intent
-                intent.putExtra("listImage", listImageJson);
-
-                String listsizeJson = new Gson().toJson(sanPham.getListProp());
-                intent.putExtra("listsize", listsizeJson);
-                Log.d("check", "onClick: " + listsizeJson);
-                context.startActivity(intent);
+            if (sanPham.getSize() == null) {
+                itemViewHolder.tvName.setText(sanPham.getNameproduct());
+            } else {
+                itemViewHolder.tvName.setText(sanPham.getNameproduct() + "--" + sanPham.getSize());
             }
-        });
+
+            itemViewHolder.tvAmount.setText(String.valueOf(sanPham.getAmount()));
+            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+            itemViewHolder.tvPrice.setText(decimalFormat.format(sanPham.getPrice())+" vnđ");
+            if (sanPham.getListImage() != null && !sanPham.getListImage().isEmpty()) {
+                ItemImageDTO firstImage = sanPham.getListImage().get(0);
+                String imageUrl = firstImage.getImage();
+
+                Glide.with(context)
+                        .load(imageUrl)
+                        .error(R.drawable.image)
+                        .placeholder(R.drawable.image)
+                        .centerCrop()
+                        .into(itemViewHolder.img_AnhSp);
+            }
+
+            itemViewHolder.lllayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_click_animation);
+                    holder.itemView.startAnimation(animation);
+
+                    Intent intent = new Intent(context, DetailProductActivity.class);
+                    intent.putExtra("id_product", sanPham.getId());
+                    intent.putExtra("name", sanPham.getNameproduct());
+                    intent.putExtra("price", sanPham.getPrice());
+                    intent.putExtra("about", sanPham.getDescription());
+                    intent.putExtra("slkho", sanPham.getAmount());
+                    intent.putExtra("id_shop",sanPham.getId_shop());
+                    intent.putExtra("time_product",sanPham.getTime_product());
+                    intent.putExtra("id_category",sanPham.getId_category());
+                    intent.putExtra("status",sanPham.isStatus());
+                    intent.putExtra("sold",sanPham.getSold());
+                    intent.putExtra("dtoSanpham",sanPham);
+                    // Chuyển danh sách thành JSON
+                    String listImageJson = new Gson().toJson(sanPham.getListImage());
+                    // Đặt chuỗi JSON vào Intent
+                    intent.putExtra("listImage", listImageJson);
+
+                    String listsizeJson = new Gson().toJson(sanPham.getListProp());
+                    intent.putExtra("listsize", listsizeJson);
+                    Log.d("check", "onClick: " + listsizeJson);
+                    context.startActivity(intent);
+                }
+            });
+        }
+
     }
 
     public void clearlistProduct(){

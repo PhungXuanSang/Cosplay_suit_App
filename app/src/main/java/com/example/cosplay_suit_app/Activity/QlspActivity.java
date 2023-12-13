@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -38,6 +39,7 @@ import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.CategoryInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
+import com.example.cosplay_suit_app.PhanTrang;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -73,12 +75,14 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
     EditText search;
 
     SwipeRefreshLayout srlQlsp;
+
+    LinearLayoutManager linearLayoutManager;
     String idshop;
     String id;
     GridLayoutManager layoutManager;
-    private int currentPage = 1;
-    private boolean isLoading = false;
-    private boolean isLastPage = false;
+    private int currentPage =1 ;
+    private boolean isLoading ;
+    private boolean isLastPage ;
 
     private int totalPage;
 
@@ -99,9 +103,12 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         id = sharedPreferences.getString("id", "");
         SharedPreferences sharedPreferences2 = this.getSharedPreferences("shops", MODE_PRIVATE);
         idshop = sharedPreferences2.getString("id", "");
+        linearLayoutManager = new LinearLayoutManager(this);
+        rclvList.setLayoutManager(linearLayoutManager);
         Intent intent = getIntent();
         DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
         rclvList.addItemDecoration(dividerItemDecoration);
+
         searchProduct();
         mlist = new ArrayList<DTO_SanPham>();
         adapter = new QlspAdapter(mlist, this);
@@ -199,7 +206,7 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
                 if (response.isSuccessful()) {
                     // Tạo đối tượng đặc biệt "Hiển thị Tất cả"
                     CategoryDTO categoryDTO = new CategoryDTO();
-                    categoryDTO.setName("Hiển thị Tất cả"); // Đặt tên cho item đặc biệt
+                    categoryDTO.setName("Tất cả loại"); // Đặt tên cho item đặc biệt
                     categoryDTO.setId(String.valueOf(-1));
                     categoryDTO.setImageCategory("https://png.pngtree.com/png-vector/20221114/ourmid/pngtree-atom-model-connection-sign-vector-png-image_34645666.png");
                     // Thêm item đặc biệt vào đầu danh sách
@@ -413,6 +420,35 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
             }
         });
 
+    }
+    private void loadMore(){
+        rclvList.addOnScrollListener(new PhanTrang(linearLayoutManager) {
+            @Override
+            public void loadMoreItem() {
+                isLoading = true;
+                currentPage +=1;
+                loadNextPage();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+        });
+    }
+    private void loadNextPage(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        },2000);
     }
     @Override
     public void onClickItem(CategoryDTO categoryDTO) {
