@@ -14,11 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.DTO.DTO_Wallet;
 import com.example.cosplay_suit_app.DTO.LoginUser;
 import com.example.cosplay_suit_app.DTO.User;
 import com.example.cosplay_suit_app.Interface_retrofit.UserInterface;
 import com.example.cosplay_suit_app.MainActivity;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Wallet_controller;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout tilpass;
     FirebaseAuth auth;
     FirebaseDatabase database;
-
+    String id;
 
     int temp = 0;
 
@@ -98,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (temp==0){
 
                     LoginUser();
+
                 }else{
                     temp=0;
                 }
@@ -118,16 +121,18 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
         Log.e(TAG, "onStart: " + id );
         if (!id.equalsIgnoreCase("")){
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
         }
     }
 
@@ -246,5 +251,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
 }

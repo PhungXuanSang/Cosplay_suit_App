@@ -366,6 +366,7 @@ public class BuynowActivity extends AppCompatActivity implements Adapter_buynow.
                     Log.d(TAG, ": vnp_SecureHash" +vnp_SecureHash);
 
                     DTO_thanhtoan dtovnpay = new DTO_thanhtoan();
+                    dtovnpay.setStatus("NotDisbursed");
                     dtovnpay.setVnp_CardType(vnp_CardType);
                     dtovnpay.setVnp_Amount(String.valueOf(Integer.parseInt(vnp_Amount) /100));
                     dtovnpay.setVnp_BankCode(vnp_BankCode);

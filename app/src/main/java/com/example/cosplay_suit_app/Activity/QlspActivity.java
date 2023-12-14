@@ -39,7 +39,7 @@ import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.CategoryInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.SanPhamInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.ShopInterface;
-import com.example.cosplay_suit_app.PhanTrang;
+//import com.example.cosplay_suit_app.PhanTrang;
 import com.example.cosplay_suit_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -421,26 +421,26 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         });
 
     }
-    private void loadMore(){
-        rclvList.addOnScrollListener(new PhanTrang(linearLayoutManager) {
-            @Override
-            public void loadMoreItem() {
-                isLoading = true;
-                currentPage +=1;
-                loadNextPage();
-            }
-
-            @Override
-            public boolean isLoading() {
-                return isLoading;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-        });
-    }
+//    private void loadMore(){
+//        rclvList.addOnScrollListener(new PhanTrang(linearLayoutManager) {
+//            @Override
+//            public void loadMoreItem() {
+//                isLoading = true;
+//                currentPage +=1;
+//                loadNextPage();
+//            }
+//
+//            @Override
+//            public boolean isLoading() {
+//                return isLoading;
+//            }
+//
+//            @Override
+//            public boolean isLastPage() {
+//                return isLastPage;
+//            }
+//        });
+//    }
     private void loadNextPage(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

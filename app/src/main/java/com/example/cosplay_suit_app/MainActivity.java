@@ -11,11 +11,13 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,17 +29,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cosplay_suit_app.Activity.LoginActivity;
+import com.example.cosplay_suit_app.DTO.DTO_Wallet;
 import com.example.cosplay_suit_app.Fragments.Fragment_chat;
 import com.example.cosplay_suit_app.Fragments.Fragment_donhang;
 import com.example.cosplay_suit_app.Fragments.Fragment_profile;
 import com.example.cosplay_suit_app.Fragments.Fragment_trangchu;
+import com.example.cosplay_suit_app.bill.controller.Wallet_controller;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
-
     Dialog dialog;
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
             }
         }, 1000);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
+        id = sharedPreferences.getString("id","");
+        checkaddwallet();
     }
 
     public void ralaceFragment(Fragment fragment){
@@ -154,4 +162,21 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+    public void checkaddwallet(){
+        Wallet_controller walletController = new Wallet_controller(MainActivity.this);
+        walletController.getWallet(id, new Wallet_controller.ApiGetwalet() {
+            @Override
+            public void onApiGetwalet(DTO_Wallet dtoWallet) {
+                if (dtoWallet == null){
+                    DTO_Wallet dtoWallet1 = new DTO_Wallet();
+                    dtoWallet1.setId_user(id);
+                    dtoWallet1.setCurrenry("VND");
+                    dtoWallet1.setMoney("0");
+                    dtoWallet1.setPasswd("");
+                    walletController.AddWallet(dtoWallet1);
+                }
+            }
+        });
+    }
+
 }

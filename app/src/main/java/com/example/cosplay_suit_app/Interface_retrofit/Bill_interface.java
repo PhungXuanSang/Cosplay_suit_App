@@ -1,13 +1,10 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
-import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.DTOcheck_productshop;
 import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
-import com.example.cosplay_suit_app.DTO.User;
-import com.example.cosplay_suit_app.Package_bill.DTO.BillDTO;
 
 import java.util.List;
 
