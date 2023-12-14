@@ -24,6 +24,7 @@
         android:background="@drawable/rounded_message_receiver"
         android:padding="10dp"
         android:text="Hi there!"
+        android:textStyle="bold|normal|italic"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@+id/avatar_receiver"
         app:layout_constraintTop_toTopOf="parent" />
