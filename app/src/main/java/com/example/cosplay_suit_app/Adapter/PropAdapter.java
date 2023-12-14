@@ -45,6 +45,7 @@ public class PropAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<DTO_properties> mlist;
     Context context;
+    private boolean isClickable = false;
     static String url = API.URL;
     static final String BASE_URL = url + "/product/";
 
@@ -54,6 +55,10 @@ public class PropAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mlist = mlist;
         this.context = context;
         this.onclick = onclick;
+    }
+    public void setClickable(boolean clickable) {
+        this.isClickable = clickable;
+        notifyDataSetChanged();
     }
 
     public PropAdapter(List<DTO_properties> mlist, Context context) {
@@ -74,53 +79,37 @@ public class PropAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         DTO_properties propertiesDTO = mlist.get(position);
 
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
-
+        viewHolder.llSize.setAlpha(0.5f);
+        viewHolder.ivDel.setAlpha(0.5f);
         viewHolder.tvName.setText(propertiesDTO.getNameproperties());
         viewHolder.tvAmount.setText(propertiesDTO.getAmount() + "");
         viewHolder.llSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_click_animation);
-                viewHolder.llSize.startAnimation(animation);
-                onclick.onclikSize(propertiesDTO);
+                if (isClickable==true){
+                    Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_click_animation);
+                    viewHolder.llSize.startAnimation(animation);
+                    viewHolder.llSize.setAlpha(1.0f);
+                    onclick.onclikSize(propertiesDTO);
 //                UpdateSize(propertiesDTO);
+                }else {
+                    viewHolder.llSize.setAlpha(0.5f);
+                }
+
             }
         });
 
         viewHolder.ivDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isClickable==true){
+                    onclick.onclikXoa(propertiesDTO);
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle("Xác nhận xóa");
-                        builder.setMessage("Bạn có muốn xóa size này không?");
+//                UpdateSize(propertiesDTO);
+                }else {
 
-                        builder.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                }
 
-                                int adapterPosition = holder.getAdapterPosition();
-
-                                if (adapterPosition != RecyclerView.NO_POSITION) {
-
-                                    mlist.remove(adapterPosition);
-
-                                    notifyItemRemoved(adapterPosition);
-
-                                    Toast.makeText(context, "Size đã được xóa", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-                        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(context, "Hủy xóa Size này", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
             }
         });
 
@@ -130,6 +119,7 @@ public class PropAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         return mlist.size();
     }
+
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvAmount;
@@ -150,6 +140,7 @@ public class PropAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface  Onclick{
         void onclikSize(DTO_properties dtoProperties);
+        void onclikXoa(DTO_properties dtoProperties);
     }
 
 

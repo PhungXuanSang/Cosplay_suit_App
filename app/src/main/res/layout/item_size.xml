@@ -58,13 +58,13 @@
       </LinearLayout>
 
     </LinearLayout>
+
     <ImageView
         android:id="@+id/ivSizedelete"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_50sdp"
         android:layout_weight="1"
-        android:layout_gravity="center"
-        android:src="@drawable/baseline_close_24"
+        android:src="@drawable/sang111"
         />
 
 </LinearLayout>
