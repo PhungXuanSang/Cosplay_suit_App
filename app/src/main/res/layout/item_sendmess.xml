@@ -25,6 +25,7 @@
         android:padding="10dp"
         android:text="Hello!"
         android:textColor="@android:color/black"
+        android:textStyle="bold|normal|italic"
         app:layout_constraintEnd_toStartOf="@+id/avatar_sender"
         app:layout_constraintTop_toTopOf="parent" />
 

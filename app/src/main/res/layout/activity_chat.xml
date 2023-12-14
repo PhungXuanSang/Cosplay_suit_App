@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_tilte_chat"
+
     tools:context=".Activity.ChatActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/gradient_tilte_chat"
         android:id="@+id/layoutTitle"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:padding="8dp"
-            android:text="Shop DangChuong"
+            android:text=""
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/profile_image"
@@ -52,7 +53,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/bgchat3"
+        android:background="#4DFAEAF7"
         app:layout_constraintBottom_toTopOf="@id/layoutChat"
         app:layout_constraintTop_toBottomOf="@id/layoutTitle">
 
@@ -70,7 +71,7 @@
         android:id="@+id/layoutChat"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:background="#FBE6E6"
+        android:background="#33FF69B4"
         app:layout_constraintBottom_toBottomOf="parent">
         <ImageView
             android:layout_width="40dp"
