@@ -1,6 +1,9 @@
 package com.example.cosplay_suit_app.Interface_retrofit;
 
 import com.example.cosplay_suit_app.DTO.DTO_Wallet;
+import com.example.cosplay_suit_app.DTO.History_DTO;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -16,4 +19,7 @@ public interface Wallet_interface {
     Call<DTO_Wallet> getwallet(@Path("iduser") String iduser);
     @PUT("upwalletAdmin")
     Call<DTO_Wallet> upwallet(@Body DTO_Wallet dtoWallet);
+
+    @GET("lichsuthuchien/{iduser}")
+    Call<List<History_DTO>> getlichsuthuchien(@Path("iduser") String iduser);
 }

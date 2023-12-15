@@ -11,6 +11,7 @@ import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_Wallet;
 import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
+import com.example.cosplay_suit_app.DTO.History_DTO;
 import com.example.cosplay_suit_app.Interface_retrofit.Bill_interface;
 import com.example.cosplay_suit_app.Interface_retrofit.CartOrderInterface;
 import com.example.cosplay_suit_app.Interface_retrofit.Wallet_interface;
@@ -140,5 +141,51 @@ public class Wallet_controller {
                 Log.e(TAG, t.getLocalizedMessage());
             }
         });
+    }
+
+    public void getlichsuthuchien(String id, Apigetlichsuthuchien apigetlichsuthuchien) {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_WALLET)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        Wallet_interface walletInterface = retrofit.create(Wallet_interface.class);
+
+        // tạo đối tượng
+        Call<List<History_DTO>> objCall = walletInterface.getlichsuthuchien(id);
+        objCall.enqueue(new Callback<List<History_DTO>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<History_DTO>> call, @NonNull Response<List<History_DTO>> response) {
+                if (apigetlichsuthuchien != null) {
+                    if (response.isSuccessful()) {
+                        apigetlichsuthuchien.onApigetlichsuthuchien(response.body());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<History_DTO>> call, Throwable t) {
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
+    }
+    public interface Apigetlichsuthuchien {
+        void onApigetlichsuthuchien(List<History_DTO> getVoucherDto);
     }
 }

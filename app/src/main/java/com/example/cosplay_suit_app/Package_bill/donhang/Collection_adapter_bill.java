@@ -30,8 +30,6 @@ public class Collection_adapter_bill extends AppCompatActivity {
         viewPager2 = findViewById(R.id.pager2);
         viewPager2.setAdapter( pagerAdapter );
 
-
-
         ImageView icback = findViewById(R.id.icback);
         icback.setOnClickListener(new View.OnClickListener() {
             @Override
