@@ -39,6 +39,7 @@ import com.example.cosplay_suit_app.Activity.ProfileActivity;
 import com.example.cosplay_suit_app.Activity.QlspActivity;
 import com.example.cosplay_suit_app.Activity.Shopcuatoi_Activity;
 import com.example.cosplay_suit_app.Activity.VouchercuatoiActivity;
+import com.example.cosplay_suit_app.Activity.WalletActivity;
 import com.example.cosplay_suit_app.Adapter.DhWithoutCmtsAdapter;
 import com.example.cosplay_suit_app.DTO.ItemDoneDTO;
 import com.example.cosplay_suit_app.DTO.Shop;
@@ -89,7 +90,7 @@ public class Fragment_profile extends Fragment {
     String username_u, id_user;
     static String  role;
     static String id="";
-    RelativeLayout rlRole, relative_newpass, rll_shopcuatoi, relative_voucher;
+    RelativeLayout rlRole, relative_newpass, rll_shopcuatoi, relative_voucher, relative_wallet;
     View idview5;
     SharedPreferences sharedPreferences;
     String idshop;
@@ -143,12 +144,21 @@ public class Fragment_profile extends Fragment {
         rlRole = view.findViewById(R.id.rlRole);
         rll_shopcuatoi = view.findViewById(R.id.rll_shopcuatoi);
         relative_voucher = view.findViewById(R.id.relative_voucher);
+        relative_wallet = view.findViewById(R.id.relative_wallet);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
         id = sharedPreferences.getString("id", "");
         role = sharedPreferences.getString("role", "");
         tv_fullname.setText(username_u);
+
+        relative_wallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), WalletActivity.class);
+                startActivity(intent);
+            }
+        });
         relative_voucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

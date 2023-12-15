@@ -5,17 +5,25 @@ import com.google.gson.annotations.SerializedName;
 public class DTO_Wallet {
     @SerializedName("_id")
     String _id;
-    String id_user, money, currenry, passwd;
+    String id_user, money, currency, passwd;
 
     public DTO_Wallet() {
     }
 
-    public DTO_Wallet(String _id, String id_user, String money, String currenry, String passwd) {
+    public DTO_Wallet(String _id, String id_user, String money, String currency, String passwd) {
         this._id = _id;
         this.id_user = id_user;
         this.money = money;
-        this.currenry = currenry;
+        this.currency = currency;
         this.passwd = passwd;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public String get_id() {
@@ -40,14 +48,6 @@ public class DTO_Wallet {
 
     public void setMoney(String money) {
         this.money = money;
-    }
-
-    public String getCurrenry() {
-        return currenry;
-    }
-
-    public void setCurrenry(String currenry) {
-        this.currenry = currenry;
     }
 
     public String getPasswd() {

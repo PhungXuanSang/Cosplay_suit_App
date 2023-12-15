@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 if (dtoWallet == null){
                     DTO_Wallet dtoWallet1 = new DTO_Wallet();
                     dtoWallet1.setId_user(id);
-                    dtoWallet1.setCurrenry("VND");
+                    dtoWallet1.setCurrency("VND");
                     dtoWallet1.setMoney("0");
                     dtoWallet1.setPasswd("");
                     walletController.AddWallet(dtoWallet1);
