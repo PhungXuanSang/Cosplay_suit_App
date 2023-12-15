@@ -27,6 +27,7 @@ import com.example.cosplay_suit_app.Adapter.Adapter_buynow;
 import com.example.cosplay_suit_app.Adapter.Adapterchonvoucher;
 import com.example.cosplay_suit_app.DTO.CartShopManager;
 import com.example.cosplay_suit_app.DTO.DTO_Address;
+import com.example.cosplay_suit_app.DTO.DTO_Wallet;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ProfileDTO;
@@ -42,6 +43,7 @@ import com.example.cosplay_suit_app.ThanhtoanVNpay.WebViewThanhtoan;
 import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.example.cosplay_suit_app.bill.controller.Voucher_controller;
+import com.example.cosplay_suit_app.bill.controller.Wallet_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.text.DecimalFormat;
@@ -392,6 +394,10 @@ public class BuynowActivity extends AppCompatActivity implements Adapter_buynow.
                                 public void onApiAddress(DTO_Address dtoAddress) {
                                     idaddress = dtoAddress.get_id();
                                     arrayAdapter.performActionOnAllItems(dtoThanhtoan.getIdthanhtoan(), idaddress);
+                                    Wallet_controller walletController = new Wallet_controller(BuynowActivity.this);
+                                    DTO_Wallet dtoWallet = new DTO_Wallet();
+                                    dtoWallet.setMoney(String.valueOf(Integer.parseInt(vnp_Amount) /100));
+                                    walletController.UpWallet(dtoWallet);
                                 }
                             });
                             List<String> list1 = totalPriceManager.getListcart();

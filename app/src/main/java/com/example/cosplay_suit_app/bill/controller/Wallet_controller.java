@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.cosplay_suit_app.API;
+import com.example.cosplay_suit_app.DTO.DTO_Bill;
 import com.example.cosplay_suit_app.DTO.DTO_CartOrder;
 import com.example.cosplay_suit_app.DTO.DTO_Wallet;
 import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
@@ -109,4 +110,35 @@ public class Wallet_controller {
         });
     }
 
+    public void UpWallet(DTO_Wallet dtoWallet){
+        //Tạo đối tượng chuyển đổi kiểu dữ liệu
+        Gson gson = new GsonBuilder().setLenient().create();
+        //Tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_WALLET)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        // Khởi  tạo interface
+        Wallet_interface walletInterface = retrofit.create(Wallet_interface.class);
+        // Tạo Call
+        Call<DTO_Wallet> objCall = walletInterface.upwallet(dtoWallet);
+        // Thực hiện gửi dữ liệu lên server
+        objCall.enqueue(new Callback<DTO_Wallet>() {
+            @Override
+            public void onResponse(Call<DTO_Wallet> call, Response<DTO_Wallet> response) {
+                // kết quả server trả về ở đây
+                if (response.isSuccessful()) {
+
+                } else {
+                    Log.e(TAG, response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<DTO_Wallet> call, Throwable t) {
+                // nếu xảy ra lỗi sẽ thông báo ở đây
+
+                Log.e(TAG, t.getLocalizedMessage());
+            }
+        });
+    }
 }

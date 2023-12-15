@@ -29,6 +29,7 @@ import com.example.cosplay_suit_app.Adapter.Adapterchonvoucher;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_Address;
 import com.example.cosplay_suit_app.DTO.DTO_Bill;
+import com.example.cosplay_suit_app.DTO.DTO_Wallet;
 import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.GetVoucher_DTO;
 import com.example.cosplay_suit_app.DTO.ItemImageDTO;
@@ -44,6 +45,7 @@ import com.example.cosplay_suit_app.bill.controller.Bill_controller;
 import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.example.cosplay_suit_app.bill.controller.Mualai_controller;
 import com.example.cosplay_suit_app.bill.controller.Voucher_controller;
+import com.example.cosplay_suit_app.bill.controller.Wallet_controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -510,6 +512,10 @@ public class MualaiActivity extends AppCompatActivity implements Adapterchonvouc
                                         public void onAddBillComplete() {
                                             // Gọi databilldetail khi Addbill đã hoàn thành
                                             mualaiController.databilldetail(amount, selectedNameProperties, (amount*priceproduct),idproduct);
+                                            Wallet_controller walletController = new Wallet_controller(MualaiActivity.this);
+                                            DTO_Wallet dtoWallet = new DTO_Wallet();
+                                            dtoWallet.setMoney(String.valueOf(Integer.parseInt(vnp_Amount) /100));
+                                            walletController.UpWallet(dtoWallet);
                                         }
                                     });
                                 }
