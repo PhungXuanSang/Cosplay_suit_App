@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
@@ -39,9 +40,10 @@ public class Giaohang_Activity extends AppCompatActivity {
     Adapter_Bill arrayAdapter;
     RecyclerView recyclerView;
     ImageView img_back;
-
     String checkactivity = "user", checkstatus= "";
     LinearLayout noProductMessage;
+    ProgressBar loadingProgressBar;
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +55,23 @@ public class Giaohang_Activity extends AppCompatActivity {
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = this.getSharedPreferences("User", this.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
-
+        id = sharedPreferences.getString("id","");
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
+        reloadBillList();
+    }
+
+    public void Anhxa(){
+        recyclerView = findViewById(R.id.rcv_danhgia);
+        img_back = findViewById(R.id.id_back);
+        noProductMessage = findViewById(R.id.noProductMessage);
+        loadingProgressBar = findViewById(R.id.loadingProgressBar);
+    }
+    public void getList(){
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(this);
             billController.GetUserBillDelivery(id, checkactivity, new Bill_controller.ApiGetUserBillDelivery() {
@@ -76,19 +87,25 @@ public class Giaohang_Activity extends AppCompatActivity {
                     if (list.isEmpty()) {
                         noProductMessage.setVisibility(LinearLayout.VISIBLE);
                         recyclerView.setVisibility(ListView.GONE);
+                        loadingProgressBar.setVisibility(View.GONE);
                     } else {
                         noProductMessage.setVisibility(LinearLayout.GONE);
                         recyclerView.setVisibility(ListView.VISIBLE);
+                        loadingProgressBar.setVisibility(View.GONE);
                     }
                 }
             });
         }
 
     }
+    public void reloadBillList() {
+        loadingProgressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar trước khi tải dữ liệu
+        getList();
+    }
 
-    public void Anhxa(){
-        recyclerView = findViewById(R.id.rcv_danhgia);
-        img_back = findViewById(R.id.id_back);
-        noProductMessage = findViewById(R.id.noProductMessage);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getList();
     }
 }

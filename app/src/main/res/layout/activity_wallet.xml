@@ -30,7 +30,7 @@
     <com.denzcoskun.imageslider.ImageSlider
         android:id="@+id/image_slider"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="140dp"
         app:iss_auto_cycle="true"
         app:iss_period="1000"
         app:iss_delay="1000"
@@ -41,8 +41,10 @@
         android:id="@+id/cart2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        android:layout_margin="10dp"
+        app:cardCornerRadius="9dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/image_slider"
         android:background="#F9F9F9">
         <LinearLayout

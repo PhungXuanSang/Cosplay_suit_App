@@ -1,14 +1,17 @@
 package com.example.cosplay_suit_app.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cosplay_suit_app.Activity.Chitietbill_Activity;
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.DTO_buynow;
 import com.example.cosplay_suit_app.Package_bill.DTO.BillDTO;
@@ -45,6 +48,17 @@ public class Adapter_FragDoneBill extends RecyclerView.Adapter<RecyclerView.View
         }else {
             viewHolder.tv_trangthai.setText("Đã giải ngân");
         }
+        viewHolder.carddonebill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, Chitietbill_Activity.class);
+                intent.putExtra("idbill", billDTO.getDtoBill().get_id());
+                intent.putExtra("tongbill", billDTO.getDtoBill().getTotalPayment());
+                intent.putExtra("stringstatus","Done");
+                intent.putExtra("checkactivity", "shop");
+                context.startActivity(intent);
+            }
+        });
 
     }
 
@@ -55,6 +69,7 @@ public class Adapter_FragDoneBill extends RecyclerView.Adapter<RecyclerView.View
 
     public class ItemViewHoldel extends RecyclerView.ViewHolder{
         TextView tv_trangthai,tv_giatrithuc,tv_giatribill, tv_time, tv_nguoimua;
+        CardView carddonebill;
         public ItemViewHoldel(@NonNull View itemView) {
             super(itemView);
             tv_trangthai = itemView.findViewById(R.id.tv_trangthai);
@@ -62,6 +77,7 @@ public class Adapter_FragDoneBill extends RecyclerView.Adapter<RecyclerView.View
             tv_giatribill = itemView.findViewById(R.id.tv_giatribill);
             tv_time = itemView.findViewById(R.id.tv_time);
             tv_nguoimua = itemView.findViewById(R.id.tv_nguoimua);
+            carddonebill = itemView.findViewById(R.id.carddonebill);
         }
     }
 

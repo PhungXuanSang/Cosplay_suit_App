@@ -124,7 +124,7 @@ public class Chitietbill_Activity extends AppCompatActivity {
                     SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
 
                     // Định dạng mới bạn muốn
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
                     // Chuyển đổi từ định dạng ban đầu sang Date
                     Date date = null;
                     try {

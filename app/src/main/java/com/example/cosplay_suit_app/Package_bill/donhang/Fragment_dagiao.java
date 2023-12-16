@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.Package_bill.Adapter.Adapter_Bill;
@@ -30,7 +32,9 @@ public class Fragment_dagiao extends Fragment {
     RecyclerView recyclerView;
     String checkactivity, checkstatus;
     LinearLayout noProductMessage;
-
+    SwipeRefreshLayout setOnRefreshListener;
+    String id;
+    ProgressBar loadingProgressBar;
     public Fragment_dagiao(String checkactivity) {
         this.checkactivity = checkactivity;
     }
@@ -40,13 +44,30 @@ public class Fragment_dagiao extends Fragment {
         View viewok = inflater.inflate(R.layout.fragment_dagiao, container, false);
         recyclerView = viewok.findViewById(R.id.rcv_danhgia);
         noProductMessage = viewok.findViewById(R.id.noProductMessage);
+        setOnRefreshListener = viewok.findViewById(R.id.restartbill);
+        loadingProgressBar = viewok.findViewById(R.id.loadingProgressBar);
         //danh sách sản phẩm
         list = new ArrayList<>();
         arrayAdapter = new Adapter_Bill(list, getContext(), checkactivity, checkstatus);
         recyclerView.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
+        id = sharedPreferences.getString("id","");
+        reloadBillList();
+        setOnRefreshListener.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
+        return viewok;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+    public void getlist(){
         if (id != null && !id.isEmpty()) {
             Bill_controller billController = new Bill_controller(getContext());
             billController.GetUserBillDone(id, checkactivity, new Bill_controller.ApiGetUserBillDone() {
@@ -62,19 +83,23 @@ public class Fragment_dagiao extends Fragment {
                     if (list.isEmpty()) {
                         noProductMessage.setVisibility(LinearLayout.VISIBLE);
                         recyclerView.setVisibility(ListView.GONE);
+                        loadingProgressBar.setVisibility(View.GONE);
                     } else {
                         noProductMessage.setVisibility(LinearLayout.GONE);
                         recyclerView.setVisibility(ListView.VISIBLE);
+                        loadingProgressBar.setVisibility(View.GONE);
                     }
                 }
             });
         }
-
-        return viewok;
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void reloadBillList() {
+        loadingProgressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar trước khi tải dữ liệu
+        getlist();
+    }
+    private void fetchData() {
+        getlist();
+        // Kết thúc quá trình làm mới
+        setOnRefreshListener.setRefreshing(false);
     }
 }

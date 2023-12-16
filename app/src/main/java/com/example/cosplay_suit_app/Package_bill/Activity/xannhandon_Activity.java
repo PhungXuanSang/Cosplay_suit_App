@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Package_bill.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.cosplay_suit_app.API;
@@ -42,6 +44,9 @@ public class xannhandon_Activity extends AppCompatActivity {
     String checkactivity = "user" , checkstatus = "";
     LinearLayout noProductMessage;
     String id;
+    ProgressBar loadingProgressBar;
+    SwipeRefreshLayout setOnRefreshListener;
+    Bill_controller billController = new Bill_controller(xannhandon_Activity.this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,12 @@ public class xannhandon_Activity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        setOnRefreshListener.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
         reloadBillList();
     }
 
@@ -68,10 +79,12 @@ public class xannhandon_Activity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcv_danhgia);
         img_back = findViewById(R.id.id_back);
         noProductMessage = findViewById(R.id.noProductMessage);
+        loadingProgressBar = findViewById(R.id.loadingProgressBar);
+        setOnRefreshListener = findViewById(R.id.restartbill);
     }
-    public void reloadBillList() {
+    public void getList(){
         if (id != null && !id.isEmpty()) {
-            Bill_controller billController = new Bill_controller(this);
+            // ... (Các xử lý khác)
             billController.GetUserBillWait(id, checkactivity, new Bill_controller.ApiGetUserBillWait() {
                 @Override
                 public void onApiGetUserBillWait(List<BillDetailDTO> profileDTO) {
@@ -89,15 +102,23 @@ public class xannhandon_Activity extends AppCompatActivity {
                         noProductMessage.setVisibility(LinearLayout.GONE);
                         recyclerView.setVisibility(ListView.VISIBLE);
                     }
+                    loadingProgressBar.setVisibility(View.GONE); // Ẩn ProgressBar sau khi tải xong
                 }
             });
         }
     }
-
+    public void reloadBillList() {
+        loadingProgressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar trước khi tải dữ liệu
+        getList();
+    }
+    private void fetchData() {
+        getList();
+        // Kết thúc quá trình làm mới
+        setOnRefreshListener.setRefreshing(false);
+    }
     @Override
     protected void onResume() {
         super.onResume();
-        reloadBillList();
+        getList();
     }
-
 }

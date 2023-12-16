@@ -44,7 +44,6 @@ public class WalletActivity extends AppCompatActivity {
         username_u = sharedPreferences.getString("fullname", "");
         id = sharedPreferences.getString("id", "");
         ArrayList<SlideModel> models = new ArrayList<>();
-//        models.add(new SlideModel(R.drawable.bg4,null));
         models.add(new SlideModel(R.drawable.banner1,null));
         models.add(new SlideModel(R.drawable.banner2,null));
         models.add(new SlideModel(R.drawable.banner3,null));

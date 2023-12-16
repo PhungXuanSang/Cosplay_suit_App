@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class Fragment_layhang extends Fragment {
     LinearLayout noProductMessage;
     String id;
     SwipeRefreshLayout setOnRefreshListener;
+    ProgressBar loadingProgressBar;
     public Fragment_layhang(String checkactivity) {
         this.checkactivity = checkactivity;
     }
@@ -44,6 +46,7 @@ public class Fragment_layhang extends Fragment {
         recyclerView = viewok.findViewById(R.id.rcv_danhgia);
         noProductMessage = viewok.findViewById(R.id.noProductMessage);
         setOnRefreshListener = viewok.findViewById(R.id.restartbill);
+        loadingProgressBar = viewok.findViewById(R.id.loadingProgressBar);
         //danh sách sản phẩm
         list = new ArrayList<>();
         arrayAdapter = new Adapter_Bill(list, getContext(), checkactivity, checkstatus);
@@ -51,7 +54,7 @@ public class Fragment_layhang extends Fragment {
         arrayAdapter.notifyDataSetChanged();
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         id = sharedPreferences.getString("id","");
-        getlist();
+        reloadBillList();
         setOnRefreshListener.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -82,13 +85,19 @@ public class Fragment_layhang extends Fragment {
                     if (list.isEmpty()) {
                         noProductMessage.setVisibility(LinearLayout.VISIBLE);
                         recyclerView.setVisibility(ListView.GONE);
+                        loadingProgressBar.setVisibility(View.GONE);
                     } else {
                         noProductMessage.setVisibility(LinearLayout.GONE);
                         recyclerView.setVisibility(ListView.VISIBLE);
+                        loadingProgressBar.setVisibility(View.GONE);
                     }
                 }
             });
         }
+    }
+    public void reloadBillList() {
+        loadingProgressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar trước khi tải dữ liệu
+        getlist();
     }
     private void fetchData() {
         getlist();
