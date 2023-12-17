@@ -2,6 +2,7 @@ package com.example.cosplay_suit_app.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +65,8 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
     LinearLayout noProductMessage;
     CheckBox cbkSelectAll;
     String id;
+    ProgressBar loadingProgressBar;
+    SwipeRefreshLayout setOnRefreshListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +113,13 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
 
             }
         });
-
-        getShop(id);
+        setOnRefreshListener.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
+        reloadBillList();
     }
 
     public void Anhxa(){
@@ -120,6 +129,8 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
         btnbuynow = findViewById(R.id.btn_buynow);
         noProductMessage = findViewById(R.id.noProductMessage);
         cbkSelectAll = findViewById(R.id.cbkcart);
+        loadingProgressBar = findViewById(R.id.loadingProgressBar);
+        setOnRefreshListener = findViewById(R.id.restartbill);
     }
 
     public void getShop(String id){
@@ -162,6 +173,7 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                         noProductMessage.setVisibility(LinearLayout.GONE);
                         recyclerView.setVisibility(ListView.VISIBLE);
                     }
+                    loadingProgressBar.setVisibility(View.GONE); // Ẩn ProgressBar sau khi tải xong
                 } else {
                     Toast.makeText(CartOrderActivity.this,
                             "Không lấy được dữ liệu" + response.message(), Toast.LENGTH_SHORT).show();
@@ -173,6 +185,15 @@ public class CartOrderActivity extends AppCompatActivity implements AdapterCarto
                 Log.d(TAG, "onFailure: " + t);
             }
         });
+    }
+    public void reloadBillList() {
+        loadingProgressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar trước khi tải dữ liệu
+        getShop(id);
+    }
+    private void fetchData() {
+        getShop(id);
+        // Kết thúc quá trình làm mới
+        setOnRefreshListener.setRefreshing(false);
     }
     @Override
     public void onCheckboxTrue() {

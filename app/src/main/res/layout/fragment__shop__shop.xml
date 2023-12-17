@@ -141,7 +141,7 @@
 
     </androidx.core.widget.NestedScrollView>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/id_bg_load"
         android:background="#ffffff"
         android:layout_width="match_parent"

@@ -108,7 +108,7 @@ public class AdapterKhachHang extends RecyclerView.Adapter<RecyclerView.ViewHold
                     dto_seenVoucherList = response.body();
                     for(int i = 0;i<dto_seenVoucherList.size();i++){
                         Log.e("manh", "onBindViewHolder: " + dto_seenVoucherList.get(i).getId_user() );
-                        if (user.getId().equalsIgnoreCase(dto_seenVoucherList.get(i).getId_user())){
+                        if (user.getId_user().getId().equalsIgnoreCase(dto_seenVoucherList.get(i).getId_user())){
                             viewHoldel.box.setEnabled(false);
 
                         }
