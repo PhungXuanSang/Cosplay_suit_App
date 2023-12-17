@@ -148,6 +148,7 @@ public class Fragment_profile extends Fragment {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("User", getContext().MODE_PRIVATE);
         username_u = sharedPreferences.getString("fullname", "");
+
         id = sharedPreferences.getString("id", "");
         role = sharedPreferences.getString("role", "");
         tv_fullname.setText(username_u);
