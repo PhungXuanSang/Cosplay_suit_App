@@ -29,6 +29,7 @@ import com.example.cosplay_suit_app.Activity.SearchActivity;
 import com.example.cosplay_suit_app.Adapter.Adapter_SanPham;
 import com.example.cosplay_suit_app.Adapter.Adapter_TrenddingProduct;
 import com.example.cosplay_suit_app.Adapter.CategoryAdapter;
+import com.example.cosplay_suit_app.DTO.BillDetailDTO;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
 import com.example.cosplay_suit_app.Interface_retrofit.CategoryInterface;
@@ -276,9 +277,15 @@ public class Fragment_trangchu extends Fragment {
                 if (response.isSuccessful()) {
 
                     mlist.clear();
-                    mlist.addAll(response.body());
-                    arrayAdapter.notifyDataSetChanged();
-                    Log.d("list", "onResponse: "+mlist.size());
+                    List<DTO_SanPham> dtoSanPhams = response.body();
+                    if (dtoSanPhams != null && !dtoSanPhams.isEmpty()) {
+                        for (DTO_SanPham dtoSanPham : dtoSanPhams) {
+                            if (dtoSanPham.isStatus() == true && dtoSanPham.getAmount() > 0){
+                                mlist.add(dtoSanPham);
+                            }
+                        }
+                        arrayAdapter.notifyDataSetChanged();
+                    }
 
                 } else {
                     Toast.makeText(getContext(),

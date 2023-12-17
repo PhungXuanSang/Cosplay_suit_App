@@ -95,7 +95,7 @@ public class Chitietsanpham extends AppCompatActivity {
     static final String BASE_URL_SHOP = url +"/shop/";
     static String TAG = "chitietsp";
     ImageView img_backsp, img_pro, img_favorite, img_chat, img_themgiohang;
-    TextView tv_price, tv_name,tv_slcmts ,tv_nameShop, tv_diachiShop ,tvSlSPShop, tv_noidung, tv_muahang,tvcheckshop;
+    TextView tv_price, tv_name,tv_slcmts ,tv_nameShop, tv_diachiShop ,tvSlSPShop, tv_noidung, tv_muahang,tvcheckshop, id_bought;
     String idproduct, nameproduct, imageproduct, aboutproduct, id_shop, time_product, id_category,stringsize, listImageJson;
     Dialog fullScreenDialog;
     int priceproduct, slkho;
@@ -119,6 +119,7 @@ public class Chitietsanpham extends AppCompatActivity {
     Dialog dialog;
     Bill_controller billController;
     TableLayout tblcheck;
+    int sold;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +148,7 @@ public class Chitietsanpham extends AppCompatActivity {
                 id_category = intent.getStringExtra("id_category");
                 // Lấy chuỗi JSON từ Intent
                 listImageJson = intent.getStringExtra("listImage");
+                sold = intent.getIntExtra("sold", 0);
                 // Chuyển chuỗi JSON thành danh sách đối tượng
                 listImage = new Gson().fromJson(listImageJson,
                         new TypeToken<List<ItemImageDTO>>() {}.getType());
@@ -221,6 +223,7 @@ public class Chitietsanpham extends AppCompatActivity {
                         tv_diachiShop.setText(diachiShop);
                         tvSlSPShop.setText(soluongSPShop);
                         tv_noidung.setText(aboutproduct);
+                        id_bought.setText(""+sold);
                         if (isMyFavorite) {
                             img_favorite.setImageResource(R.drawable.favorite_24);
                         } else {
@@ -347,6 +350,7 @@ public class Chitietsanpham extends AppCompatActivity {
         tv_muahang = findViewById(R.id.tv_muahang);
         tblcheck = findViewById(R.id.tblcheck);
         tvcheckshop = findViewById(R.id.tvcheckshop);
+        id_bought = findViewById(R.id.id_bought);
     }
     private void getIdUserByShop(String idproduct) {
         Gson gson = new GsonBuilder().setLenient().create();

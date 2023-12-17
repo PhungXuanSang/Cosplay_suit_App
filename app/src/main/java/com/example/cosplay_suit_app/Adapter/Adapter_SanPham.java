@@ -80,9 +80,9 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
         viewHolder.tv_gia.setText(""+decimalFormat.format(sanPham.getPrice()));
         int soLuong = sanPham.getSold();
         if (soLuong == 0) {
-            viewHolder.tv_soluong.setText("Đã bán 0");
+            viewHolder.tv_soluong.setText("0");
         } else {
-            viewHolder.tv_soluong.setText("Đã bán " + soLuong);
+            viewHolder.tv_soluong.setText(""+soLuong);
         }
 //        Glide.with(context).load(sanPham.getImage()).centerCrop().into(viewHolder.img_AnhSp);
 
@@ -113,6 +113,7 @@ public class Adapter_SanPham extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("id_shop",sanPham.getId_shop());
                 intent.putExtra("time_product",sanPham.getTime_product());
                 intent.putExtra("id_category",sanPham.getId_category());
+                intent.putExtra("sold", sanPham.getSold());
                 // Chuyển danh sách thành JSON
                 String listImageJson = new Gson().toJson(sanPham.getListImage());
                 // Đặt chuỗi JSON vào Intent
