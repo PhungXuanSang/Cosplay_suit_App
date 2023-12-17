@@ -54,6 +54,7 @@ import com.example.cosplay_suit_app.Package_bill.Activity.Layhang_Activity;
 import com.example.cosplay_suit_app.Package_bill.Activity.xannhandon_Activity;
 import com.example.cosplay_suit_app.Package_bill.donhang.Collection_adapter_bill;
 import com.example.cosplay_suit_app.R;
+import com.example.cosplay_suit_app.bill.controller.Dialogthongbao;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -155,22 +156,40 @@ public class Fragment_profile extends Fragment {
         relative_wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), WalletActivity.class);
-                startActivity(intent);
+                if (id.equals("")){
+                    String title = "Thông báo đăng nhập";
+                    String msg = "Bạn cần phải đăng nhập để sử dụng chức năng này";
+                    Dialogthongbao.showSuccessDialog(getContext(), title, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), WalletActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         relative_voucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), VouchercuatoiActivity.class);
-                startActivity(intent);
+                if (id.equals("")){
+                    String title = "Thông báo đăng nhập";
+                    String msg = "Bạn cần phải đăng nhập để sử dụng chức năng này";
+                    Dialogthongbao.showSuccessDialog(getContext(), title, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), VouchercuatoiActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         rll_shopcuatoi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Shopcuatoi_Activity.class);
-                startActivity(intent);
+                if (id.equals("")){
+                    String title = "Thông báo đăng nhập";
+                    String msg = "Bạn cần phải đăng nhập để sử dụng chức năng này";
+                    Dialogthongbao.showSuccessDialog(getContext(), title, msg);
+                }else {
+                    Intent intent = new Intent(getContext(), Shopcuatoi_Activity.class);
+                    startActivity(intent);
+                }
             }
         });
 

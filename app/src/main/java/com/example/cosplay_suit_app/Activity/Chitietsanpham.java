@@ -570,7 +570,7 @@ public class Chitietsanpham extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "Added to your favorites list...", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -591,7 +591,7 @@ public class Chitietsanpham extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "Removed to your favorites list...", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

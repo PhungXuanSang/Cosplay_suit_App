@@ -163,20 +163,22 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void checkaddwallet(){
-        Wallet_controller walletController = new Wallet_controller(MainActivity.this);
-        walletController.getWallet(id, new Wallet_controller.ApiGetwalet() {
-            @Override
-            public void onApiGetwalet(DTO_Wallet dtoWallet) {
-                if (dtoWallet == null){
-                    DTO_Wallet dtoWallet1 = new DTO_Wallet();
-                    dtoWallet1.setId_user(id);
-                    dtoWallet1.setCurrency("VND");
-                    dtoWallet1.setMoney("0");
-                    dtoWallet1.setPasswd("");
-                    walletController.AddWallet(dtoWallet1);
+        if (id != null){
+            Wallet_controller walletController = new Wallet_controller(MainActivity.this);
+            walletController.getWallet(id, new Wallet_controller.ApiGetwalet() {
+                @Override
+                public void onApiGetwalet(DTO_Wallet dtoWallet) {
+                    if (dtoWallet == null){
+                        DTO_Wallet dtoWallet1 = new DTO_Wallet();
+                        dtoWallet1.setId_user(id);
+                        dtoWallet1.setCurrency("VND");
+                        dtoWallet1.setMoney("0");
+                        dtoWallet1.setPasswd("");
+                        walletController.AddWallet(dtoWallet1);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 }
