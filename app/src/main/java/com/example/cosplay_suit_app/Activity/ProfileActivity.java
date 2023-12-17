@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -172,6 +173,10 @@ public class ProfileActivity extends AppCompatActivity {
     private void dialogsua(String field) {
         final Dialog editDialog = new Dialog(ProfileActivity.this);
         editDialog.setContentView(R.layout.edit_diachi);
+        // Sử dụng drawable resource để đặt hình dạng và độ cong của góc cho dialog
+        Drawable drawable = getResources().getDrawable(R.drawable.rounded_dialog);
+        editDialog.getWindow().setBackgroundDrawable(drawable);
+
         Profile1_DTO dto = new Profile1_DTO();
         EditText tv_sua = editDialog.findViewById(R.id.tv_sua);
         Button saveButton = editDialog.findViewById(R.id.btn_save);
