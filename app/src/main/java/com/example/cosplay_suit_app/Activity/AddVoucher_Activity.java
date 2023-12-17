@@ -27,7 +27,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddVoucher_Activity extends AppCompatActivity {
-Button buttonAddProduct;
+Button buttonAddProduct,buttonCancel;
     static String url = API.URL;
     static final String BASE_URL = url + "/Voucher/";
     TextView ed_content,ed_amount,ed_Discount;
@@ -42,6 +42,13 @@ Button buttonAddProduct;
         ed_content=findViewById(R.id.ed_content);
         ed_amount=findViewById(R.id.ed_amount);
         ed_Discount=findViewById(R.id.ed_Discount);
+        buttonCancel=findViewById(R.id.buttonCancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               onBackPressed();
+            }
+        });
 
         SharedPreferences sharedPreferences2 = this.getSharedPreferences("shops", MODE_PRIVATE);
         idshop = sharedPreferences2.getString("id", "");
@@ -107,7 +114,7 @@ Button buttonAddProduct;
             @Override
             public void onResponse(@NonNull Call<DTO_voucher> call, Response<DTO_voucher> response) {
                 startActivity(new Intent(AddVoucher_Activity.this, Voucher_activity.class));
-                finishAffinity();
+                onBackPressed();
             }
             @Override
             public void onFailure(@NonNull Call<DTO_voucher> call, Throwable t) {
