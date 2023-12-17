@@ -3,6 +3,7 @@
     android:layout_width="300dp"
     android:layout_margin="10dp"
     android:layout_height="300dp"
+    android:background="@drawable/border_background11"
     android:orientation="vertical">
     <EditText
         android:id="@+id/tv_sua"
@@ -11,7 +12,9 @@
         android:hint="nhập" />
 
     <!-- Save Button -->
-    <Button
+      <androidx.appcompat.widget.AppCompatButton
+        android:layout_gravity="center"
+        android:background="@drawable/boder_buttonnn"
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
