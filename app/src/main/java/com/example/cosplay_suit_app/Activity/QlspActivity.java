@@ -1,14 +1,18 @@
 package com.example.cosplay_suit_app.Activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +35,7 @@ import com.example.cosplay_suit_app.Adapter.SpinnerCategotyAdapter;
 import com.example.cosplay_suit_app.DTO.CartOrderDTO;
 import com.example.cosplay_suit_app.DTO.CategoryDTO;
 import com.example.cosplay_suit_app.DTO.DTO_SanPham;
+import com.example.cosplay_suit_app.DTO.DTO_properties;
 import com.example.cosplay_suit_app.DTO.LoginUser;
 import com.example.cosplay_suit_app.DTO.Product_Page;
 import com.example.cosplay_suit_app.DTO.Shop;
@@ -57,20 +62,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class QlspActivity extends AppCompatActivity implements LocCategoryAdapter.Onclick{
+public class QlspActivity extends AppCompatActivity implements LocCategoryAdapter.Onclick {
     static String url = API.URL;
     static final String BASE_URL = url + "/product/";
 
     static final String BASE_URL_SHOP = url + "/shop/";
-    static final String BASE_URL_CAT = url +"/category/api/";
+    static final String BASE_URL_CAT = url + "/category/api/";
 
-    ImageView iv_back, iv_add;
+    ImageView iv_back, iv_add, ivLoc;
     RecyclerView rclvList;
     List<DTO_SanPham> mlist;
     ArrayList<CategoryDTO> listCat = new ArrayList<>();
     QlspAdapter adapter;
     LocCategoryAdapter categoryAdapter;
-    TextView tvQuantity,tv_voucher,tvQlspCancel,tvQlspCategory;
+    TextView tvQuantity, tv_voucher, tvQlspCancel, tvQlspCategory;
 
     EditText search;
 
@@ -80,10 +85,15 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
     String idshop;
     String id;
     GridLayoutManager layoutManager;
-    private int currentPage =1 ;
-    private boolean isLoading ;
-    private boolean isLastPage ;
-
+    private TextView tvTrue;
+    private TextView tvFalse;
+    private int currentPage = 1;
+    private boolean isLoading;
+    private boolean isLastPage;
+    private boolean isTrueSelected = false;
+    private boolean isFalseSelected = false;
+    private boolean isTrueSelectedPersist = false;
+    private boolean isFalseSelectedPersist = false;
     private int totalPage;
 
     @Override
@@ -92,6 +102,7 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         setContentView(R.layout.activity_qlsp);
         iv_add = findViewById(R.id.ivAdd);
         iv_back = findViewById(R.id.ivBack);
+        ivLoc = findViewById(R.id.ivLoc);
         rclvList = findViewById(R.id.rclvQlspListproduct);
         tvQuantity = findViewById(R.id.tvQlspQuantity);
         srlQlsp = findViewById(R.id.srlQlsp);
@@ -106,9 +117,10 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         linearLayoutManager = new LinearLayoutManager(this);
         rclvList.setLayoutManager(linearLayoutManager);
         Intent intent = getIntent();
-        DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         rclvList.addItemDecoration(dividerItemDecoration);
-
+        tvTrue = new TextView(this);
+        tvFalse = new TextView(this);
         searchProduct();
         mlist = new ArrayList<DTO_SanPham>();
         adapter = new QlspAdapter(mlist, this);
@@ -121,11 +133,12 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
 
     }
 
-    private void onClick(){
+    private void onClick() {
+
         tv_voucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(QlspActivity.this,Voucher_activity.class));
+                startActivity(new Intent(QlspActivity.this, Voucher_activity.class));
             }
         });
 
@@ -161,13 +174,12 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
                 dialog.setContentView(R.layout.dialog_category);
 
 
-
                 RecyclerView rlcvCategory = dialog.findViewById(R.id.rclvCategoryListCategory);
                 LinearLayout llLocCategory = dialog.findViewById(R.id.llLocCategory);
-                 layoutManager = new GridLayoutManager(QlspActivity.this, 1);
+                layoutManager = new GridLayoutManager(QlspActivity.this, 1);
 
                 listCat = new ArrayList<>();
-                categoryAdapter = new LocCategoryAdapter(QlspActivity.this,listCat,dialog,new Handler(),QlspActivity.this::onClickItem);
+                categoryAdapter = new LocCategoryAdapter(QlspActivity.this, listCat, dialog, new Handler(), QlspActivity.this::onClickItem);
                 rlcvCategory.setLayoutManager(layoutManager);
                 rlcvCategory.setAdapter(categoryAdapter);
                 categoryAdapter.showLoading();
@@ -178,9 +190,133 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
 
             }
         });
+
+        //
+        ivLoc.setOnClickListener(new View.OnClickListener() {
+            private boolean isColorChanged = false; // Biến để theo dõi trạng thái màu
+            private boolean isTrueSelected = false; // Biến để theo dõi trạng thái của nút True
+            private boolean isFalseSelected = false; // Biến để theo dõi trạng thái của nút False
+
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(QlspActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+
+                // Gắn layout tùy chỉnh vào dialog
+                View dialogView = inflater.inflate(R.layout.dialog_loc_product, null);
+                builder.setView(dialogView);
+                tvTrue = dialogView.findViewById(R.id.idlocProductTrue);
+                tvFalse = dialogView.findViewById(R.id.idlocProductFalse);
+
+                Button btn_thoat = dialogView.findViewById(R.id.btn_datlai);
+                Button btn_them = dialogView.findViewById(R.id.btn_loc);
+                ImageView ivdeleteLocProduct = dialogView.findViewById(R.id.ivdeleteLocProduct);
+
+                // Thiết lập các thành phần trong dialog
+
+                // Tạo dialog
+                AlertDialog dialog = builder.create();
+
+                // Khởi tạo trạng thái ban đầu từ biến persist
+                tvTrue.setBackgroundColor(isTrueSelected ? Color.RED : Color.GRAY);
+                tvFalse.setBackgroundColor(isFalseSelected ? Color.RED : Color.GRAY);
+
+                tvTrue.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        toggleBackground(tvTrue);
+                    }
+                });
+
+                tvFalse.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        toggleBackground(tvFalse);
+                    }
+                });
+
+                btn_thoat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Đặt lại màu GRAY cho từng TextView
+                        tvTrue.setBackgroundColor(Color.GRAY);
+                        tvFalse.setBackgroundColor(Color.GRAY);
+                        // Đặt lại trạng thái ban đầu cho biến
+                        isTrueSelected = false;
+                        isFalseSelected = false;
+
+                        // Đóng dialog
+                    }
+                });
+
+                ivdeleteLocProduct.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Lưu trạng thái vào biến persist
+                        isTrueSelectedPersist = isTrueSelected;
+                        isFalseSelectedPersist = isFalseSelected;
+
+                        dialog.dismiss();
+                    }
+                });
+
+                btn_them.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Kiểm tra xem nút nào đang ở trạng thái được chọn
+                        if (isTrueSelected) {
+                            // Thực hiện hành động khi True được chọn
+                            tvQlspCategory.setText("Tất cả loại");
+                            callApiProductStatusTrue();
+                            // Hiển thị thông báo hoặc thực hiện hành động cụ thể cho True
+
+                        } else if (isFalseSelected) {
+                            // Thực hiện hành động khi False được chọn
+                            callApiProductStatusFalse();
+                            tvQlspCategory.setText("Tất cả loại");
+                            // Hiển thị thông báo hoặc thực hiện hành động cụ thể cho False
+
+                        } else {
+                            // Hiển thị thông báo nếu không có nút nào được chọn
+                            callApiProduct();
+
+                        }
+                    }
+                });
+
+                dialog.show();
+            }
+
+            // Hàm để đổi màu và cập nhật trạng thái
+            private void toggleBackground(TextView textView) {
+                int newColor;
+                if (textView == tvTrue) {
+                    newColor = isTrueSelected ? Color.GRAY : Color.RED;
+                    isTrueSelected = !isTrueSelected;
+                    isFalseSelected = false;
+
+                    // Đặt lại màu của TextView False
+                    tvFalse.setBackgroundColor(Color.GRAY);
+                } else if (textView == tvFalse) {
+                    newColor = isFalseSelected ? Color.GRAY : Color.RED;
+                    isFalseSelected = !isFalseSelected;
+                    isTrueSelected = false;
+
+                    // Đặt lại màu của TextView True
+                    tvTrue.setBackgroundColor(Color.GRAY);
+                } else {
+                    return;
+                }
+
+                textView.setBackgroundColor(newColor);
+            }
+        });
+
+
+
     }
 
-    private void getListCat() {
+     private void getListCat() {
         Gson gson = new GsonBuilder().setLenient().create();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -304,6 +440,122 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         });
 
     }
+
+    private void callApiProductStatusFalse() {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+
+        // tạo đối tượng
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(idshop);
+        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
+                if (response.isSuccessful()) {
+                    List<DTO_SanPham> allProductsList = response.body();
+
+                    // Lọc danh sách chỉ giữ lại các sản phẩm có status là false
+                    List<DTO_SanPham> filteredList = new ArrayList<>();
+                    for (DTO_SanPham sanPham : allProductsList) {
+                        if (!sanPham.isStatus()) {
+                            filteredList.add(sanPham);
+                        }
+                    }
+
+                    mlist.clear();
+                    mlist.addAll(filteredList);
+                    tvQuantity.setText(mlist.size() + " Sản phẩm");
+                    adapter.notifyDataSetChanged();
+
+                    Log.d("TAG", "onResponse: " + mlist.size());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+                Log.d("TAG", "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
+
+    private void callApiProductStatusTrue() {
+
+        // tạo gson
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        // Create a new object from HttpLoggingInterceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        // Add Interceptor to HttpClient
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client) // Set HttpClient to be used by Retrofit
+                .build();
+
+        // sử dụng interface
+        SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
+
+        // tạo đối tượng
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProduct(idshop);
+        objCall.enqueue(new Callback<List<DTO_SanPham>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
+                if (response.isSuccessful()) {
+                    List<DTO_SanPham> allProductsList = response.body();
+
+                    // Lọc danh sách chỉ giữ lại các sản phẩm có status là false
+                    List<DTO_SanPham> filteredList = new ArrayList<>();
+                    for (DTO_SanPham sanPham : allProductsList) {
+                        if (sanPham.isStatus()) {
+                            filteredList.add(sanPham);
+                        }
+                    }
+
+                    mlist.clear();
+                    mlist.addAll(filteredList);
+                    tvQuantity.setText(mlist.size() + " Sản phẩm");
+                    adapter.notifyDataSetChanged();
+
+                    Log.d("TAG", "onResponse: " + mlist.size());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<DTO_SanPham>> call, Throwable t) {
+                Log.d("TAG", "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
+
+
     private void callApiProductCategory(String idCategory) {
 
         // tạo gson
@@ -329,7 +581,7 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         SanPhamInterface sanPhamInterface = retrofit.create(SanPhamInterface.class);
 
         // tạo đối tượng
-        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProductCtegory(idshop,idCategory);
+        Call<List<DTO_SanPham>> objCall = sanPhamInterface.GetProductCtegory(idshop, idCategory);
         objCall.enqueue(new Callback<List<DTO_SanPham>>() {
             @Override
             public void onResponse(@NonNull Call<List<DTO_SanPham>> call, @NonNull Response<List<DTO_SanPham>> response) {
@@ -354,6 +606,7 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
         });
 
     }
+
     private void callApiSearchProduct(String name) {
         // Tạo Gson
         Gson gson = new GsonBuilder().setLenient().create();
@@ -412,16 +665,19 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
             @Override
             public void onRefresh() {
                 mlist = new ArrayList<DTO_SanPham>();
-                adapter = new QlspAdapter(mlist,QlspActivity.this);
+                adapter = new QlspAdapter(mlist, QlspActivity.this);
                 rclvList.setAdapter(adapter);
 //                mlist.clear();
+                isTrueSelected = false;
+                isFalseSelected = false;
                 callApiProduct();
                 srlQlsp.setRefreshing(false);
             }
         });
 
     }
-//    private void loadMore(){
+
+    //    private void loadMore(){
 //        rclvList.addOnScrollListener(new PhanTrang(linearLayoutManager) {
 //            @Override
 //            public void loadMoreItem() {
@@ -441,15 +697,16 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
 //            }
 //        });
 //    }
-    private void loadNextPage(){
+    private void loadNextPage() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
 
             }
-        },2000);
+        }, 2000);
     }
+
     @Override
     public void onClickItem(CategoryDTO categoryDTO) {
 //
@@ -457,12 +714,12 @@ public class QlspActivity extends AppCompatActivity implements LocCategoryAdapte
 //        callApiProductCategory(categoryDTO.getId());
 //        tvQlspCategory.setText(categoryDTO.getName());
 //        Log.d("TAG", "onClickItem: "+categoryDTO.getId());
-                // Nếu là một Category khác
-        if (categoryDTO.getId().equals("-1")){
+        // Nếu là một Category khác
+        if (categoryDTO.getId().equals("-1")) {
             adapter.clearlistProduct();
             callApiProduct();
             tvQlspCategory.setText(categoryDTO.getName());
-        }else {
+        } else {
             adapter.clearlistProduct();
             callApiProductCategory(categoryDTO.getId());
             tvQlspCategory.setText(categoryDTO.getName());
