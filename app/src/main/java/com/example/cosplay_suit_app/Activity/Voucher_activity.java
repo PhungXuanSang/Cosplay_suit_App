@@ -74,6 +74,7 @@ public class Voucher_activity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                startActivity(new Intent(Voucher_activity.this, QlspActivity.class));
                 onBackPressed();
             }
         });
