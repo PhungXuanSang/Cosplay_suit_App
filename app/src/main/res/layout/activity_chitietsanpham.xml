@@ -340,6 +340,8 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:ellipsize="end"
+                android:maxLines="3"
                 android:id="@+id/tv_noidung"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
